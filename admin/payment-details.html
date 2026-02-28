@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Details — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="payment-details.html" class="sidebar-link active"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="settings/general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="settings/branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="settings/sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="settings/integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Payment Details</h1>
+            <p class="text-xs text-muted-foreground">Benefits &gt; Payment Details</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+
+        <!-- Billing Model Info -->
+        <div class="flex items-start gap-2 p-3 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+          <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+          <span>Your organisation is billed monthly based on <strong>total perks allocated to employees</strong>. The invoice is generated on the 1st of each month for the previous month's usage.</span>
+        </div>
+
+        <!-- Current Billing Summary -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h3 class="card-title">Current Billing Period</h3>
+            <p class="card-description">February 2026 — usage accrued so far</p>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <p class="text-xs text-muted-foreground mb-1">Active Employees</p>
+                <p class="text-xl font-bold">248</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground mb-1">Perks Allocated</p>
+                <p class="text-xl font-bold">₹8,42,000</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground mb-1">Platform Fee (2%)</p>
+                <p class="text-xl font-bold">₹16,840</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground mb-1">Estimated Invoice</p>
+                <p class="text-xl font-bold text-primary">₹8,58,840</p>
+                <p class="text-[11px] text-muted-foreground">+ GST as applicable</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Payment Method -->
+        <div class="card mb-6">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Primary Payment Method</h3>
+              <p class="card-description">Default method used for monthly perk billing</p>
+            </div>
+            <button class="btn-outline btn-sm text-xs flex items-center gap-1.5"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Method</button>
+          </div>
+          <div class="card-content">
+            <div class="flex flex-col sm:flex-row gap-4">
+              <!-- Card 1 - Primary -->
+              <div class="flex-1 p-4 rounded-xl border-2 border-primary bg-primary/5 relative">
+                <span class="absolute top-3 right-3 badge badge-primary text-[10px]">Primary</span>
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center">
+                    <i data-lucide="credit-card" class="w-5 h-5 text-white"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold">Visa ending in 4242</p>
+                    <p class="text-xs text-muted-foreground">Expires 08/2027</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                  <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                  <span>AcmeCorp Finance Department</span>
+                </div>
+                <div class="flex gap-2 mt-4">
+                  <button class="btn-ghost btn-sm text-xs">Edit</button>
+                  <button class="btn-ghost btn-sm text-xs text-destructive">Remove</button>
+                </div>
+              </div>
+
+              <!-- Card 2 - Backup -->
+              <div class="flex-1 p-4 rounded-xl border bg-card">
+                <span class="absolute top-3 right-3 badge text-[10px] hidden">Backup</span>
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
+                    <i data-lucide="credit-card" class="w-5 h-5 text-white"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold">Mastercard ending in 8371</p>
+                    <p class="text-xs text-muted-foreground">Expires 02/2026</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                  <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                  <span>AcmeCorp Operations</span>
+                </div>
+                <div class="flex gap-2 mt-4">
+                  <button class="btn-primary btn-sm text-xs">Set as Primary</button>
+                  <button class="btn-ghost btn-sm text-xs">Edit</button>
+                  <button class="btn-ghost btn-sm text-xs text-destructive">Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Account (Wire Transfer) -->
+        <div class="card mb-6">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Bank Account (Wire Transfer)</h3>
+              <p class="card-description">For monthly invoice settlements via NEFT/RTGS</p>
+            </div>
+            <button class="btn-outline btn-sm text-xs flex items-center gap-1.5"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Account</button>
+          </div>
+          <div class="card-content">
+            <div class="p-4 rounded-xl border">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="landmark" class="w-5 h-5 text-green-700"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold">HDFC Bank — Current Account</p>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+                    <div>
+                      <p class="text-[11px] text-muted-foreground">Account Number</p>
+                      <p class="text-sm font-medium">XXXX XXXX 7890</p>
+                    </div>
+                    <div>
+                      <p class="text-[11px] text-muted-foreground">IFSC Code</p>
+                      <p class="text-sm font-medium">HDFC0001234</p>
+                    </div>
+                    <div>
+                      <p class="text-[11px] text-muted-foreground">Account Holder</p>
+                      <p class="text-sm font-medium">AcmeCorp Pvt Ltd</p>
+                    </div>
+                    <div>
+                      <p class="text-[11px] text-muted-foreground">Status</p>
+                      <span class="badge badge-success text-[10px]">Verified</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex gap-2 mt-4 pt-3 border-t">
+                <button class="btn-ghost btn-sm text-xs">Edit</button>
+                <button class="btn-ghost btn-sm text-xs text-destructive">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing Address -->
+        <div class="card mb-6">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Billing Address</h3>
+              <p class="card-description">Address shown on invoices</p>
+            </div>
+            <button class="btn-ghost btn-sm text-xs flex items-center gap-1.5"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-medium text-muted-foreground">Company Name</label>
+                <p class="text-sm mt-0.5">AcmeCorp Private Limited</p>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-muted-foreground">GSTIN</label>
+                <p class="text-sm mt-0.5">27AABCA1234C1ZV</p>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="text-xs font-medium text-muted-foreground">Address</label>
+                <p class="text-sm mt-0.5">Tower B, 5th Floor, TechPark One, Whitefield Road, Bangalore, Karnataka 560066, India</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Details -->
+        <div class="card">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Tax & Compliance</h3>
+              <p class="card-description">Tax identifiers for invoice generation</p>
+            </div>
+            <button class="btn-ghost btn-sm text-xs flex items-center gap-1.5"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="text-xs font-medium text-muted-foreground">PAN</label>
+                <p class="text-sm mt-0.5">AABCA1234C</p>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-muted-foreground">TAN</label>
+                <p class="text-sm mt-0.5">BLRA12345E</p>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-muted-foreground">GST Treatment</label>
+                <p class="text-sm mt-0.5">Registered Business — Regular</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

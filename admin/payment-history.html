@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment History — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="payment-history.html" class="sidebar-link active"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="settings/general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="settings/branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="settings/sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="settings/integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Payment History</h1>
+            <p class="text-xs text-muted-foreground">Benefits &gt; Payment History</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-outline btn-sm text-xs flex items-center gap-1.5"><i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+
+        <!-- Billing Model Info -->
+        <div class="flex items-start gap-2 p-3 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+          <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+          <span>Invoices are generated on the <strong>1st of each month</strong> for the previous month's perk allocations. Payment is due within 10 days.</span>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Total Billed (FY)</span>
+              <i data-lucide="indian-rupee" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹62,18,480</span>
+            <span class="text-xs text-muted-foreground">7 months billed · Aug 2025 – Feb 2026</span>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Pending</span>
+              <i data-lucide="clock" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹8,58,840</span>
+            <span class="text-xs text-amber-600 font-medium">Due 10 Mar 2026</span>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Overdue</span>
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value text-destructive">₹0</span>
+            <span class="text-xs text-green-600 font-medium">No overdue payments</span>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Next Invoice</span>
+              <i data-lucide="calendar" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value text-base">1 Mar 2026</span>
+            <span class="text-xs text-muted-foreground">Based on Feb usage</span>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card mb-6">
+          <div class="card-content py-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="flex-1 min-w-[200px]">
+                <div class="relative">
+                  <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                  <input type="text" class="input pl-9 w-full" placeholder="Search by invoice number...">
+                </div>
+              </div>
+              <select class="input w-40 text-sm">
+                <option>All Statuses</option>
+                <option>Paid</option>
+                <option>Pending</option>
+                <option>Overdue</option>
+              </select>
+              <select class="input w-36 text-sm">
+                <option>FY 2025-26</option>
+                <option>FY 2024-25</option>
+                <option>FY 2023-24</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction Table -->
+        <div class="card">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Invoices</h3>
+              <p class="card-description">Monthly invoices based on perks allocated to employees</p>
+            </div>
+          </div>
+          <div class="card-content p-0">
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                  <tr>
+                    <th>Invoice #</th>
+                    <th>Billing Period</th>
+                    <th>Employees</th>
+                    <th class="text-right">Perks Allocated</th>
+                    <th class="text-right">Platform Fee</th>
+                    <th class="text-right">Total</th>
+                    <th>Status</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2026-007</td>
+                    <td class="text-sm">Feb 2026</td>
+                    <td class="text-sm text-right">248</td>
+                    <td class="text-sm text-right">₹8,42,000</td>
+                    <td class="text-sm text-right">₹16,840</td>
+                    <td class="text-sm text-right font-medium">₹8,58,840</td>
+                    <td><span class="badge text-[10px] bg-amber-100 text-amber-800">Pending</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2026-006</td>
+                    <td class="text-sm">Jan 2026</td>
+                    <td class="text-sm text-right">245</td>
+                    <td class="text-sm text-right">₹8,82,000</td>
+                    <td class="text-sm text-right">₹17,640</td>
+                    <td class="text-sm text-right font-medium">₹8,99,640</td>
+                    <td><span class="badge badge-success text-[10px]">Paid</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2025-005</td>
+                    <td class="text-sm">Dec 2025</td>
+                    <td class="text-sm text-right">242</td>
+                    <td class="text-sm text-right">₹9,68,000</td>
+                    <td class="text-sm text-right">₹19,360</td>
+                    <td class="text-sm text-right font-medium">₹9,87,360</td>
+                    <td><span class="badge badge-success text-[10px]">Paid</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2025-004</td>
+                    <td class="text-sm">Nov 2025</td>
+                    <td class="text-sm text-right">240</td>
+                    <td class="text-sm text-right">₹8,40,000</td>
+                    <td class="text-sm text-right">₹16,800</td>
+                    <td class="text-sm text-right font-medium">₹8,56,800</td>
+                    <td><span class="badge badge-success text-[10px]">Paid</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2025-003</td>
+                    <td class="text-sm">Oct 2025</td>
+                    <td class="text-sm text-right">238</td>
+                    <td class="text-sm text-right">₹9,52,000</td>
+                    <td class="text-sm text-right">₹19,040</td>
+                    <td class="text-sm text-right font-medium">₹9,71,040</td>
+                    <td><span class="badge badge-success text-[10px]">Paid</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2025-002</td>
+                    <td class="text-sm">Sep 2025</td>
+                    <td class="text-sm text-right">235</td>
+                    <td class="text-sm text-right">₹8,22,500</td>
+                    <td class="text-sm text-right">₹16,450</td>
+                    <td class="text-sm text-right font-medium">₹8,38,950</td>
+                    <td><span class="badge badge-success text-[10px]">Paid</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium text-primary">INV-2025-001</td>
+                    <td class="text-sm">Aug 2025</td>
+                    <td class="text-sm text-right">230</td>
+                    <td class="text-sm text-right">₹7,82,000</td>
+                    <td class="text-sm text-right">₹15,640</td>
+                    <td class="text-sm text-right font-medium">₹7,97,640</td>
+                    <td><span class="badge badge-success text-[10px]">Paid</span></td>
+                    <td class="text-right"><button class="btn-ghost btn-sm text-xs">View</button><button class="btn-ghost btn-sm text-xs">PDF</button></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="font-semibold">
+                    <td class="text-sm" colspan="3">Total (7 invoices)</td>
+                    <td class="text-sm text-right">₹61,88,500</td>
+                    <td class="text-sm text-right">₹1,21,770</td>
+                    <td class="text-sm text-right">₹63,10,270</td>
+                    <td colspan="2"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-4">
+          <p class="text-sm text-muted-foreground">Showing 1–7 of 7 invoices</p>
+          <div class="flex items-center gap-1">
+            <button class="btn-ghost btn-sm text-xs" disabled>&larr; Previous</button>
+            <button class="btn-primary btn-sm text-xs w-8 h-8 p-0 flex items-center justify-center">1</button>
+            <button class="btn-ghost btn-sm text-xs" disabled>Next &rarr;</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

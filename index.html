@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground min-h-screen">
+
+  <div class="min-h-screen flex">
+    <!-- Left — Brand Panel -->
+    <div class="hidden lg:flex lg:w-1/2 bg-primary relative flex-col justify-between p-12 text-white overflow-hidden">
+      <div class="absolute top-[-5rem] left-[-5rem] w-64 h-64 bg-white/10 rounded-full"></div>
+      <div class="absolute bottom-[-8rem] right-[-4rem] w-80 h-80 bg-white/5 rounded-full"></div>
+
+      <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-2">
+          <i data-lucide="globe" class="w-8 h-8"></i>
+          <span class="text-2xl font-bold tracking-tight">Trvello</span>
+        </div>
+        <p class="text-white/70 text-sm">Corporate Travel Benefits Platform</p>
+      </div>
+
+      <div class="relative z-10 space-y-6">
+        <h1 class="text-3xl font-bold leading-tight">Travel benefits your<br>team will love.</h1>
+        <p class="text-white/80 max-w-md">Empower your workforce with curated travel perks, seamless planning, and company-managed benefits — all in one platform.</p>
+        <div class="space-y-3 text-sm text-white/70">
+          <div class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-white/90"></i> Personalised destination matching</div>
+          <div class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-white/90"></i> Company-managed travel perks</div>
+          <div class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-white/90"></i> Full compliance & audit trail</div>
+        </div>
+      </div>
+
+      <p class="relative z-10 text-xs text-white/40">© 2025 Trvello. All rights reserved.</p>
+    </div>
+
+    <!-- Right — Login Form -->
+    <div class="flex-1 flex items-center justify-center p-8">
+      <div class="w-full max-w-sm space-y-8">
+        <div class="lg:hidden flex items-center gap-2 justify-center mb-4">
+          <i data-lucide="globe" class="w-7 h-7 text-primary"></i>
+          <span class="text-xl font-bold tracking-tight">Trvello</span>
+        </div>
+
+        <div class="text-center lg:text-left">
+          <h2 class="text-2xl font-bold">Welcome back</h2>
+          <p class="text-muted-foreground text-sm mt-1">Sign in to your corporate travel portal</p>
+        </div>
+
+        <div class="flex items-center gap-2 px-3 py-2 bg-muted rounded-lg text-sm">
+          <i data-lucide="building-2" class="w-4 h-4 text-muted-foreground"></i>
+          <span class="text-muted-foreground">Signing in to</span>
+          <span class="font-semibold">acmecorp.trvello.com</span>
+        </div>
+
+        <form class="space-y-4" onsubmit="event.preventDefault(); window.location.href='admin/dashboard.html';">
+          <div>
+            <label class="label" for="email">Email</label>
+            <input id="email" type="email" class="input w-full" placeholder="you@acmecorp.com" required>
+          </div>
+          <div>
+            <label class="label" for="password">Password</label>
+            <input id="password" type="password" class="input w-full" placeholder="••••••••" required>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" class="checkbox"> Remember me
+            </label>
+            <a href="#" class="text-primary hover:underline text-sm">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn-primary w-full">Sign In</button>
+          <div class="relative flex items-center justify-center">
+            <span class="separator w-full"></span>
+            <span class="bg-background px-3 text-xs text-muted-foreground absolute">OR</span>
+          </div>
+          <button type="button" class="btn-outline w-full flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign in with Google
+          </button>
+          <button type="button" class="btn-outline w-full flex items-center justify-center gap-2">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+            Sign in with SSO
+          </button>
+        </form>
+
+        <div class="text-center text-xs text-muted-foreground space-x-2">
+          <a href="#" class="hover:underline">Terms of Service</a>
+          <span>·</span>
+          <a href="#" class="hover:underline">Privacy Policy</a>
+          <span>·</span>
+          <span>Powered by <strong>Trvello</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

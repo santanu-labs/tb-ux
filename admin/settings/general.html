@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings: General — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="../dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="../employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="../employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="../perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="../perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="../financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="../payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="../payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="../audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="general.html" class="sidebar-link active"><i data-lucide="settings"></i> General</a>
+        <a href="branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Organisation Settings</h1>
+            <p class="text-xs text-muted-foreground">Settings &gt; General</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content max-w-4xl">
+        <!-- Settings Tabs -->
+        <div data-tabs>
+          <div class="tabs-list mb-8">
+            <a href="general.html" class="tab-trigger active">General</a>
+            <a href="branding.html" class="tab-trigger">Branding</a>
+            <a href="sign-in.html" class="tab-trigger">Sign-in Methods</a>
+            <a href="integrations.html" class="tab-trigger">Integrations</a>
+          </div>
+        </div>
+
+        <!-- Organisation Details Form -->
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">Organisation Details</h3>
+            <p class="card-description">Basic information about your organisation</p>
+          </div>
+          <div class="card-content space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="label">Organisation Name</label>
+                <input class="input w-full" value="Acme Corporation">
+              </div>
+              <div>
+                <label class="label">Subdomain</label>
+                <div class="flex items-center gap-0">
+                  <input class="input w-full rounded-r-none" value="acmecorp" disabled>
+                  <span class="px-3 py-2 bg-muted border border-l-0 border-border rounded-r-lg text-sm text-muted-foreground">.trvello.com</span>
+                </div>
+                <p class="text-xs text-muted-foreground mt-1">Subdomain cannot be changed after setup</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="label">Contact Email</label>
+                <input type="email" class="input w-full" value="hr@acmecorp.com">
+              </div>
+              <div>
+                <label class="label">Phone</label>
+                <input type="tel" class="input w-full" value="+91 22 4567 8900">
+              </div>
+            </div>
+
+            <div>
+              <label class="label">Street Address</label>
+              <input class="input w-full" value="42 Tech Park, Whitefield">
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <label class="label">City</label>
+                <input class="input w-full" value="Bengaluru">
+              </div>
+              <div>
+                <label class="label">State</label>
+                <input class="input w-full" value="Karnataka">
+              </div>
+              <div>
+                <label class="label">Country</label>
+                <select class="select w-full">
+                  <option selected>India</option>
+                  <option>United States</option>
+                  <option>United Kingdom</option>
+                </select>
+              </div>
+              <div>
+                <label class="label">ZIP / PIN</label>
+                <input class="input w-full" value="560066">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="label">Industry</label>
+                <select class="select w-full">
+                  <option>Technology</option>
+                  <option>Finance</option>
+                  <option>Healthcare</option>
+                  <option>Manufacturing</option>
+                  <option>Retail</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="label">Number of Employees</label>
+                <div class="flex items-center gap-2">
+                  <input class="input w-full" value="248" disabled>
+                  <span class="badge badge-secondary text-xs whitespace-nowrap">Auto-calculated</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer flex justify-end">
+            <button class="btn-primary" onclick="showToast('Settings saved successfully!', 'success')">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="card">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Corporate Documents</h3>
+              <p class="card-description">Travel policies and compliance documents</p>
+            </div>
+            <button class="btn-outline text-sm flex items-center gap-1.5">
+              <i data-lucide="upload" class="w-4 h-4"></i> Upload Document
+            </button>
+          </div>
+          <div class="card-content">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded bg-red-50 flex items-center justify-center">
+                    <i data-lucide="file-text" class="w-4.5 h-4.5 text-red-500"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Travel Policy v2.1</p>
+                    <p class="text-xs text-muted-foreground">PDF · 245 KB · Uploaded 1 week ago</p>
+                  </div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn-ghost btn-icon btn-sm"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                  <button class="btn-ghost btn-icon btn-sm"><i data-lucide="download" class="w-4 h-4"></i></button>
+                  <button class="btn-ghost btn-icon btn-sm text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded bg-blue-50 flex items-center justify-center">
+                    <i data-lucide="file-text" class="w-4.5 h-4.5 text-blue-500"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Employee Benefits Guide 2025</p>
+                    <p class="text-xs text-muted-foreground">PDF · 1.2 MB · Uploaded 3 weeks ago</p>
+                  </div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn-ghost btn-icon btn-sm"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                  <button class="btn-ghost btn-icon btn-sm"><i data-lucide="download" class="w-4 h-4"></i></button>
+                  <button class="btn-ghost btn-icon btn-sm text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded bg-green-50 flex items-center justify-center">
+                    <i data-lucide="file-spreadsheet" class="w-4.5 h-4.5 text-green-500"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Expense Reimbursement Form</p>
+                    <p class="text-xs text-muted-foreground">XLSX · 48 KB · Uploaded 1 month ago</p>
+                  </div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn-ghost btn-icon btn-sm"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                  <button class="btn-ghost btn-icon btn-sm"><i data-lucide="download" class="w-4 h-4"></i></button>
+                  <button class="btn-ghost btn-icon btn-sm text-destructive"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

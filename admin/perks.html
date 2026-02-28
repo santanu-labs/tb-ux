@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perks — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="perks.html" class="sidebar-link active"><i data-lucide="gift"></i> Perks</a>
+        <a href="perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="settings/general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="settings/branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="settings/sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="settings/integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Perks Management</h1>
+            <p class="text-xs text-muted-foreground">Benefits &gt; Perks</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <!-- Page header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <p class="text-sm text-muted-foreground">Manage travel perks and benefits for your employees</p>
+          </div>
+          <button onclick="openDialog('create-perk-dialog')" class="btn-primary text-sm flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Create Perk
+          </button>
+        </div>
+
+        <!-- Page Tabs -->
+        <div data-tabs class="mb-6">
+          <div class="tabs-list">
+            <button class="tab-trigger active" data-tab="manual-perks">All Perks</button>
+            <button class="tab-trigger" data-tab="automations">Automations</button>
+            <button class="tab-trigger" data-tab="peer-recognition">Peer Recognition</button>
+            <button class="tab-trigger" data-tab="forecast">Forecast</button>
+          </div>
+        </div>
+
+        <!-- ═══ TAB: All Perks ═══ -->
+        <div data-tab-panel="manual-perks">
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Total Budget</span>
+              <i data-lucide="wallet" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹15L</span>
+            <span class="text-xs text-muted-foreground">Annual allocation</span>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Allocated</span>
+              <i data-lucide="send" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹12.4L</span>
+            <div class="progress-bar mt-2"><div class="progress-bar-fill" style="width:82%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Remaining</span>
+              <i data-lucide="piggy-bank" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹2.6L</span>
+            <span class="text-xs text-muted-foreground">17.3% unallocated</span>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Active Perks</span>
+              <i data-lucide="gift" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">6</span>
+            <span class="text-xs text-muted-foreground">2 expiring soon</span>
+          </div>
+        </div>
+
+        <!-- Perks Table -->
+        <div class="card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th>Perk Name</th>
+                  <th>Type</th>
+                  <th>Value</th>
+                  <th>Assigned To</th>
+                  <th>Validity</th>
+                  <th>Status</th>
+                  <th class="w-16">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="font-medium text-sm">Summer Travel Credit</div>
+                    <div class="text-xs text-muted-foreground">Credit for any domestic travel booking</div>
+                  </td>
+                  <td><span class="badge badge-primary text-xs">Travel Credit</span></td>
+                  <td class="text-sm font-medium">₹25,000</td>
+                  <td class="text-sm">124 employees</td>
+                  <td class="text-sm text-muted-foreground">1 Apr – 30 Sep 2025</td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="users" class="w-3.5 h-3.5"></i> Assign</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="pause-circle" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="font-medium text-sm">Hotel Partner Discount</div>
+                    <div class="text-xs text-muted-foreground">15% off at partner hotels worldwide</div>
+                  </td>
+                  <td><span class="badge badge-secondary text-xs">Discount</span></td>
+                  <td class="text-sm font-medium">15%</td>
+                  <td class="text-sm">248 employees</td>
+                  <td class="text-sm text-muted-foreground">1 Jan – 31 Dec 2025</td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="users" class="w-3.5 h-3.5"></i> Assign</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="pause-circle" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="font-medium text-sm">Q3 Wellness Retreat</div>
+                    <div class="text-xs text-muted-foreground">Sponsored wellness trip for top performers</div>
+                  </td>
+                  <td><span class="badge text-xs" style="background:hsl(280 60% 95%);color:hsl(280 60% 40%);">Experience</span></td>
+                  <td class="text-sm font-medium">₹50,000</td>
+                  <td class="text-sm">20 employees</td>
+                  <td class="text-sm text-muted-foreground">1 Jul – 30 Sep 2025</td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="users" class="w-3.5 h-3.5"></i> Assign</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="pause-circle" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="font-medium text-sm">Team Offsite Allowance</div>
+                    <div class="text-xs text-muted-foreground">Per-head allowance for team offsites</div>
+                  </td>
+                  <td><span class="badge badge-primary text-xs">Travel Credit</span></td>
+                  <td class="text-sm font-medium">₹15,000</td>
+                  <td class="text-sm">60 employees</td>
+                  <td class="text-sm text-muted-foreground">1 Jan – 31 Dec 2025</td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="users" class="w-3.5 h-3.5"></i> Assign</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="pause-circle" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="font-medium text-sm">Anniversary Travel Bonus</div>
+                    <div class="text-xs text-muted-foreground">Special credit on work anniversary</div>
+                  </td>
+                  <td><span class="badge badge-primary text-xs">Travel Credit</span></td>
+                  <td class="text-sm font-medium">₹10,000</td>
+                  <td class="text-sm">35 employees</td>
+                  <td class="text-sm text-muted-foreground">Rolling — 30 days from assignment</td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="users" class="w-3.5 h-3.5"></i> Assign</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="pause-circle" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="opacity-60">
+                  <td>
+                    <div class="font-medium text-sm">Year-End Bonus Trip</div>
+                    <div class="text-xs text-muted-foreground">Bonus travel credit for year-end holidays</div>
+                  </td>
+                  <td><span class="badge badge-primary text-xs">Travel Credit</span></td>
+                  <td class="text-sm font-medium">₹15,000</td>
+                  <td class="text-sm">200 employees</td>
+                  <td class="text-sm text-muted-foreground">1 Nov – 31 Dec 2024</td>
+                  <td><span class="badge badge-outline text-xs">Expired</span></td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Duplicate</a>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        </div><!-- /TAB: All Perks -->
+
+        <!-- ═══ TAB: Automations ═══ -->
+        <div data-tab-panel="automations" style="display:none">
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <h3 class="text-base font-semibold">Perk Automations</h3>
+              <p class="text-sm text-muted-foreground">Auto-assign travel perks based on employee milestones and events</p>
+            </div>
+            <button onclick="openDialog('create-automation-dialog')" class="btn-primary text-sm flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-4 h-4"></i> Create Automation
+            </button>
+          </div>
+
+          <!-- Active Automations -->
+          <div class="space-y-4 mb-8">
+
+            <!-- Birthday Perk -->
+            <div class="card">
+              <div class="card-content p-5">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-pink-50 border border-pink-200 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="cake" class="w-5 h-5 text-pink-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 mb-1">
+                        <h4 class="text-sm font-semibold">Birthday Travel Credit</h4>
+                        <span class="badge badge-success text-[10px]">Active</span>
+                        <span class="badge text-[10px]" style="background:hsl(330 80% 95%);color:hsl(330 60% 40%);"><i data-lucide="zap" class="w-3 h-3 inline"></i> Auto</span>
+                      </div>
+                      <p class="text-xs text-muted-foreground mb-3">Automatically assign a travel credit to employees on their birthday</p>
+                      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Trigger</span>
+                          <p class="text-sm font-medium">Birthday</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                          <p class="text-sm font-medium">₹5,000</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Valid For</span>
+                          <p class="text-sm font-medium">30 days</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Assigned YTD</span>
+                          <p class="text-sm font-medium">42 employees</p>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
+                        <i data-lucide="calendar" class="w-3 h-3"></i>
+                        <span>Next: 3 birthdays in March 2026</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button class="btn-ghost btn-icon btn-sm"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                    <div class="toggle active"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Work Anniversary Milestones -->
+            <div class="card">
+              <div class="card-content p-5">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="award" class="w-5 h-5 text-amber-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 mb-1">
+                        <h4 class="text-sm font-semibold">Work Anniversary Milestones</h4>
+                        <span class="badge badge-success text-[10px]">Active</span>
+                        <span class="badge text-[10px]" style="background:hsl(330 80% 95%);color:hsl(330 60% 40%);"><i data-lucide="zap" class="w-3 h-3 inline"></i> Auto</span>
+                      </div>
+                      <p class="text-xs text-muted-foreground mb-3">Reward employees with travel credits at key work anniversary milestones</p>
+
+                      <!-- Milestone Tiers -->
+                      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+                        <div class="border border-border rounded-md p-2.5 text-center">
+                          <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold mx-auto mb-1">1</div>
+                          <span class="text-[10px] text-muted-foreground">1 Year</span>
+                          <p class="text-sm font-semibold">₹5,000</p>
+                        </div>
+                        <div class="border border-border rounded-md p-2.5 text-center">
+                          <div class="w-7 h-7 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs font-bold mx-auto mb-1">3</div>
+                          <span class="text-[10px] text-muted-foreground">3 Years</span>
+                          <p class="text-sm font-semibold">₹15,000</p>
+                        </div>
+                        <div class="border border-border rounded-md p-2.5 text-center">
+                          <div class="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold mx-auto mb-1">5</div>
+                          <span class="text-[10px] text-muted-foreground">5 Years</span>
+                          <p class="text-sm font-semibold">₹30,000</p>
+                        </div>
+                        <div class="border border-border rounded-md p-2.5 text-center">
+                          <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold mx-auto mb-1">10</div>
+                          <span class="text-[10px] text-muted-foreground">10 Years</span>
+                          <p class="text-sm font-semibold">₹75,000</p>
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Valid For</span>
+                          <p class="text-sm font-medium">60 days</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Assigned YTD</span>
+                          <p class="text-sm font-medium">18 employees</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">YTD Spend</span>
+                          <p class="text-sm font-medium">₹2.1L</p>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
+                        <i data-lucide="calendar" class="w-3 h-3"></i>
+                        <span>Next: 5 anniversaries in March 2026 (2× 1yr, 1× 3yr, 1× 5yr, 1× 10yr)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button class="btn-ghost btn-icon btn-sm"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                    <div class="toggle active"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Festival / Custom — inactive example -->
+            <div class="card opacity-60">
+              <div class="card-content p-5">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="sparkles" class="w-5 h-5 text-violet-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 mb-1">
+                        <h4 class="text-sm font-semibold">Festival Season Bonus</h4>
+                        <span class="badge badge-outline text-[10px]">Inactive</span>
+                        <span class="badge text-[10px]" style="background:hsl(330 80% 95%);color:hsl(330 60% 40%);"><i data-lucide="zap" class="w-3 h-3 inline"></i> Auto</span>
+                      </div>
+                      <p class="text-xs text-muted-foreground mb-3">Assign bonus travel credit during Diwali & Christmas season (Oct – Dec)</p>
+                      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Trigger</span>
+                          <p class="text-sm font-medium">Fixed Date</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                          <p class="text-sm font-medium">₹8,000</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Valid For</span>
+                          <p class="text-sm font-medium">90 days</p>
+                        </div>
+                        <div class="bg-muted/50 rounded-md p-2.5">
+                          <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Scope</span>
+                          <p class="text-sm font-medium">All Employees</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button class="btn-ghost btn-icon btn-sm"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                    <div class="toggle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /TAB: Automations -->
+
+        <!-- ═══ TAB: Peer Recognition ═══ -->
+        <div data-tab-panel="peer-recognition" style="display:none">
+
+          <!-- Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <h3 class="text-base font-semibold">Peer-to-Peer Recognition</h3>
+              <p class="text-sm text-muted-foreground">Empower employees to appreciate colleagues with travel perk rewards</p>
+            </div>
+            <button onclick="openDialog('p2p-settings-dialog')" class="btn-outline text-sm flex items-center gap-1.5">
+              <i data-lucide="settings" class="w-4 h-4"></i> Program Settings
+            </button>
+          </div>
+
+          <!-- Summary Stats -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Recognitions Sent</span>
+                <i data-lucide="heart" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">342</span>
+              <span class="text-xs text-green-600 font-medium">↑ 18% vs. last month</span>
+            </div>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">P2P Budget Used</span>
+                <i data-lucide="wallet" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">₹3.4L</span>
+              <div class="progress-bar mt-2"><div class="progress-bar-fill" style="width:68%"></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Unique Senders</span>
+                <i data-lucide="send" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">127</span>
+              <span class="text-xs text-muted-foreground">51% participation rate</span>
+            </div>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Pending Approval</span>
+                <i data-lucide="clock" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">8</span>
+              <span class="text-xs text-amber-600 font-medium">3 &gt; 24hr old</span>
+            </div>
+          </div>
+
+          <!-- Sub-tabs: Cards | Rules | Approval Flow | Activity -->
+          <div data-tabs class="mb-6">
+            <div class="tabs-list">
+              <button class="tab-trigger active text-xs" data-p2p-tab="cards">Recognition Cards</button>
+              <button class="tab-trigger text-xs" data-p2p-tab="rules">Program Rules</button>
+              <button class="tab-trigger text-xs" data-p2p-tab="approval">Approval Flow</button>
+              <button class="tab-trigger text-xs" data-p2p-tab="activity">Recent Activity</button>
+            </div>
+          </div>
+
+          <!-- ── SUB-TAB: Recognition Cards ── -->
+          <div data-p2p-panel="cards">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-xs text-muted-foreground">Predefined appreciation cards employees can send to each other. Each card comes with a travel perk reward.</p>
+              <button onclick="openDialog('create-card-dialog')" class="btn-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> New Card
+              </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+              <!-- Card 1: Great Teamwork -->
+              <div class="card group hover:border-primary/40 transition-colors">
+                <div class="card-content p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center">
+                      <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="badge badge-success text-[10px]">Active</span>
+                      <button class="btn-ghost btn-icon btn-sm opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="text-sm font-semibold mb-1">Great Teamwork 🤝</h4>
+                  <p class="text-xs text-muted-foreground mb-3">For going above and beyond to help the team succeed together.</p>
+                  <div class="flex items-center justify-between pt-3 border-t border-dashed">
+                    <div>
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                      <p class="text-sm font-bold text-primary">₹2,000</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Sent this month</span>
+                      <p class="text-sm font-semibold">28</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: Going the Extra Mile -->
+              <div class="card group hover:border-primary/40 transition-colors">
+                <div class="card-content p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center">
+                      <i data-lucide="rocket" class="w-6 h-6 text-amber-600"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="badge badge-success text-[10px]">Active</span>
+                      <button class="btn-ghost btn-icon btn-sm opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="text-sm font-semibold mb-1">Going the Extra Mile 🚀</h4>
+                  <p class="text-xs text-muted-foreground mb-3">Recognise someone who went beyond expectations to deliver results.</p>
+                  <div class="flex items-center justify-between pt-3 border-t border-dashed">
+                    <div>
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                      <p class="text-sm font-bold text-primary">₹3,000</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Sent this month</span>
+                      <p class="text-sm font-semibold">45</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: Innovation Star -->
+              <div class="card group hover:border-primary/40 transition-colors">
+                <div class="card-content p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-violet-50 border border-violet-200 flex items-center justify-center">
+                      <i data-lucide="lightbulb" class="w-6 h-6 text-violet-600"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="badge badge-success text-[10px]">Active</span>
+                      <button class="btn-ghost btn-icon btn-sm opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="text-sm font-semibold mb-1">Innovation Star 💡</h4>
+                  <p class="text-xs text-muted-foreground mb-3">For bringing creative ideas and innovative solutions to the table.</p>
+                  <div class="flex items-center justify-between pt-3 border-t border-dashed">
+                    <div>
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                      <p class="text-sm font-bold text-primary">₹5,000</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Sent this month</span>
+                      <p class="text-sm font-semibold">12</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: Customer Champion -->
+              <div class="card group hover:border-primary/40 transition-colors">
+                <div class="card-content p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center">
+                      <i data-lucide="trophy" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="badge badge-success text-[10px]">Active</span>
+                      <button class="btn-ghost btn-icon btn-sm opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="text-sm font-semibold mb-1">Customer Champion 🏆</h4>
+                  <p class="text-xs text-muted-foreground mb-3">For delivering an outstanding customer experience or resolving a tough issue.</p>
+                  <div class="flex items-center justify-between pt-3 border-t border-dashed">
+                    <div>
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                      <p class="text-sm font-bold text-primary">₹3,000</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Sent this month</span>
+                      <p class="text-sm font-semibold">19</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 5: Knowledge Sharer -->
+              <div class="card group hover:border-primary/40 transition-colors">
+                <div class="card-content p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center">
+                      <i data-lucide="book-open" class="w-6 h-6 text-cyan-600"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="badge badge-success text-[10px]">Active</span>
+                      <button class="btn-ghost btn-icon btn-sm opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="text-sm font-semibold mb-1">Knowledge Sharer 📚</h4>
+                  <p class="text-xs text-muted-foreground mb-3">For mentoring, documenting, or sharing expertise that helps others grow.</p>
+                  <div class="flex items-center justify-between pt-3 border-t border-dashed">
+                    <div>
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                      <p class="text-sm font-bold text-primary">₹1,500</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Sent this month</span>
+                      <p class="text-sm font-semibold">31</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 6: Culture Champion -->
+              <div class="card group hover:border-primary/40 transition-colors">
+                <div class="card-content p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-pink-50 border border-pink-200 flex items-center justify-center">
+                      <i data-lucide="sparkles" class="w-6 h-6 text-pink-600"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="badge badge-success text-[10px]">Active</span>
+                      <button class="btn-ghost btn-icon btn-sm opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="text-sm font-semibold mb-1">Culture Champion 🌟</h4>
+                  <p class="text-xs text-muted-foreground mb-3">For embodying company values and making the workplace a better place.</p>
+                  <div class="flex items-center justify-between pt-3 border-t border-dashed">
+                    <div>
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Perk Value</span>
+                      <p class="text-sm font-bold text-primary">₹2,500</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-muted-foreground uppercase tracking-wider">Sent this month</span>
+                      <p class="text-sm font-semibold">22</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div><!-- /SUB-TAB: Cards -->
+
+          <!-- ── SUB-TAB: Program Rules ── -->
+          <div data-p2p-panel="rules" style="display:none">
+            <div class="card">
+              <div class="card-content p-6">
+                <div class="flex items-center gap-3 mb-6">
+                  <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <i data-lucide="scale" class="w-5 h-5 text-primary"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-semibold">Recognition Program Rules</h4>
+                    <p class="text-xs text-muted-foreground">Define who can recognise, how often, and how much</p>
+                  </div>
+                </div>
+
+                <div class="space-y-6">
+
+                  <!-- WHO can send -->
+                  <div class="p-4 rounded-lg border">
+                    <div class="flex items-center gap-2 mb-3">
+                      <i data-lucide="user-check" class="w-4 h-4 text-primary"></i>
+                      <h5 class="text-sm font-semibold">Who Can Send Recognition</h5>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label class="label">Eligible Senders</label>
+                        <select class="input w-full text-sm">
+                          <option selected>All Employees</option>
+                          <option>Managers & Above</option>
+                          <option>Full-Time Employees Only</option>
+                          <option>After Probation Period</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label">Minimum Tenure</label>
+                        <select class="input w-full text-sm">
+                          <option>No minimum</option>
+                          <option selected>30 days</option>
+                          <option>90 days</option>
+                          <option>6 months</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- WHO can receive -->
+                  <div class="p-4 rounded-lg border">
+                    <div class="flex items-center gap-2 mb-3">
+                      <i data-lucide="user-plus" class="w-4 h-4 text-primary"></i>
+                      <h5 class="text-sm font-semibold">Who Can Receive</h5>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label class="label">Eligible Recipients</label>
+                        <select class="input w-full text-sm">
+                          <option selected>All Employees</option>
+                          <option>Same Department Only</option>
+                          <option>Cross-Department Only</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label flex items-center gap-2">
+                          <span>Self-Recognition</span>
+                        </label>
+                        <div class="flex items-center gap-3 mt-2">
+                          <div class="toggle" data-toggle-label="Blocked"></div>
+                          <span class="text-xs text-muted-foreground">Employees cannot recognise themselves</span>
+                        </div>
+                      </div>
+                      <div>
+                        <label class="label">Can Recognise Direct Manager?</label>
+                        <div class="flex items-center gap-3 mt-2">
+                          <div class="toggle active" data-toggle-label="Allowed"></div>
+                          <span class="text-xs text-muted-foreground">Employees can appreciate their direct reports and managers</span>
+                        </div>
+                      </div>
+                      <div>
+                        <label class="label">Repeat to Same Person</label>
+                        <select class="input w-full text-sm">
+                          <option>Unlimited</option>
+                          <option selected>Max 2 per month</option>
+                          <option>Max 1 per month</option>
+                          <option>Once per quarter</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- WHEN / HOW OFTEN -->
+                  <div class="p-4 rounded-lg border">
+                    <div class="flex items-center gap-2 mb-3">
+                      <i data-lucide="calendar-clock" class="w-4 h-4 text-primary"></i>
+                      <h5 class="text-sm font-semibold">When & How Often</h5>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label class="label">Recognitions Per Sender</label>
+                        <select class="input w-full text-sm">
+                          <option>Unlimited</option>
+                          <option>3 per month</option>
+                          <option selected>5 per month</option>
+                          <option>10 per month</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label">Cooldown Between Sends</label>
+                        <select class="input w-full text-sm">
+                          <option selected>No cooldown</option>
+                          <option>1 day</option>
+                          <option>3 days</option>
+                          <option>1 week</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label">Program Active Period</label>
+                        <select class="input w-full text-sm">
+                          <option selected>Always Active</option>
+                          <option>Specific Date Range</option>
+                          <option>Quarterly Cycles</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label">Perk Validity (after receiving)</label>
+                        <select class="input w-full text-sm">
+                          <option>14 days</option>
+                          <option selected>30 days</option>
+                          <option>60 days</option>
+                          <option>90 days</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- HOW MUCH (Budget) -->
+                  <div class="p-4 rounded-lg border">
+                    <div class="flex items-center gap-2 mb-3">
+                      <i data-lucide="indian-rupee" class="w-4 h-4 text-primary"></i>
+                      <h5 class="text-sm font-semibold">Budget & Limits</h5>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label class="label">Monthly P2P Budget (total)</label>
+                        <input class="input w-full text-sm" value="₹5,00,000" placeholder="₹5,00,000">
+                        <p class="text-[11px] text-muted-foreground mt-1">Once exhausted, new recognitions queue for next month</p>
+                      </div>
+                      <div>
+                        <label class="label">Per-Sender Monthly Limit</label>
+                        <input class="input w-full text-sm" value="₹10,000" placeholder="₹10,000">
+                        <p class="text-[11px] text-muted-foreground mt-1">Max a single employee can give in a month</p>
+                      </div>
+                      <div>
+                        <label class="label">Per-Recipient Monthly Cap</label>
+                        <input class="input w-full text-sm" value="₹15,000" placeholder="₹15,000">
+                        <p class="text-[11px] text-muted-foreground mt-1">Max a single employee can receive in a month</p>
+                      </div>
+                      <div>
+                        <label class="label">Allow Custom Amounts?</label>
+                        <div class="flex items-center gap-3 mt-2">
+                          <div class="toggle" data-toggle-label="Off"></div>
+                          <span class="text-xs text-muted-foreground">If off, employees pick from card values only</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- HOW (Message / Visibility) -->
+                  <div class="p-4 rounded-lg border">
+                    <div class="flex items-center gap-2 mb-3">
+                      <i data-lucide="message-square" class="w-4 h-4 text-primary"></i>
+                      <h5 class="text-sm font-semibold">How It Works</h5>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label class="label">Personal Message Required?</label>
+                        <div class="flex items-center gap-3 mt-2">
+                          <div class="toggle active" data-toggle-label="Required"></div>
+                          <span class="text-xs text-muted-foreground">Senders must write a personal note</span>
+                        </div>
+                      </div>
+                      <div>
+                        <label class="label">Min. Message Length</label>
+                        <select class="input w-full text-sm">
+                          <option>No minimum</option>
+                          <option selected>20 characters</option>
+                          <option>50 characters</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label">Visibility</label>
+                        <select class="input w-full text-sm">
+                          <option selected>Public (visible on company feed)</option>
+                          <option>Private (only sender & receiver)</option>
+                          <option>Manager-visible (sender, receiver, managers)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="label">Notifications</label>
+                        <select class="input w-full text-sm">
+                          <option selected>Email + In-App</option>
+                          <option>In-App Only</option>
+                          <option>Email + In-App + Slack</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                  <button class="btn-primary text-sm" onclick="showToast('Program rules saved!', 'success')">Save Rules</button>
+                </div>
+              </div>
+            </div>
+          </div><!-- /SUB-TAB: Rules -->
+
+          <!-- ── SUB-TAB: Approval Flow ── -->
+          <div data-p2p-panel="approval" style="display:none">
+            <div class="space-y-6">
+
+              <!-- Approval Mode -->
+              <div class="card">
+                <div class="card-content p-6">
+                  <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <i data-lucide="git-branch" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-sm font-semibold">Approval Workflow</h4>
+                      <p class="text-xs text-muted-foreground">Choose how recognitions are approved before perk credits are issued</p>
+                    </div>
+                  </div>
+
+                  <div class="space-y-3">
+                    <!-- Option 1: Auto-approve -->
+                    <label class="flex items-start gap-3 p-4 rounded-lg border-2 border-primary bg-primary/5 cursor-pointer">
+                      <input type="radio" name="approval-mode" class="mt-1 accent-primary" checked>
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm font-semibold">Auto-Approve (below threshold)</span>
+                          <span class="badge badge-success text-[10px]">Active</span>
+                        </div>
+                        <p class="text-xs text-muted-foreground mt-1">Recognitions under a set value auto-approve instantly. Higher amounts require manager sign-off.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                          <div>
+                            <label class="label text-[11px]">Auto-Approve Threshold</label>
+                            <input class="input w-full text-sm" value="₹3,000" placeholder="₹3,000">
+                          </div>
+                          <div>
+                            <label class="label text-[11px]">Above Threshold → Approved By</label>
+                            <select class="input w-full text-sm">
+                              <option selected>Sender's Manager</option>
+                              <option>Recipient's Manager</option>
+                              <option>HR / Admin</option>
+                              <option>Both Managers</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+
+                    <!-- Option 2: Manager approval always -->
+                    <label class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-muted/30 transition-colors">
+                      <input type="radio" name="approval-mode" class="mt-1 accent-primary">
+                      <div class="flex-1">
+                        <span class="text-sm font-semibold">Manager Approval (all recognitions)</span>
+                        <p class="text-xs text-muted-foreground mt-1">Every recognition requires approval from the sender's direct manager before the perk is credited.</p>
+                      </div>
+                    </label>
+
+                    <!-- Option 3: HR approval -->
+                    <label class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-muted/30 transition-colors">
+                      <input type="radio" name="approval-mode" class="mt-1 accent-primary">
+                      <div class="flex-1">
+                        <span class="text-sm font-semibold">HR / Admin Approval</span>
+                        <p class="text-xs text-muted-foreground mt-1">All recognitions are reviewed and approved by an HR administrator or organisation admin.</p>
+                      </div>
+                    </label>
+
+                    <!-- Option 4: No approval -->
+                    <label class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-muted/30 transition-colors">
+                      <input type="radio" name="approval-mode" class="mt-1 accent-primary">
+                      <div class="flex-1">
+                        <span class="text-sm font-semibold">Instant (no approval)</span>
+                        <p class="text-xs text-muted-foreground mt-1">All recognitions are processed immediately — perk credit issued instantly. Budget limits still apply.</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Escalation & SLA -->
+              <div class="card">
+                <div class="card-content p-6">
+                  <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center">
+                      <i data-lucide="alarm-clock" class="w-5 h-5 text-amber-600"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-sm font-semibold">Escalation & SLA</h4>
+                      <p class="text-xs text-muted-foreground">What happens when approvals are delayed</p>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label class="label">Approval SLA</label>
+                      <select class="input w-full text-sm">
+                        <option>12 hours</option>
+                        <option selected>24 hours</option>
+                        <option>48 hours</option>
+                        <option>72 hours</option>
+                      </select>
+                      <p class="text-[11px] text-muted-foreground mt-1">Send reminder after this period</p>
+                    </div>
+                    <div>
+                      <label class="label">If Not Approved Within</label>
+                      <select class="input w-full text-sm">
+                        <option>Auto-approve after SLA</option>
+                        <option selected>Escalate to HR Admin</option>
+                        <option>Escalate to skip-level manager</option>
+                        <option>Auto-reject</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="label">Escalation Timeout</label>
+                      <select class="input w-full text-sm">
+                        <option>24 hours after SLA</option>
+                        <option selected>48 hours after SLA</option>
+                        <option>72 hours after SLA</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="label">Notify Sender on Status Change?</label>
+                      <div class="flex items-center gap-3 mt-2">
+                        <div class="toggle active" data-toggle-label="Yes"></div>
+                        <span class="text-xs text-muted-foreground">Email + in-app notification</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pending Approvals Queue -->
+              <div class="card overflow-hidden">
+                <div class="px-5 py-3.5 border-b border-border flex items-center justify-between">
+                  <h4 class="text-sm font-semibold">Pending Approvals</h4>
+                  <span class="badge badge-primary text-xs">8 pending</span>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="table w-full">
+                    <thead>
+                      <tr>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Card</th>
+                        <th class="text-right">Value</th>
+                        <th>Submitted</th>
+                        <th>Approver</th>
+                        <th class="w-28">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><div class="flex items-center gap-2"><div class="avatar w-6 h-6 text-[9px]">PK</div><span class="text-sm">Priya K.</span></div></td>
+                        <td><div class="flex items-center gap-2"><div class="avatar w-6 h-6 text-[9px]">AM</div><span class="text-sm">Ankit M.</span></div></td>
+                        <td><span class="text-sm">Innovation Star 💡</span></td>
+                        <td class="text-sm text-right font-medium">₹5,000</td>
+                        <td class="text-xs text-muted-foreground">2 hrs ago</td>
+                        <td class="text-sm">Rekha L. (Mgr)</td>
+                        <td>
+                          <div class="flex items-center gap-1">
+                            <button class="btn-primary btn-sm text-xs px-2 py-1" onclick="showToast('Recognition approved!', 'success')">Approve</button>
+                            <button class="btn-ghost btn-sm text-xs px-2 py-1" onclick="showToast('Recognition rejected', 'error')">Reject</button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><div class="flex items-center gap-2"><div class="avatar w-6 h-6 text-[9px]">SG</div><span class="text-sm">Suresh G.</span></div></td>
+                        <td><div class="flex items-center gap-2"><div class="avatar w-6 h-6 text-[9px]">NR</div><span class="text-sm">Nisha R.</span></div></td>
+                        <td><span class="text-sm">Going the Extra Mile 🚀</span></td>
+                        <td class="text-sm text-right font-medium">₹3,000</td>
+                        <td class="text-xs text-muted-foreground">5 hrs ago</td>
+                        <td class="text-sm">Vikas T. (Mgr)</td>
+                        <td>
+                          <div class="flex items-center gap-1">
+                            <button class="btn-primary btn-sm text-xs px-2 py-1" onclick="showToast('Recognition approved!', 'success')">Approve</button>
+                            <button class="btn-ghost btn-sm text-xs px-2 py-1" onclick="showToast('Recognition rejected', 'error')">Reject</button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="bg-amber-50/50">
+                        <td><div class="flex items-center gap-2"><div class="avatar w-6 h-6 text-[9px]">DS</div><span class="text-sm">Deepa S.</span></div></td>
+                        <td><div class="flex items-center gap-2"><div class="avatar w-6 h-6 text-[9px]">RJ</div><span class="text-sm">Rohit J.</span></div></td>
+                        <td><span class="text-sm">Great Teamwork 🤝</span></td>
+                        <td class="text-sm text-right font-medium">₹2,000</td>
+                        <td class="text-xs text-amber-600 font-medium">26 hrs ago ⚠️</td>
+                        <td class="text-sm text-amber-600">Ankit M. (Mgr) — overdue</td>
+                        <td>
+                          <div class="flex items-center gap-1">
+                            <button class="btn-primary btn-sm text-xs px-2 py-1" onclick="showToast('Recognition approved!', 'success')">Approve</button>
+                            <button class="btn-ghost btn-sm text-xs px-2 py-1" onclick="showToast('Recognition rejected', 'error')">Reject</button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="flex justify-end">
+                <button class="btn-primary text-sm" onclick="showToast('Approval flow saved!', 'success')">Save Approval Settings</button>
+              </div>
+            </div>
+          </div><!-- /SUB-TAB: Approval Flow -->
+
+          <!-- ── SUB-TAB: Recent Activity ── -->
+          <div data-p2p-panel="activity" style="display:none">
+            <div class="card overflow-hidden">
+              <div class="px-5 py-3.5 border-b border-border flex items-center justify-between">
+                <h4 class="text-sm font-semibold">Recognition Feed</h4>
+                <div class="flex items-center gap-2">
+                  <select class="input text-xs py-1 px-2 w-auto">
+                    <option>All Cards</option>
+                    <option>Great Teamwork</option>
+                    <option>Going the Extra Mile</option>
+                    <option>Innovation Star</option>
+                    <option>Customer Champion</option>
+                    <option>Knowledge Sharer</option>
+                    <option>Culture Champion</option>
+                  </select>
+                  <select class="input text-xs py-1 px-2 w-auto">
+                    <option>Last 7 days</option>
+                    <option selected>Last 30 days</option>
+                    <option>Last 90 days</option>
+                  </select>
+                </div>
+              </div>
+              <div class="divide-y divide-border">
+
+                <div class="p-4 flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="rocket" class="w-4 h-4 text-amber-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-sm"><strong>Priya Kapoor</strong> → <strong>Ankit Mehta</strong></span>
+                      <span class="badge badge-success text-[10px]">Approved</span>
+                      <span class="text-xs text-muted-foreground">₹3,000</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground mt-0.5">"Ankit stayed late 3 days in a row to help me ship the client dashboard. True teamwork and dedication!"</p>
+                    <span class="text-[11px] text-muted-foreground mt-1 block">Going the Extra Mile 🚀 · 2 hours ago</span>
+                  </div>
+                </div>
+
+                <div class="p-4 flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-sm"><strong>Vikas Thakur</strong> → <strong>Deepa Shah</strong></span>
+                      <span class="badge badge-success text-[10px]">Approved</span>
+                      <span class="text-xs text-muted-foreground">₹2,000</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground mt-0.5">"Deepa organised the entire cross-team retro and made sure everyone's voice was heard. Amazing facilitation!"</p>
+                    <span class="text-[11px] text-muted-foreground mt-1 block">Great Teamwork 🤝 · 5 hours ago</span>
+                  </div>
+                </div>
+
+                <div class="p-4 flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-violet-50 border border-violet-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-violet-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-sm"><strong>Nisha Reddy</strong> → <strong>Rohit Joshi</strong></span>
+                      <span class="badge badge-success text-[10px]">Approved</span>
+                      <span class="text-xs text-muted-foreground">₹5,000</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground mt-0.5">"Rohit's idea to automate the reporting pipeline saved the team 10+ hours per week. Brilliant thinking!"</p>
+                    <span class="text-[11px] text-muted-foreground mt-1 block">Innovation Star 💡 · 1 day ago</span>
+                  </div>
+                </div>
+
+                <div class="p-4 flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="trophy" class="w-4 h-4 text-green-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-sm"><strong>Rekha Lal</strong> → <strong>Suresh Gupta</strong></span>
+                      <span class="badge badge-success text-[10px]">Approved</span>
+                      <span class="text-xs text-muted-foreground">₹3,000</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground mt-0.5">"Suresh handled the escalated customer issue with such grace and professionalism. The client sent a thank-you note!"</p>
+                    <span class="text-[11px] text-muted-foreground mt-1 block">Customer Champion 🏆 · 2 days ago</span>
+                  </div>
+                </div>
+
+                <div class="p-4 flex items-start gap-3 bg-amber-50/40">
+                  <div class="w-9 h-9 rounded-xl bg-pink-50 border border-pink-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-pink-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-sm"><strong>Ankit Mehta</strong> → <strong>Priya Kapoor</strong></span>
+                      <span class="badge text-[10px]" style="background: hsl(40 90% 92%); color: hsl(30 80% 35%);">Pending</span>
+                      <span class="text-xs text-muted-foreground">₹2,500</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground mt-0.5">"Priya's positivity and care for the team culture is infectious — she makes everyone feel welcome!"</p>
+                    <span class="text-[11px] text-muted-foreground mt-1 block">Culture Champion 🌟 · 3 days ago · Awaiting manager approval</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="px-5 py-3 border-t border-border text-center">
+                <button class="btn-ghost text-xs text-primary">Load More</button>
+              </div>
+            </div>
+          </div><!-- /SUB-TAB: Activity -->
+
+        </div><!-- /TAB: Peer Recognition -->
+
+        <!-- ═══ TAB: Forecast ═══ -->
+        <div data-tab-panel="forecast" style="display:none">
+
+          <div class="mb-6">
+            <h3 class="text-base font-semibold">Perk Forecast</h3>
+            <p class="text-sm text-muted-foreground">Projected perk spend based on current perks and active automations</p>
+          </div>
+
+          <!-- Forecast Summary Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Projected Annual</span>
+                <i data-lucide="trending-up" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">₹18.2L</span>
+              <span class="text-xs text-muted-foreground">FY 2026-27 estimate</span>
+            </div>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Manual Perks</span>
+                <i data-lucide="hand" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">₹12.4L</span>
+              <span class="text-xs text-muted-foreground">68% of projected total</span>
+            </div>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Automation Spend</span>
+                <i data-lucide="zap" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">₹5.8L</span>
+              <span class="text-xs text-muted-foreground">32% of projected total</span>
+            </div>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <span class="stat-card-label">Next 30 Days</span>
+                <i data-lucide="calendar-clock" class="w-4 h-4 text-muted-foreground"></i>
+              </div>
+              <span class="stat-card-value">₹78,000</span>
+              <span class="text-xs text-muted-foreground">8 auto-assignments pending</span>
+            </div>
+          </div>
+
+          <!-- Monthly Forecast Table -->
+          <div class="card overflow-hidden mb-8">
+            <div class="px-5 py-3.5 border-b border-border">
+              <h4 class="text-sm font-semibold">Monthly Forecast — FY 2026-27</h4>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th class="text-right">Manual Perks</th>
+                    <th class="text-right">Birthdays</th>
+                    <th class="text-right">Anniversaries</th>
+                    <th class="text-right">Total</th>
+                    <th class="w-36">Budget Usage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-medium text-sm">Apr 2026</td>
+                    <td class="text-sm text-right">₹1,03,000</td>
+                    <td class="text-sm text-right">₹25,000</td>
+                    <td class="text-sm text-right">₹20,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,48,000</td>
+                    <td><div class="progress-bar"><div class="progress-bar-fill" style="width:82%"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td class="font-medium text-sm">May 2026</td>
+                    <td class="text-sm text-right">₹1,03,000</td>
+                    <td class="text-sm text-right">₹20,000</td>
+                    <td class="text-sm text-right">₹35,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,58,000</td>
+                    <td><div class="progress-bar"><div class="progress-bar-fill" style="width:87%"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td class="font-medium text-sm">Jun 2026</td>
+                    <td class="text-sm text-right">₹1,03,000</td>
+                    <td class="text-sm text-right">₹30,000</td>
+                    <td class="text-sm text-right">₹15,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,48,000</td>
+                    <td><div class="progress-bar"><div class="progress-bar-fill" style="width:82%"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td class="font-medium text-sm">Jul 2026</td>
+                    <td class="text-sm text-right">₹1,03,000</td>
+                    <td class="text-sm text-right">₹15,000</td>
+                    <td class="text-sm text-right">₹45,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,63,000</td>
+                    <td><div class="progress-bar"><div class="progress-bar-fill" style="width:90%"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td class="font-medium text-sm">Aug 2026</td>
+                    <td class="text-sm text-right">₹1,03,000</td>
+                    <td class="text-sm text-right">₹20,000</td>
+                    <td class="text-sm text-right">₹5,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,28,000</td>
+                    <td><div class="progress-bar"><div class="progress-bar-fill" style="width:71%"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td class="font-medium text-sm">Sep 2026</td>
+                    <td class="text-sm text-right">₹1,03,000</td>
+                    <td class="text-sm text-right">₹25,000</td>
+                    <td class="text-sm text-right">₹75,000</td>
+                    <td class="text-sm text-right font-semibold">₹2,03,000</td>
+                    <td><div class="progress-bar"><div class="progress-bar-fill bg-amber-500" style="width:112%"></div></div></td>
+                  </tr>
+                </tbody>
+                <tfoot class="border-t-2 border-border">
+                  <tr>
+                    <td class="font-semibold text-sm">H1 Total</td>
+                    <td class="text-sm text-right font-semibold">₹6,18,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,35,000</td>
+                    <td class="text-sm text-right font-semibold">₹1,95,000</td>
+                    <td class="text-sm text-right font-bold">₹9,48,000</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- Upcoming Auto-Assignments -->
+          <div class="card overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-border flex items-center justify-between">
+              <h4 class="text-sm font-semibold">Upcoming Auto-Assignments — Next 30 Days</h4>
+              <span class="badge badge-primary text-xs">8 pending</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Perk</th>
+                    <th class="text-right">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">PK</div>
+                        <span class="text-sm font-medium">Priya Kapoor</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="cake" class="w-3.5 h-3.5 text-pink-500"></i> Birthday</span></td>
+                    <td class="text-sm text-muted-foreground">3 Mar 2026</td>
+                    <td class="text-sm">Birthday Travel Credit</td>
+                    <td class="text-sm text-right font-medium">₹5,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">AM</div>
+                        <span class="text-sm font-medium">Ankit Mehta</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i> 5 Year Anniversary</span></td>
+                    <td class="text-sm text-muted-foreground">5 Mar 2026</td>
+                    <td class="text-sm">Milestone Credit</td>
+                    <td class="text-sm text-right font-medium">₹30,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">RL</div>
+                        <span class="text-sm font-medium">Rekha Lal</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="cake" class="w-3.5 h-3.5 text-pink-500"></i> Birthday</span></td>
+                    <td class="text-sm text-muted-foreground">11 Mar 2026</td>
+                    <td class="text-sm">Birthday Travel Credit</td>
+                    <td class="text-sm text-right font-medium">₹5,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">SG</div>
+                        <span class="text-sm font-medium">Suresh Gupta</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i> 1 Year Anniversary</span></td>
+                    <td class="text-sm text-muted-foreground">14 Mar 2026</td>
+                    <td class="text-sm">Milestone Credit</td>
+                    <td class="text-sm text-right font-medium">₹5,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">NR</div>
+                        <span class="text-sm font-medium">Nisha Reddy</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="cake" class="w-3.5 h-3.5 text-pink-500"></i> Birthday</span></td>
+                    <td class="text-sm text-muted-foreground">19 Mar 2026</td>
+                    <td class="text-sm">Birthday Travel Credit</td>
+                    <td class="text-sm text-right font-medium">₹5,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">VT</div>
+                        <span class="text-sm font-medium">Vikas Thakur</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i> 10 Year Anniversary</span></td>
+                    <td class="text-sm text-muted-foreground">22 Mar 2026</td>
+                    <td class="text-sm">Milestone Credit</td>
+                    <td class="text-sm text-right font-medium">₹75,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">DS</div>
+                        <span class="text-sm font-medium">Deepa Shah</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i> 3 Year Anniversary</span></td>
+                    <td class="text-sm text-muted-foreground">25 Mar 2026</td>
+                    <td class="text-sm">Milestone Credit</td>
+                    <td class="text-sm text-right font-medium">₹15,000</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="avatar w-7 h-7 text-[10px]">RJ</div>
+                        <span class="text-sm font-medium">Rohit Joshi</span>
+                      </div>
+                    </td>
+                    <td><span class="flex items-center gap-1.5 text-sm"><i data-lucide="cake" class="w-3.5 h-3.5 text-pink-500"></i> Birthday</span></td>
+                    <td class="text-sm text-muted-foreground">28 Mar 2026</td>
+                    <td class="text-sm">Birthday Travel Credit</td>
+                    <td class="text-sm text-right font-medium">₹5,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /TAB: Forecast -->
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Create/Edit Perk Dialog -->
+  <div id="create-perk-dialog" class="dialog-overlay">
+    <div class="dialog" style="max-width:32rem;">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Create New Perk</h2>
+        <p class="dialog-description">Define a travel perk for your employees</p>
+      </div>
+      <div class="dialog-body space-y-4">
+        <div>
+          <label class="label">Perk Name</label>
+          <input class="input w-full" placeholder="e.g., Summer Travel Credit">
+        </div>
+        <div>
+          <label class="label">Description</label>
+          <textarea class="textarea w-full" rows="2" placeholder="Brief description of this perk..."></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="label">Type</label>
+            <select class="select w-full">
+              <option>Travel Credit</option>
+              <option>Discount</option>
+              <option>Experience</option>
+            </select>
+          </div>
+          <div>
+            <label class="label">Value</label>
+            <input class="input w-full" placeholder="₹25,000 or 15%">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="label">Valid From</label>
+            <input type="date" class="input w-full">
+          </div>
+          <div>
+            <label class="label">Valid Until</label>
+            <input type="date" class="input w-full">
+          </div>
+        </div>
+        <div>
+          <label class="label">Assign To</label>
+          <select class="select w-full">
+            <option>All Employees</option>
+            <option>Select Employees</option>
+            <option>By Department</option>
+          </select>
+        </div>
+        <!-- Automation Trigger -->
+        <div class="border border-dashed border-border rounded-lg p-3">
+          <label class="flex items-center gap-2 text-sm font-medium cursor-pointer">
+            <input type="checkbox" class="checkbox" id="enable-automation-cb"> <i data-lucide="zap" class="w-3.5 h-3.5 text-primary"></i> Enable Automation
+          </label>
+          <div id="automation-fields" class="mt-3 space-y-3" style="display:none;">
+            <div>
+              <label class="label">Trigger Event</label>
+              <select class="select w-full">
+                <option>Birthday</option>
+                <option>Work Anniversary (all)</option>
+                <option>1 Year Anniversary</option>
+                <option>3 Year Anniversary</option>
+                <option>5 Year Anniversary</option>
+                <option>10 Year Anniversary</option>
+                <option>Fixed Date (yearly)</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Valid For (days after trigger)</label>
+              <input type="number" class="input w-full" value="30" placeholder="30">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-outline" onclick="closeDialog('create-perk-dialog')">Cancel</button>
+        <button class="btn-primary" onclick="closeDialog('create-perk-dialog'); showToast('Perk created successfully!', 'success');">Create Perk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Automation Dialog -->
+  <div id="create-automation-dialog" class="dialog-overlay">
+    <div class="dialog" style="max-width:36rem;">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Create Automation</h2>
+        <p class="dialog-description">Set up a rule to auto-assign perks when employee events occur</p>
+      </div>
+      <div class="dialog-body space-y-4">
+        <div>
+          <label class="label">Automation Name</label>
+          <input class="input w-full" placeholder="e.g., Birthday Travel Bonus">
+        </div>
+        <div>
+          <label class="label">Trigger Event</label>
+          <select class="select w-full">
+            <option value="">Select a trigger…</option>
+            <option>Birthday</option>
+            <option>Work Anniversary — All Milestones</option>
+            <option>Work Anniversary — 1 Year</option>
+            <option>Work Anniversary — 3 Years</option>
+            <option>Work Anniversary — 5 Years</option>
+            <option>Work Anniversary — 10 Years</option>
+            <option>Fixed Date (yearly recurring)</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="label">Perk Type</label>
+            <select class="select w-full">
+              <option>Travel Credit</option>
+              <option>Discount</option>
+              <option>Experience</option>
+            </select>
+          </div>
+          <div>
+            <label class="label">Perk Value</label>
+            <input class="input w-full" placeholder="₹5,000">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="label">Valid For (days)</label>
+            <input type="number" class="input w-full" value="30" placeholder="30">
+          </div>
+          <div>
+            <label class="label">Applies To</label>
+            <select class="select w-full">
+              <option>All Employees</option>
+              <option>By Department</option>
+              <option>By Role</option>
+            </select>
+          </div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800 flex items-start gap-2">
+          <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0"></i>
+          <span>Perks will be auto-assigned on the trigger date. Employees receive an email notification and the perk appears in their portal immediately.</span>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-outline" onclick="closeDialog('create-automation-dialog')">Cancel</button>
+        <button class="btn-primary" onclick="closeDialog('create-automation-dialog'); showToast('Automation created!', 'success');">Create Automation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Recognition Card Dialog -->
+  <div id="create-card-dialog" class="dialog-overlay">
+    <div class="dialog" style="max-width:32rem;">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Create Recognition Card</h2>
+        <p class="dialog-description">Design an appreciation card employees can send to their peers</p>
+      </div>
+      <div class="dialog-body space-y-4">
+        <div>
+          <label class="label">Card Name</label>
+          <input class="input w-full" placeholder="e.g., Problem Solver 🔧">
+        </div>
+        <div>
+          <label class="label">Description</label>
+          <textarea class="textarea w-full" rows="2" placeholder="When should this card be sent?"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="label">Icon</label>
+            <select class="select w-full">
+              <option>🤝 Handshake</option>
+              <option>🚀 Rocket</option>
+              <option>💡 Lightbulb</option>
+              <option>🏆 Trophy</option>
+              <option>📚 Book</option>
+              <option>🌟 Star</option>
+              <option>🔧 Wrench</option>
+              <option>❤️ Heart</option>
+            </select>
+          </div>
+          <div>
+            <label class="label">Perk Value</label>
+            <input class="input w-full" placeholder="₹2,000">
+          </div>
+        </div>
+        <div>
+          <label class="label">Icon Colour Theme</label>
+          <div class="flex items-center gap-2 mt-1">
+            <button class="w-7 h-7 rounded-full bg-blue-500 ring-2 ring-blue-300 ring-offset-2"></button>
+            <button class="w-7 h-7 rounded-full bg-amber-500"></button>
+            <button class="w-7 h-7 rounded-full bg-violet-500"></button>
+            <button class="w-7 h-7 rounded-full bg-green-500"></button>
+            <button class="w-7 h-7 rounded-full bg-pink-500"></button>
+            <button class="w-7 h-7 rounded-full bg-cyan-500"></button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-outline" onclick="closeDialog('create-card-dialog')">Cancel</button>
+        <button class="btn-primary" onclick="closeDialog('create-card-dialog'); showToast('Recognition card created!', 'success');">Create Card</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    lucide.createIcons();
+    // Toggle automation fields in Create Perk dialog
+    const autoCb = document.getElementById('enable-automation-cb');
+    const autoFields = document.getElementById('automation-fields');
+    if (autoCb && autoFields) {
+      autoCb.addEventListener('change', function () {
+        autoFields.style.display = this.checked ? 'block' : 'none';
+      });
+    }
+
+    // P2P sub-tabs (Cards / Rules / Approval / Activity)
+    document.querySelectorAll('[data-p2p-tab]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('[data-p2p-tab]').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.getAttribute('data-p2p-tab');
+        document.querySelectorAll('[data-p2p-panel]').forEach(p => {
+          if (p.getAttribute('data-p2p-panel') === target) {
+            p.style.display = '';
+            p.classList.remove('hidden');
+          } else {
+            p.style.display = 'none';
+            p.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Auto-activate tab from URL hash (e.g. #peer-recognition or #automations)
+    (function() {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const tabBtn = document.querySelector('.tab-trigger[data-tab="' + hash + '"]');
+        if (tabBtn) tabBtn.click();
+      }
+    })();
+
+    // Approval mode radio visual selection
+    document.querySelectorAll('input[name="approval-mode"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.querySelectorAll('input[name="approval-mode"]').forEach(r => {
+          const label = r.closest('label');
+          if (r.checked) {
+            label.classList.add('border-primary', 'bg-primary/5');
+            label.classList.remove('border-border', 'hover:bg-muted/30');
+            const badge = label.querySelector('.badge');
+            if (!badge) {
+              const titleEl = label.querySelector('.text-sm.font-semibold');
+              if (titleEl) {
+                const b = document.createElement('span');
+                b.className = 'badge badge-success text-[10px]';
+                b.textContent = 'Active';
+                titleEl.parentElement.appendChild(b);
+              }
+            }
+          } else {
+            label.classList.remove('border-primary', 'bg-primary/5');
+            label.classList.add('border-border', 'hover:bg-muted/30');
+            const badge = label.querySelector('.badge');
+            if (badge) badge.remove();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

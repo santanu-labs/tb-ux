@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employees — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+            <i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i>
+          </div>
+          <div class="sidebar-brand-text">
+            <div class="text-sm font-semibold text-white">Trvello</div>
+            <div class="text-[11px] text-white/50">Admin Portal</div>
+          </div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="employees.html" class="sidebar-link active"><i data-lucide="users"></i> Employees</a>
+        <a href="employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="settings/general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="settings/branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="settings/sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="settings/integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info">
+            <div class="text-sm font-medium text-white truncate">Jane Doe</div>
+            <div class="text-[11px] text-white/50">Org Admin</div>
+          </div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h1 class="text-lg font-semibold">Employee Management</h1>
+            <p class="text-xs text-muted-foreground">People &gt; Employees</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-destructive rounded-full"></span>
+          </button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <!-- Page header + actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <p class="text-sm text-muted-foreground">248 employees in your organisation</p>
+          </div>
+          <div class="flex gap-2">
+            <a href="employee-import.html" class="btn-outline text-sm flex items-center gap-1.5">
+              <i data-lucide="upload" class="w-4 h-4"></i> Import Employees
+            </a>
+            <button onclick="openDialog('add-employee-dialog')" class="btn-primary text-sm flex items-center gap-1.5">
+              <i data-lucide="user-plus" class="w-4 h-4"></i> Add Employee
+            </button>
+          </div>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="card mb-6">
+          <div class="card-content p-4">
+            <div class="flex flex-col md:flex-row gap-3">
+              <div class="relative flex-1">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                <input type="text" class="input w-full pl-9" placeholder="Search by name, email, or department...">
+              </div>
+              <select class="select w-full md:w-40">
+                <option value="">All Status</option>
+                <option>Active</option>
+                <option>Inactive</option>
+                <option>Pending</option>
+              </select>
+              <select class="select w-full md:w-40">
+                <option value="">All Roles</option>
+                <option>Employee</option>
+                <option>Co-Admin</option>
+              </select>
+              <select class="select w-full md:w-44">
+                <option value="">All Departments</option>
+                <option>Engineering</option>
+                <option>Design</option>
+                <option>Marketing</option>
+                <option>Sales</option>
+                <option>HR</option>
+                <option>Finance</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bulk actions bar (shown when rows selected) -->
+        <div id="bulk-actions" class="hidden mb-4 p-3 bg-primary/5 border border-primary/20 rounded-lg flex items-center justify-between">
+          <span class="text-sm font-medium"><span id="selected-count">0</span> employees selected</span>
+          <div class="flex gap-2">
+            <button class="btn-outline btn-sm text-xs">Activate</button>
+            <button class="btn-outline btn-sm text-xs">Deactivate</button>
+            <button class="btn-outline btn-sm text-xs">Export</button>
+          </div>
+        </div>
+
+        <!-- Employee Table -->
+        <div class="card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th class="w-10"><input type="checkbox" class="checkbox"></th>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th class="w-16">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" class="checkbox"></td>
+                  <td>
+                    <a href="employee-detail.html" class="flex items-center gap-3 hover:underline">
+                      <div class="avatar w-8 h-8 text-xs">RS</div>
+                      <div>
+                        <div class="font-medium text-sm">Rahul Sharma</div>
+                        <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+                      </div>
+                    </a>
+                  </td>
+                  <td class="text-sm">Engineering</td>
+                  <td><span class="badge badge-secondary text-xs">Employee</span></td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td class="text-sm text-muted-foreground">12 Jan 2025</td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="employee-detail.html" class="dropdown-item"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="shield" class="w-3.5 h-3.5"></i> Promote to Co-Admin</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="user-x" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="checkbox"></td>
+                  <td>
+                    <a href="employee-detail.html" class="flex items-center gap-3 hover:underline">
+                      <div class="avatar w-8 h-8 text-xs">PP</div>
+                      <div>
+                        <div class="font-medium text-sm">Priya Patel</div>
+                        <div class="text-xs text-muted-foreground">priya.patel@acmecorp.com</div>
+                      </div>
+                    </a>
+                  </td>
+                  <td class="text-sm">Design</td>
+                  <td><span class="badge badge-primary text-xs">Co-Admin</span></td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td class="text-sm text-muted-foreground">5 Nov 2024</td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="employee-detail.html" class="dropdown-item"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="shield-off" class="w-3.5 h-3.5"></i> Demote to Employee</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="user-x" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="checkbox"></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <div class="avatar w-8 h-8 text-xs">AV</div>
+                      <div>
+                        <div class="font-medium text-sm">Ankit Verma</div>
+                        <div class="text-xs text-muted-foreground">ankit.verma@acmecorp.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-sm">Marketing</td>
+                  <td><span class="badge badge-secondary text-xs">Employee</span></td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td class="text-sm text-muted-foreground">20 Feb 2025</td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="employee-detail.html" class="dropdown-item"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="shield" class="w-3.5 h-3.5"></i> Promote to Co-Admin</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="user-x" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="checkbox"></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <div class="avatar w-8 h-8 text-xs">SK</div>
+                      <div>
+                        <div class="font-medium text-sm">Sneha Kumar</div>
+                        <div class="text-xs text-muted-foreground">sneha.kumar@acmecorp.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-sm">Sales</td>
+                  <td><span class="badge badge-secondary text-xs">Employee</span></td>
+                  <td><span class="badge badge-warning text-xs">Pending</span></td>
+                  <td class="text-sm text-muted-foreground">1 Mar 2025</td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="employee-detail.html" class="dropdown-item"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="mail" class="w-3.5 h-3.5"></i> Resend Invite</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Remove</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="checkbox"></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <div class="avatar w-8 h-8 text-xs">VS</div>
+                      <div>
+                        <div class="font-medium text-sm">Vikram Singh</div>
+                        <div class="text-xs text-muted-foreground">vikram.singh@acmecorp.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-sm">Finance</td>
+                  <td><span class="badge badge-secondary text-xs">Employee</span></td>
+                  <td><span class="badge badge-destructive text-xs">Inactive</span></td>
+                  <td class="text-sm text-muted-foreground">10 Aug 2024</td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="employee-detail.html" class="dropdown-item"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="user-check" class="w-3.5 h-3.5"></i> Reactivate</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Remove</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="checkbox"></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <div class="avatar w-8 h-8 text-xs">MG</div>
+                      <div>
+                        <div class="font-medium text-sm">Meera Gupta</div>
+                        <div class="text-xs text-muted-foreground">meera.gupta@acmecorp.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-sm">HR</td>
+                  <td><span class="badge badge-primary text-xs">Co-Admin</span></td>
+                  <td><span class="badge badge-success text-xs">Active</span></td>
+                  <td class="text-sm text-muted-foreground">3 Sep 2024</td>
+                  <td>
+                    <div class="dropdown">
+                      <button data-dropdown-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                      <div class="dropdown-menu">
+                        <a href="employee-detail.html" class="dropdown-item"><i data-lucide="eye" class="w-3.5 h-3.5"></i> View</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</a>
+                        <a href="#" class="dropdown-item"><i data-lucide="shield-off" class="w-3.5 h-3.5"></i> Demote to Employee</a>
+                        <div class="separator my-1"></div>
+                        <a href="#" class="dropdown-item destructive"><i data-lucide="user-x" class="w-3.5 h-3.5"></i> Deactivate</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="p-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>Rows per page:</span>
+              <select class="select w-16 text-sm py-1">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+              </select>
+            </div>
+            <div class="text-sm text-muted-foreground">Showing 1–6 of 248</div>
+            <div class="flex gap-1">
+              <button class="btn-outline btn-icon btn-sm" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <button class="btn-primary btn-sm text-xs px-3">1</button>
+              <button class="btn-outline btn-sm text-xs px-3">2</button>
+              <button class="btn-outline btn-sm text-xs px-3">3</button>
+              <span class="flex items-center px-1 text-muted-foreground">…</span>
+              <button class="btn-outline btn-sm text-xs px-3">25</button>
+              <button class="btn-outline btn-icon btn-sm"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Employee Dialog -->
+  <div id="add-employee-dialog" class="dialog-overlay">
+    <div class="dialog" style="max-width:28rem;">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Add New Employee</h2>
+        <p class="text-sm text-muted-foreground">They'll receive a welcome email with login instructions.</p>
+      </div>
+      <div class="dialog-body space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="label">First Name</label>
+            <input class="input w-full" placeholder="Rahul">
+          </div>
+          <div>
+            <label class="label">Last Name</label>
+            <input class="input w-full" placeholder="Sharma">
+          </div>
+        </div>
+        <div>
+          <label class="label">Work Email</label>
+          <input type="email" class="input w-full" placeholder="name@acmecorp.com">
+        </div>
+        <div>
+          <label class="label">Department</label>
+          <select class="select w-full">
+            <option value="">Select department</option>
+            <option>Engineering</option>
+            <option>Design</option>
+            <option>Marketing</option>
+            <option>Sales</option>
+            <option>HR</option>
+            <option>Finance</option>
+          </select>
+        </div>
+        <div>
+          <label class="label">Role</label>
+          <select class="select w-full">
+            <option>Employee</option>
+            <option>Co-Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-outline" onclick="closeDialog('add-employee-dialog')">Cancel</button>
+        <button class="btn-primary" onclick="closeDialog('add-employee-dialog'); showToast('Employee added successfully!', 'success');">Add Employee</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

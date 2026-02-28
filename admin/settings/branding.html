@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings: Branding — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="../dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="../employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="../employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="../perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="../perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="../financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="../payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="../payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="../audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="branding.html" class="sidebar-link active"><i data-lucide="palette"></i> Branding</a>
+        <a href="sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Branding</h1>
+            <p class="text-xs text-muted-foreground">Settings &gt; Branding</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content max-w-4xl">
+        <!-- Settings Tabs -->
+        <div data-tabs>
+          <div class="tabs-list mb-8">
+            <a href="general.html" class="tab-trigger">General</a>
+            <a href="branding.html" class="tab-trigger active">Branding</a>
+            <a href="sign-in.html" class="tab-trigger">Sign-in Methods</a>
+            <a href="integrations.html" class="tab-trigger">Integrations</a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <!-- Left — Settings -->
+          <div class="lg:col-span-3 space-y-6">
+            <!-- Logo Upload -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Company Logo</h3>
+                <p class="card-description">This logo appears on the employee portal and login page</p>
+              </div>
+              <div class="card-content">
+                <div class="flex items-start gap-6">
+                  <div class="w-20 h-20 rounded-lg border-2 border-dashed border-border flex items-center justify-center bg-muted/50">
+                    <i data-lucide="building-2" class="w-8 h-8 text-muted-foreground/40"></i>
+                  </div>
+                  <div class="space-y-3">
+                    <div class="file-upload p-4" style="min-width:0;">
+                      <input type="file" accept="image/*" class="hidden">
+                      <div class="flex items-center gap-2">
+                        <i data-lucide="upload" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-sm">Upload logo</span>
+                      </div>
+                    </div>
+                    <p class="text-xs text-muted-foreground">PNG, SVG or JPG. Max 2 MB. Recommended: 200×200px</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brand Colors -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Brand Colours</h3>
+                <p class="card-description">Customise the look of your employee portal</p>
+              </div>
+              <div class="card-content space-y-5">
+                <div>
+                  <label class="label">Primary Colour</label>
+                  <div class="flex items-center gap-3">
+                    <div class="color-swatch" style="background-color:#5B4FC4;"></div>
+                    <input class="input w-32" value="#5B4FC4" id="primary-color">
+                    <span class="text-xs text-muted-foreground">Used for buttons, links, active states</span>
+                  </div>
+                </div>
+                <div class="separator"></div>
+                <div>
+                  <label class="label">Secondary Colour</label>
+                  <div class="flex items-center gap-3">
+                    <div class="color-swatch" style="background-color:#F0EEFF;"></div>
+                    <input class="input w-32" value="#F0EEFF" id="secondary-color">
+                    <span class="text-xs text-muted-foreground">Used for backgrounds, badges, highlights</span>
+                  </div>
+                </div>
+
+                <div class="separator"></div>
+                <h4 class="text-sm font-medium">Colour Presets</h4>
+                <div class="flex gap-3 flex-wrap">
+                  <button class="color-swatch" style="background-color:#5B4FC4;" title="Trvello Purple"></button>
+                  <button class="color-swatch" style="background-color:#2563EB;" title="Blue"></button>
+                  <button class="color-swatch" style="background-color:#059669;" title="Green"></button>
+                  <button class="color-swatch" style="background-color:#D97706;" title="Amber"></button>
+                  <button class="color-swatch" style="background-color:#DC2626;" title="Red"></button>
+                  <button class="color-swatch" style="background-color:#7C3AED;" title="Violet"></button>
+                  <button class="color-swatch" style="background-color:#0891B2;" title="Cyan"></button>
+                  <button class="color-swatch" style="background-color:#1F2937;" title="Dark"></button>
+                </div>
+              </div>
+              <div class="card-footer flex justify-between">
+                <button class="btn-outline text-sm">Reset to Default</button>
+                <button class="btn-primary text-sm" onclick="showToast('Branding saved successfully!', 'success')">Save Branding</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right — Live Preview -->
+          <div class="lg:col-span-2">
+            <div class="sticky top-20">
+              <h3 class="text-sm font-semibold mb-3">Live Preview</h3>
+              <div class="card overflow-hidden">
+                <div class="card-content p-0">
+                  <!-- Preview: Login page mock -->
+                  <div class="bg-primary p-6 text-white">
+                    <div class="flex items-center gap-2 mb-4">
+                      <div class="w-6 h-6 rounded bg-white/20 flex items-center justify-center">
+                        <i data-lucide="building-2" class="w-3 h-3"></i>
+                      </div>
+                      <span class="text-sm font-semibold">Acme Corp</span>
+                    </div>
+                    <p class="text-xs text-white/70">acmecorp.trvello.com</p>
+                  </div>
+                  <div class="p-6 space-y-3">
+                    <h4 class="text-sm font-semibold">Welcome back</h4>
+                    <div class="h-8 rounded bg-muted border border-border"></div>
+                    <div class="h-8 rounded bg-muted border border-border"></div>
+                    <div class="h-8 rounded-md bg-primary"></div>
+                    <div class="text-center">
+                      <span class="text-[10px] text-muted-foreground">Powered by Trvello</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card overflow-hidden mt-4">
+                <div class="card-content p-0">
+                  <!-- Preview: Employee navbar mock -->
+                  <div class="h-10 bg-white border-b border-border flex items-center px-4 gap-4">
+                    <div class="w-5 h-5 rounded bg-primary/20"></div>
+                    <div class="flex gap-3">
+                      <div class="h-2 w-12 rounded bg-muted"></div>
+                      <div class="h-2 w-12 rounded bg-primary/30"></div>
+                      <div class="h-2 w-8 rounded bg-muted"></div>
+                    </div>
+                  </div>
+                  <div class="p-4 space-y-2">
+                    <div class="h-3 w-32 rounded bg-foreground/10"></div>
+                    <div class="h-2 w-48 rounded bg-muted"></div>
+                    <div class="flex gap-2 mt-3">
+                      <div class="h-6 w-16 rounded bg-primary/20"></div>
+                      <div class="h-6 w-16 rounded bg-muted"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-muted-foreground mt-2 text-center">Preview updates reflect your selected colours</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Logs — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="audit-logs.html" class="sidebar-link active"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="settings/general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="settings/branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="settings/sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="settings/integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Audit Trail</h1>
+            <p class="text-xs text-muted-foreground">System &gt; Audit Logs</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <!-- Filters -->
+        <div class="card mb-6">
+          <div class="card-content p-4">
+            <div class="flex flex-col md:flex-row gap-3">
+              <div class="flex gap-2 flex-1">
+                <input type="date" class="input w-full md:w-40" value="2025-01-01">
+                <span class="flex items-center text-sm text-muted-foreground">to</span>
+                <input type="date" class="input w-full md:w-40">
+              </div>
+              <select class="select w-full md:w-44">
+                <option value="">All Event Types</option>
+                <option>Employee Changes</option>
+                <option>Role Changes</option>
+                <option>Settings</option>
+                <option>Logins</option>
+                <option>Perks</option>
+                <option>Import</option>
+              </select>
+              <select class="select w-full md:w-40">
+                <option value="">All Actors</option>
+                <option>Jane Doe</option>
+                <option>Priya Patel</option>
+                <option>Meera Gupta</option>
+                <option>System</option>
+              </select>
+              <button class="btn-outline text-sm flex items-center gap-1.5">
+                <i data-lucide="download" class="w-4 h-4"></i> Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logs Table -->
+        <div class="card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Actor</th>
+                  <th>Event Type</th>
+                  <th>Description</th>
+                  <th>IP Address</th>
+                  <th class="w-12"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">Today, 2:15 PM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-secondary text-xs">Employee</span></td>
+                  <td class="text-sm">Added new employee: Rahul Sharma (rahul.sharma@acmecorp.com)</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "employee.create", "target": "rahul.sharma@acmecorp.com", "department": "Engineering", "role": "employee", "invite_sent": true }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">Today, 11:30 AM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge text-xs" style="background:hsl(142 70% 95%);color:hsl(142 70% 30%);">Perk</span></td>
+                  <td class="text-sm">Assigned "Summer Travel Credit" to Engineering department (82 employees)</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "perk.assign", "perk": "Summer Travel Credit", "value": "₹25,000", "target": "department:Engineering", "count": 82 }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">Yesterday, 4:45 PM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-warning text-xs">Role</span></td>
+                  <td class="text-sm">Promoted Priya Patel to Co-Admin</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "role.change", "target": "priya.patel@acmecorp.com", "from": "employee", "to": "co-admin" }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">Yesterday, 2:10 PM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">System</span>
+                      <span class="badge badge-outline text-[10px]">Auto</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-secondary text-xs">Import</span></td>
+                  <td class="text-sm">CSV import completed: 45 imported, 2 failed, 0 skipped</td>
+                  <td class="text-xs text-muted-foreground font-mono">—</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "import.complete", "initiated_by": "jane.doe@acmecorp.com", "total_rows": 47, "imported": 45, "failed": 2, "emails_sent": 45 }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">3 days ago, 9:00 AM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge text-xs" style="background:hsl(220 70% 95%);color:hsl(220 70% 40%);">Settings</span></td>
+                  <td class="text-sm">Updated organisation branding: primary colour changed to #5B4FC4</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "settings.branding", "field": "primary_color", "old": "#4F46E5", "new": "#5B4FC4" }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">5 days ago, 3:20 PM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge text-xs" style="background:hsl(220 70% 95%);color:hsl(220 70% 40%);">Settings</span></td>
+                  <td class="text-sm">Enabled Google OAuth sign-in for organisation</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "settings.auth", "provider": "google_oauth", "enabled": true }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">1 week ago, 10:15 AM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-destructive text-xs">Employee</span></td>
+                  <td class="text-sm">Deactivated employee: Vikram Singh (vikram.singh@acmecorp.com)</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "employee.deactivate", "target": "vikram.singh@acmecorp.com", "reason": "left_company" }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">1 week ago, 9:00 AM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Priya Patel</span>
+                      <span class="badge badge-secondary text-[10px]">Co-Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge text-xs" style="background:hsl(220 70% 95%);color:hsl(220 70% 40%);">Settings</span></td>
+                  <td class="text-sm">Updated organisation contact email to hr@acmecorp.com</td>
+                  <td class="text-xs text-muted-foreground font-mono">49.37.12.88</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "settings.general", "field": "contact_email", "old": "admin@acmecorp.com", "new": "hr@acmecorp.com" }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">2 weeks ago, 11:45 AM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Rahul Sharma</span>
+                      <span class="badge badge-outline text-[10px]">Employee</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-secondary text-xs">Login</span></td>
+                  <td class="text-sm">First login and onboarding completed</td>
+                  <td class="text-xs text-muted-foreground font-mono">182.71.23.45</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "auth.first_login", "user": "rahul.sharma@acmecorp.com", "onboarding_completed": true, "device": "Chrome/macOS" }</pre>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-sm text-muted-foreground whitespace-nowrap">2 weeks ago, 10:00 AM</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium">Jane Doe</span>
+                      <span class="badge badge-primary text-[10px]">Admin</span>
+                    </div>
+                  </td>
+                  <td><span class="badge text-xs" style="background:hsl(142 70% 95%);color:hsl(142 70% 30%);">Perk</span></td>
+                  <td class="text-sm">Created perk: "Q3 Wellness Retreat" with ₹50,000 budget</td>
+                  <td class="text-xs text-muted-foreground font-mono">103.21.58.12</td>
+                  <td><button data-accordion-trigger class="btn-ghost btn-icon btn-sm"><i data-lucide="chevron-down" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hidden bg-muted/30">
+                  <td colspan="6" class="text-xs text-muted-foreground">
+                    <pre class="whitespace-pre-wrap font-mono p-3 bg-muted rounded">{ "action": "perk.create", "name": "Q3 Wellness Retreat", "type": "experience", "value": "₹50,000", "assigned_to": 20, "valid_from": "2025-07-01", "valid_to": "2025-09-30" }</pre>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="p-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span class="text-sm text-muted-foreground">Showing 1–10 of 156 events</span>
+            <div class="flex gap-1">
+              <button class="btn-outline btn-icon btn-sm" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <button class="btn-primary btn-sm text-xs px-3">1</button>
+              <button class="btn-outline btn-sm text-xs px-3">2</button>
+              <button class="btn-outline btn-sm text-xs px-3">3</button>
+              <span class="flex items-center px-1 text-muted-foreground">…</span>
+              <button class="btn-outline btn-sm text-xs px-3">16</button>
+              <button class="btn-outline btn-icon btn-sm"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

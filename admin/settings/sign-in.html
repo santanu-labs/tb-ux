@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings: Sign-in Methods — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="../dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="../employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="../employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="../perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="../perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="../financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="../payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="../payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="../audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="sign-in.html" class="sidebar-link active"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Sign-in Methods</h1>
+            <p class="text-xs text-muted-foreground">Settings &gt; Sign-in Methods</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content max-w-4xl">
+        <!-- Settings Tabs -->
+        <div data-tabs>
+          <div class="tabs-list mb-8">
+            <a href="general.html" class="tab-trigger">General</a>
+            <a href="branding.html" class="tab-trigger">Branding</a>
+            <a href="sign-in.html" class="tab-trigger active">Sign-in Methods</a>
+            <a href="integrations.html" class="tab-trigger">Integrations</a>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2 p-3 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+          <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+          <span>Choose <strong>one authentication method</strong> for your organisation. All employees will use the selected method to sign in. You can switch methods at any time.</span>
+        </div>
+
+        <!-- Auth Method Selector -->
+        <div class="space-y-6" id="auth-methods">
+
+          <!-- ═══════════════════════════════════════════ -->
+          <!-- GROUP 1: Email & Password                  -->
+          <!-- ═══════════════════════════════════════════ -->
+          <div class="card auth-method-card border-2 border-primary ring-2 ring-primary/20 cursor-pointer" data-auth-group="email">
+            <div class="card-content p-5">
+              <!-- Header row -->
+              <div class="flex items-center justify-between gap-4 mb-0" data-auth-header>
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="mail" class="w-5 h-5 text-primary"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-sm font-semibold">Email & Password</h4>
+                      <span class="badge badge-success text-[10px] auth-active-badge">Active</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-0.5">Classic credentials — employees set a password during onboarding</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center flex-shrink-0">
+                    <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expanded config -->
+              <div class="mt-5 pt-5 border-t auth-config">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="label">Password Minimum Length</label>
+                    <select class="input w-full text-sm">
+                      <option>8 characters</option>
+                      <option selected>10 characters</option>
+                      <option>12 characters</option>
+                      <option>16 characters</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="label">Password Expiry</label>
+                    <select class="input w-full text-sm">
+                      <option>Never</option>
+                      <option>30 days</option>
+                      <option selected>90 days</option>
+                      <option>180 days</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="label">Require Uppercase + Number</label>
+                    <div class="toggle active mt-1" data-toggle-label="Required"></div>
+                  </div>
+                  <div>
+                    <label class="label">Require Special Characters</label>
+                    <div class="toggle mt-1" data-toggle-label="Optional"></div>
+                  </div>
+                </div>
+                <div class="mt-4 p-3 rounded-lg bg-muted/50 flex items-start gap-2">
+                  <i data-lucide="shield" class="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0"></i>
+                  <div class="text-xs text-muted-foreground">
+                    <strong class="text-foreground">Two-Factor Authentication</strong>
+                    <div class="flex items-center gap-3 mt-2">
+                      <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="2fa" class="accent-primary"> Disabled</label>
+                      <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="2fa" class="accent-primary" checked> Optional</label>
+                      <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="2fa" class="accent-primary"> Enforced for all</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- "OR" divider -->
+          <div class="flex items-center gap-4">
+            <div class="flex-1 border-t border-dashed"></div>
+            <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">or</span>
+            <div class="flex-1 border-t border-dashed"></div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════ -->
+          <!-- GROUP 2: Social / OAuth Providers           -->
+          <!-- ═══════════════════════════════════════════ -->
+          <div class="card auth-method-card cursor-pointer" data-auth-group="social">
+            <div class="card-content p-5">
+              <!-- Header row -->
+              <div class="flex items-center justify-between gap-4 mb-0" data-auth-header>
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="fingerprint" class="w-5 h-5 text-foreground"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-sm font-semibold">Social / OAuth Providers</h4>
+                      <span class="badge badge-outline text-[10px] auth-active-badge">Inactive</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-0.5">Sign in via Google, Microsoft, GitHub, LinkedIn — one-click authentication</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center flex-shrink-0">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expanded config (hidden by default) -->
+              <div class="mt-5 pt-5 border-t auth-config hidden">
+                <p class="text-xs text-muted-foreground mb-4">Enable the providers you want. At least one must be active.</p>
+
+                <!-- Google -->
+                <div class="p-4 rounded-lg border mb-3">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                      <span class="text-sm font-medium">Google</span>
+                    </div>
+                    <div class="toggle active"></div>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label class="label">Client ID</label>
+                      <input class="input w-full text-sm" value="123456789-abcdef.apps.googleusercontent.com" placeholder="Google OAuth Client ID">
+                    </div>
+                    <div>
+                      <label class="label">Client Secret</label>
+                      <input class="input w-full text-sm" type="password" value="GOCSPX-xxxxxxxx" placeholder="Client Secret">
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label class="label">Allowed Domain</label>
+                      <input class="input w-full text-sm" value="acmecorp.com" placeholder="e.g. acmecorp.com">
+                      <p class="text-[11px] text-muted-foreground mt-1">Only accounts from this domain can sign in. Leave blank to allow any.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Microsoft -->
+                <div class="p-4 rounded-lg border mb-3">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-5 h-5" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
+                      <span class="text-sm font-medium">Microsoft / Azure AD</span>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-50">
+                    <div>
+                      <label class="label">Tenant ID</label>
+                      <input class="input w-full text-sm" placeholder="Azure AD Tenant ID" disabled>
+                    </div>
+                    <div>
+                      <label class="label">Client ID</label>
+                      <input class="input w-full text-sm" placeholder="Application (client) ID" disabled>
+                    </div>
+                    <div>
+                      <label class="label">Client Secret</label>
+                      <input class="input w-full text-sm" type="password" placeholder="Client Secret" disabled>
+                    </div>
+                    <div>
+                      <label class="label">Allowed Domain</label>
+                      <input class="input w-full text-sm" placeholder="e.g. acmecorp.com" disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- GitHub -->
+                <div class="p-4 rounded-lg border mb-3">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                      <span class="text-sm font-medium">GitHub</span>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-50">
+                    <div>
+                      <label class="label">Client ID</label>
+                      <input class="input w-full text-sm" placeholder="GitHub OAuth App Client ID" disabled>
+                    </div>
+                    <div>
+                      <label class="label">Client Secret</label>
+                      <input class="input w-full text-sm" type="password" placeholder="Client Secret" disabled>
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label class="label">Allowed Organisation</label>
+                      <input class="input w-full text-sm" placeholder="e.g. acmecorp (GitHub org slug)" disabled>
+                      <p class="text-[11px] text-muted-foreground mt-1">Only members of this GitHub org can sign in.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- LinkedIn -->
+                <div class="p-4 rounded-lg border">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                      <span class="text-sm font-medium">LinkedIn</span>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-50">
+                    <div>
+                      <label class="label">Client ID</label>
+                      <input class="input w-full text-sm" placeholder="LinkedIn App Client ID" disabled>
+                    </div>
+                    <div>
+                      <label class="label">Client Secret</label>
+                      <input class="input w-full text-sm" type="password" placeholder="Client Secret" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- "OR" divider -->
+          <div class="flex items-center gap-4">
+            <div class="flex-1 border-t border-dashed"></div>
+            <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">or</span>
+            <div class="flex-1 border-t border-dashed"></div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════ -->
+          <!-- GROUP 3: Enterprise SSO                     -->
+          <!-- ═══════════════════════════════════════════ -->
+          <div class="card auth-method-card cursor-pointer" data-auth-group="sso">
+            <div class="card-content p-5">
+              <!-- Header row -->
+              <div class="flex items-center justify-between gap-4 mb-0" data-auth-header>
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-foreground"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-sm font-semibold">Enterprise SSO</h4>
+                      <span class="badge badge-outline text-[10px] auth-active-badge">Inactive</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-0.5">SAML 2.0 or OpenID Connect via Okta, OneLogin, Azure AD, Auth0, etc.</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center flex-shrink-0">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expanded config (hidden by default) -->
+              <div class="mt-5 pt-5 border-t auth-config hidden">
+                <!-- Protocol Tabs -->
+                <div class="tabs-list mb-5" id="sso-protocol-tabs">
+                  <button class="tab-trigger active text-xs" data-sso-tab="saml">SAML 2.0</button>
+                  <button class="tab-trigger text-xs" data-sso-tab="oidc">OpenID Connect</button>
+                </div>
+
+                <!-- SAML 2.0 Config -->
+                <div id="sso-saml" class="space-y-4">
+                  <div class="p-4 rounded-lg border bg-muted/30">
+                    <p class="text-xs font-medium mb-2">Service Provider (SP) Metadata — share with your IdP</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label class="label">ACS URL</label>
+                        <div class="flex items-center gap-1.5">
+                          <input class="input w-full text-xs bg-background" value="https://acmecorp.trvello.com/auth/saml/callback" readonly>
+                          <button class="btn-ghost btn-sm btn-icon flex-shrink-0" title="Copy"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                      </div>
+                      <div>
+                        <label class="label">Entity ID</label>
+                        <div class="flex items-center gap-1.5">
+                          <input class="input w-full text-xs bg-background" value="urn:trvello:acmecorp" readonly>
+                          <button class="btn-ghost btn-sm btn-icon flex-shrink-0" title="Copy"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                      <label class="label">Identity Provider SSO URL</label>
+                      <input class="input w-full text-sm" placeholder="https://idp.example.com/sso/saml">
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label class="label">IdP Entity ID</label>
+                      <input class="input w-full text-sm" placeholder="urn:example:idp">
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label class="label">X.509 Certificate</label>
+                      <div class="file-upload p-4">
+                        <div class="flex flex-col items-center gap-2 text-center">
+                          <i data-lucide="upload" class="w-5 h-5 text-muted-foreground"></i>
+                          <span class="text-sm text-muted-foreground">Drag & drop or click to upload certificate (.pem, .crt)</span>
+                          <span class="text-[11px] text-muted-foreground">Or paste the certificate text below</span>
+                        </div>
+                      </div>
+                      <textarea class="input w-full mt-2 text-xs font-mono h-20" placeholder="-----BEGIN CERTIFICATE-----&#10;MIICmTCCAYECBg...&#10;-----END CERTIFICATE-----"></textarea>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="label mb-2">Attribute Mapping</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">Email</span>
+                        <input class="input w-full text-sm" value="email" placeholder="email">
+                      </div>
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">First Name</span>
+                        <input class="input w-full text-sm" value="firstName" placeholder="firstName">
+                      </div>
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">Last Name</span>
+                        <input class="input w-full text-sm" value="lastName" placeholder="lastName">
+                      </div>
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">Department</span>
+                        <input class="input w-full text-sm" placeholder="department">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <i data-lucide="test-tube" class="w-4 h-4 text-muted-foreground flex-shrink-0"></i>
+                    <span class="text-xs text-muted-foreground flex-1">Test your configuration before enabling for all employees.</span>
+                    <button class="btn-outline btn-sm text-xs">Test Connection</button>
+                  </div>
+                </div>
+
+                <!-- OIDC Config (hidden by default) -->
+                <div id="sso-oidc" class="space-y-4 hidden">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                      <label class="label">Discovery URL</label>
+                      <input class="input w-full text-sm" placeholder="https://idp.example.com/.well-known/openid-configuration">
+                      <p class="text-[11px] text-muted-foreground mt-1">We'll auto-discover endpoints from this URL.</p>
+                    </div>
+                    <div>
+                      <label class="label">Client ID</label>
+                      <input class="input w-full text-sm" placeholder="OIDC Client ID">
+                    </div>
+                    <div>
+                      <label class="label">Client Secret</label>
+                      <input class="input w-full text-sm" type="password" placeholder="OIDC Client Secret">
+                    </div>
+                    <div>
+                      <label class="label">Scopes</label>
+                      <input class="input w-full text-sm" value="openid profile email" placeholder="openid profile email">
+                    </div>
+                    <div>
+                      <label class="label">Response Type</label>
+                      <select class="input w-full text-sm">
+                        <option selected>code</option>
+                        <option>id_token</option>
+                        <option>code id_token</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="label mb-2">Claim Mapping</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">Email</span>
+                        <input class="input w-full text-sm" value="email" placeholder="email">
+                      </div>
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">First Name</span>
+                        <input class="input w-full text-sm" value="given_name" placeholder="given_name">
+                      </div>
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">Last Name</span>
+                        <input class="input w-full text-sm" value="family_name" placeholder="family_name">
+                      </div>
+                      <div>
+                        <span class="text-[11px] text-muted-foreground">Department</span>
+                        <input class="input w-full text-sm" placeholder="custom:department">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <i data-lucide="test-tube" class="w-4 h-4 text-muted-foreground flex-shrink-0"></i>
+                    <span class="text-xs text-muted-foreground flex-1">Test your configuration before enabling for all employees.</span>
+                    <button class="btn-outline btn-sm text-xs">Test Connection</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button class="btn-primary" onclick="showToast('Sign-in configuration saved!', 'success')">Save Configuration</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // Auth method group selection (radio-style)
+    document.querySelectorAll('.auth-method-card').forEach(card => {
+      card.querySelector('[data-auth-header]').addEventListener('click', () => {
+        const group = card.dataset.authGroup;
+        // Deselect all
+        document.querySelectorAll('.auth-method-card').forEach(c => {
+          c.classList.remove('border-primary', 'ring-2', 'ring-primary/20');
+          c.classList.add('border-border');
+          const radio = c.querySelector('.w-5.h-5.rounded-full');
+          if (radio) {
+            radio.classList.remove('border-primary');
+            radio.classList.add('border-muted-foreground/30');
+            radio.innerHTML = '';
+          }
+          const badge = c.querySelector('.auth-active-badge');
+          if (badge) {
+            badge.className = 'badge badge-outline text-[10px] auth-active-badge';
+            badge.textContent = 'Inactive';
+          }
+          const icon = c.querySelector('.w-10.h-10.rounded-xl');
+          if (icon) {
+            icon.classList.remove('bg-primary/10');
+            icon.classList.add('bg-muted');
+            const i = icon.querySelector('i');
+            if (i) { i.classList.remove('text-primary'); i.classList.add('text-foreground'); }
+          }
+          const config = c.querySelector('.auth-config');
+          if (config) config.classList.add('hidden');
+        });
+        // Select this one
+        card.classList.remove('border-border');
+        card.classList.add('border-primary', 'ring-2', 'ring-primary/20');
+        const radio = card.querySelector('.w-5.h-5.rounded-full');
+        if (radio) {
+          radio.classList.add('border-primary');
+          radio.classList.remove('border-muted-foreground/30');
+          radio.innerHTML = '<div class="w-2.5 h-2.5 rounded-full bg-primary"></div>';
+        }
+        const badge = card.querySelector('.auth-active-badge');
+        if (badge) {
+          badge.className = 'badge badge-success text-[10px] auth-active-badge';
+          badge.textContent = 'Active';
+        }
+        const icon = card.querySelector('.w-10.h-10.rounded-xl');
+        if (icon) {
+          icon.classList.add('bg-primary/10');
+          icon.classList.remove('bg-muted');
+          const i = icon.querySelector('i');
+          if (i) { i.classList.add('text-primary'); i.classList.remove('text-foreground'); }
+        }
+        const config = card.querySelector('.auth-config');
+        if (config) config.classList.remove('hidden');
+      });
+    });
+
+    // SSO protocol tabs (SAML / OIDC)
+    document.querySelectorAll('[data-sso-tab]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('[data-sso-tab]').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.dataset.ssoTab;
+        document.getElementById('sso-saml').classList.toggle('hidden', target !== 'saml');
+        document.getElementById('sso-oidc').classList.toggle('hidden', target !== 'oidc');
+      });
+    });
+  </script>
+</body>
+</html>

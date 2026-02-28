@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Summary — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="financial-summary.html" class="sidebar-link active"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="settings/general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="settings/branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="settings/sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="settings/integrations.html" class="sidebar-link"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Financial Summary</h1>
+            <p class="text-xs text-muted-foreground">Benefits &gt; Financial Summary</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <!-- Admin-only notice -->
+        <div class="flex items-center gap-2 p-3 mb-6 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+          <i data-lucide="lock" class="w-4 h-4 flex-shrink-0"></i>
+          <span>This page is visible to <strong>Org Admins only</strong>. Co-Admins do not have access to financial data.</span>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="flex items-start gap-2 p-3 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+          <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+          <span>Financial data is for <strong>display purposes only</strong>. Actual transactions and payment processing will be enabled in a future phase.</span>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Total Perks Budget</span>
+              <i data-lucide="wallet" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹15,00,000</span>
+            <span class="text-xs text-muted-foreground">FY 2025-26</span>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Allocated</span>
+              <i data-lucide="send" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹12,40,000</span>
+            <div class="progress-bar mt-2"><div class="progress-bar-fill" style="width:82.7%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Utilised</span>
+              <i data-lucide="check-circle" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹5,60,000</span>
+            <div class="progress-bar mt-2"><div class="progress-bar-fill success" style="width:45.2%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center justify-between">
+              <span class="stat-card-label">Remaining</span>
+              <i data-lucide="piggy-bank" class="w-4 h-4 text-muted-foreground"></i>
+            </div>
+            <span class="stat-card-value">₹2,60,000</span>
+            <span class="text-xs text-muted-foreground">17.3% unallocated</span>
+          </div>
+        </div>
+
+        <!-- Monthly Breakdown -->
+        <div class="card mb-8">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Monthly Breakdown</h3>
+              <p class="card-description">Perks allocation and utilisation by month</p>
+            </div>
+            <button class="btn-outline btn-sm text-xs flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+            </button>
+          </div>
+          <div class="card-content p-0">
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th class="text-right">Perks Issued</th>
+                    <th class="text-right">Perks Used</th>
+                    <th class="text-right">Balance</th>
+                    <th>Utilisation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-sm font-medium">January 2025</td>
+                    <td class="text-sm text-right">₹2,50,000</td>
+                    <td class="text-sm text-right">₹1,80,000</td>
+                    <td class="text-sm text-right font-medium">₹70,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill success" style="width:72%"></div></div><span class="text-xs text-muted-foreground">72%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">February 2025</td>
+                    <td class="text-sm text-right">₹1,80,000</td>
+                    <td class="text-sm text-right">₹1,20,000</td>
+                    <td class="text-sm text-right font-medium">₹60,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill success" style="width:67%"></div></div><span class="text-xs text-muted-foreground">67%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">March 2025</td>
+                    <td class="text-sm text-right">₹3,10,000</td>
+                    <td class="text-sm text-right">₹1,60,000</td>
+                    <td class="text-sm text-right font-medium">₹1,50,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill" style="width:52%"></div></div><span class="text-xs text-muted-foreground">52%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">April 2025</td>
+                    <td class="text-sm text-right">₹2,80,000</td>
+                    <td class="text-sm text-right">₹50,000</td>
+                    <td class="text-sm text-right font-medium">₹2,30,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill warning" style="width:18%"></div></div><span class="text-xs text-muted-foreground">18%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">May 2025</td>
+                    <td class="text-sm text-right">₹2,20,000</td>
+                    <td class="text-sm text-right">₹50,000</td>
+                    <td class="text-sm text-right font-medium">₹1,70,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill warning" style="width:23%"></div></div><span class="text-xs text-muted-foreground">23%</span></div></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="font-semibold">
+                    <td class="text-sm">Total</td>
+                    <td class="text-sm text-right">₹12,40,000</td>
+                    <td class="text-sm text-right">₹5,60,000</td>
+                    <td class="text-sm text-right">₹6,80,000</td>
+                    <td><span class="text-xs text-muted-foreground">45.2% avg</span></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Department Breakdown -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Per-Department Breakdown</h3>
+            <p class="card-description">How perks are distributed across departments</p>
+          </div>
+          <div class="card-content p-0">
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th class="text-right">Employees</th>
+                    <th class="text-right">Allocated</th>
+                    <th class="text-right">Utilised</th>
+                    <th>% Used</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-sm font-medium">Engineering</td>
+                    <td class="text-sm text-right">82</td>
+                    <td class="text-sm text-right">₹4,10,000</td>
+                    <td class="text-sm text-right">₹2,30,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill success" style="width:56%"></div></div><span class="text-xs">56%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">Marketing</td>
+                    <td class="text-sm text-right">38</td>
+                    <td class="text-sm text-right">₹1,90,000</td>
+                    <td class="text-sm text-right">₹1,10,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill success" style="width:58%"></div></div><span class="text-xs">58%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">Sales</td>
+                    <td class="text-sm text-right">45</td>
+                    <td class="text-sm text-right">₹2,25,000</td>
+                    <td class="text-sm text-right">₹80,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill" style="width:36%"></div></div><span class="text-xs">36%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">Design</td>
+                    <td class="text-sm text-right">25</td>
+                    <td class="text-sm text-right">₹1,25,000</td>
+                    <td class="text-sm text-right">₹60,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill" style="width:48%"></div></div><span class="text-xs">48%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">HR</td>
+                    <td class="text-sm text-right">28</td>
+                    <td class="text-sm text-right">₹1,40,000</td>
+                    <td class="text-sm text-right">₹45,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill warning" style="width:32%"></div></div><span class="text-xs">32%</span></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text-sm font-medium">Finance</td>
+                    <td class="text-sm text-right">30</td>
+                    <td class="text-sm text-right">₹1,50,000</td>
+                    <td class="text-sm text-right">₹35,000</td>
+                    <td><div class="flex items-center gap-2"><div class="progress-bar w-20"><div class="progress-bar-fill warning" style="width:23%"></div></div><span class="text-xs">23%</span></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

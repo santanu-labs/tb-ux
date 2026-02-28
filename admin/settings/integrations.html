@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings: Integrations — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="admin-layout">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <nav class="sidebar-content">
+        <div class="sidebar-section-label">Main</div>
+        <a href="../dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="sidebar-section-label mt-4">People</div>
+        <a href="../employees.html" class="sidebar-link"><i data-lucide="users"></i> Employees</a>
+        <a href="../employee-import.html" class="sidebar-link"><i data-lucide="upload"></i> Import Employees</a>
+        <div class="sidebar-section-label mt-4">Benefits</div>
+        <a href="../perks.html" class="sidebar-link"><i data-lucide="gift"></i> Perks</a>
+        <a href="../perks.html#peer-recognition" class="sidebar-link"><i data-lucide="heart-handshake"></i> Peer Recognition</a>
+        <a href="../financial-summary.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Financial Summary</a>
+        <a href="../payment-details.html" class="sidebar-link"><i data-lucide="credit-card"></i> Payment Details</a>
+        <a href="../payment-history.html" class="sidebar-link"><i data-lucide="receipt"></i> Payment History</a>
+        <div class="sidebar-section-label mt-4">System</div>
+        <a href="../audit-logs.html" class="sidebar-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+        <div class="sidebar-section-label mt-4">Settings</div>
+        <a href="general.html" class="sidebar-link"><i data-lucide="settings"></i> General</a>
+        <a href="branding.html" class="sidebar-link"><i data-lucide="palette"></i> Branding</a>
+        <a href="sign-in.html" class="sidebar-link"><i data-lucide="key-round"></i> Sign-in Methods</a>
+        <a href="integrations.html" class="sidebar-link active"><i data-lucide="puzzle"></i> Integrations</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="flex items-center gap-3 sidebar-footer-profile">
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+          <div class="flex-1 min-w-0 sidebar-footer-info"><div class="text-sm font-medium text-white truncate">Jane Doe</div><div class="text-[11px] text-white/50">Org Admin</div></div>
+        </div>
+        <div class="sidebar-footer-links"><a href="#" class="sidebar-link mt-3 text-xs"><i data-lucide="arrow-left-right"></i> Switch to Employee View</a></div>
+        <button id="sidebar-theme-btn" class="sidebar-theme-toggle"></button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="flex items-center gap-4">
+          <button id="sidebar-toggle" class="lg:hidden p-2 -ml-2 rounded-md hover:bg-muted"><i data-lucide="menu" class="w-5 h-5"></i></button>
+          <div>
+            <h1 class="text-lg font-semibold">Integrations</h1>
+            <p class="text-xs text-muted-foreground">Settings &gt; Integrations</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-ghost btn-icon relative"><i data-lucide="bell" class="w-5 h-5"></i></button>
+          <div class="avatar w-8 h-8 text-xs">JD</div>
+        </div>
+      </header>
+
+      <main class="admin-content max-w-3xl">
+        <!-- Settings Tabs -->
+        <div data-tabs>
+          <div class="tabs-list mb-8">
+            <a href="general.html" class="tab-trigger">General</a>
+            <a href="branding.html" class="tab-trigger">Branding</a>
+            <a href="sign-in.html" class="tab-trigger">Sign-in Methods</a>
+            <a href="integrations.html" class="tab-trigger active">Integrations</a>
+          </div>
+        </div>
+
+        <!-- Coming Soon Banner -->
+        <div class="flex items-start gap-2 p-3 mb-6 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+          <i data-lucide="zap" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+          <span>Integrations are <strong>coming soon</strong>. You can preview what's planned below. These will be available in a future release.</span>
+        </div>
+
+        <!-- Integration Cards -->
+        <h3 class="text-sm font-semibold mb-3">Available Integrations</h3>
+        <div class="grid gap-4 mb-8">
+          <!-- HRMS -->
+          <div class="card opacity-60">
+            <div class="card-content p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="building-2" class="w-5 h-5 text-emerald-600"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <h4 class="text-sm font-semibold">HRMS / Workday / BambooHR</h4>
+                      <span class="badge badge-outline text-[10px]">Coming Soon</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Automatically sync employee data from your HR system. New hires are added and departures removed in real time.</p>
+                  </div>
+                </div>
+                <div class="toggle" style="pointer-events:none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slack -->
+          <div class="card opacity-60">
+            <div class="card-content p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="hash" class="w-5 h-5 text-purple-600"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <h4 class="text-sm font-semibold">Slack</h4>
+                      <span class="badge badge-outline text-[10px]">Coming Soon</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Send perk notifications, booking confirmations, and reminders directly to employees via Slack channels or DMs.</p>
+                  </div>
+                </div>
+                <div class="toggle" style="pointer-events:none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Sync -->
+          <div class="card opacity-60">
+            <div class="card-content p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="calendar" class="w-5 h-5 text-blue-600"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <h4 class="text-sm font-semibold">Calendar Sync</h4>
+                      <span class="badge badge-outline text-[10px]">Coming Soon</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Sync travel bookings and itineraries with Google Calendar or Outlook so employees never miss a trip detail.</p>
+                  </div>
+                </div>
+                <div class="toggle" style="pointer-events:none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expense Management -->
+          <div class="card opacity-60">
+            <div class="card-content p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="receipt" class="w-5 h-5 text-orange-600"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <h4 class="text-sm font-semibold">Expense Management (SAP Concur)</h4>
+                      <span class="badge badge-outline text-[10px]">Coming Soon</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Push travel expenses and receipts to SAP Concur or your expense management tool for seamless reconciliation.</p>
+                  </div>
+                </div>
+                <div class="toggle" style="pointer-events:none;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Webhooks -->
+        <div class="separator my-6"></div>
+        <h3 class="text-sm font-semibold mb-1">Webhooks</h3>
+        <p class="text-xs text-muted-foreground mb-4">Receive real-time event notifications at your endpoint when things happen in Trvello.</p>
+
+        <div class="card opacity-60">
+          <div class="card-content p-5 space-y-4">
+            <div>
+              <label class="label">Webhook URL</label>
+              <input class="input w-full" placeholder="https://your-server.com/webhooks/trvello" disabled>
+            </div>
+            <div>
+              <label class="label mb-2 block">Events to Send</label>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input type="checkbox" class="checkbox" disabled checked> employee.created
+                </label>
+                <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input type="checkbox" class="checkbox" disabled checked> employee.deactivated
+                </label>
+                <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input type="checkbox" class="checkbox" disabled> perk.assigned
+                </label>
+                <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input type="checkbox" class="checkbox" disabled> perk.redeemed
+                </label>
+                <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input type="checkbox" class="checkbox" disabled> booking.created
+                </label>
+                <label class="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input type="checkbox" class="checkbox" disabled> import.completed
+                </label>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn-outline btn-sm" disabled>Test Webhook</button>
+              <button class="btn-primary btn-sm" disabled>Save Webhook</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
