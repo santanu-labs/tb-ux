@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content max-w-4xl">
+      <!-- Profile Header -->
+      <div class="card mb-6">
+        <div class="p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold flex-shrink-0">
+            RS
+          </div>
+          <div class="flex-1 text-center sm:text-left">
+            <h1 class="text-xl font-bold">Rahul Sharma</h1>
+            <p class="text-muted-foreground text-sm">rahul.sharma@acmecorp.com</p>
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-2 text-sm text-muted-foreground">
+              <span class="flex items-center gap-1"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> Engineering</span>
+              <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Member since Feb 2022</span>
+              <span class="badge badge-success">Active</span>
+            </div>
+          </div>
+          <button class="btn-outline btn-sm"><i data-lucide="camera" class="w-4 h-4"></i> Change Photo</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-list mb-6" data-tabs>
+        <button class="tab-trigger active" data-tab="personal">Personal Info</button>
+        <button class="tab-trigger" data-tab="security">Security</button>
+        <button class="tab-trigger" data-tab="prefs">Preferences</button>
+        <button class="tab-trigger" data-tab="privacy">Data & Privacy</button>
+      </div>
+
+      <!-- Personal Info Tab -->
+      <div data-tab-panel="personal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Personal Information</div>
+            <div class="card-description">Update your personal details</div>
+          </div>
+          <div class="card-content">
+            <form class="space-y-4" onsubmit="event.preventDefault(); showToast('Profile updated!','success');">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="label" for="first-name">First Name</label>
+                  <input id="first-name" class="input" value="Rahul">
+                </div>
+                <div>
+                  <label class="label" for="last-name">Last Name</label>
+                  <input id="last-name" class="input" value="Sharma">
+                </div>
+              </div>
+              <div>
+                <label class="label" for="p-email">Email</label>
+                <input id="p-email" type="email" class="input bg-muted/50" value="rahul.sharma@acmecorp.com" readonly>
+                <p class="text-xs text-muted-foreground mt-1">Email is managed by your organization and cannot be changed.</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="label" for="phone">Phone (optional)</label>
+                  <input id="phone" type="tel" class="input" value="+91 98765 43210" placeholder="+91 XXXXX XXXXX">
+                </div>
+                <div>
+                  <label class="label" for="dept">Department</label>
+                  <select id="dept" class="select">
+                    <option>Engineering</option>
+                    <option>Design</option>
+                    <option>Product</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>HR</option>
+                    <option>Finance</option>
+                    <option>Operations</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex gap-2 pt-2">
+                <button type="submit" class="btn-primary">Save Changes</button>
+                <button type="reset" class="btn-outline">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Tab -->
+      <div class="hidden" data-tab-panel="security">
+        <div class="space-y-6">
+          <!-- Change Password -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Change Password</div>
+              <div class="card-description">Update your password to keep your account secure</div>
+            </div>
+            <div class="card-content">
+              <form class="space-y-4 max-w-md" onsubmit="event.preventDefault(); showToast('Password changed!','success');">
+                <div>
+                  <label class="label" for="current-pw">Current Password</label>
+                  <input id="current-pw" type="password" class="input" placeholder="••••••••">
+                </div>
+                <div>
+                  <label class="label" for="new-pw">New Password</label>
+                  <input id="new-pw" type="password" class="input" placeholder="••••••••">
+                </div>
+                <div>
+                  <label class="label" for="confirm-pw">Confirm New Password</label>
+                  <input id="confirm-pw" type="password" class="input" placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Update Password</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Active Sessions -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Active Sessions</div>
+              <div class="card-description">Devices where you're currently signed in</div>
+            </div>
+            <div class="card-content space-y-3">
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
+                    <i data-lucide="monitor" class="w-4 h-4 text-green-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Chrome on macOS</div>
+                    <div class="text-xs text-muted-foreground">Mumbai, India · Current session</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Active</span>
+              </div>
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-muted flex items-center justify-center">
+                    <i data-lucide="smartphone" class="w-4 h-4 text-muted-foreground"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Safari on iPhone</div>
+                    <div class="text-xs text-muted-foreground">Mumbai, India · Last active 2 hours ago</div>
+                  </div>
+                </div>
+                <button class="btn-ghost btn-sm text-destructive">Revoke</button>
+              </div>
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-muted flex items-center justify-center">
+                    <i data-lucide="monitor" class="w-4 h-4 text-muted-foreground"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Firefox on Windows</div>
+                    <div class="text-xs text-muted-foreground">Pune, India · Last active 3 days ago</div>
+                  </div>
+                </div>
+                <button class="btn-ghost btn-sm text-destructive">Revoke</button>
+              </div>
+            </div>
+            <div class="px-6 pb-5">
+              <button class="btn-outline btn-sm text-destructive border-destructive/30 hover:bg-destructive/5">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out All Other Sessions
+              </button>
+            </div>
+          </div>
+
+          <!-- Login Method -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Sign-in Method</div>
+            </div>
+            <div class="card-content space-y-3">
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="mail" class="w-5 h-5 text-muted-foreground"></i>
+                  <div>
+                    <div class="text-sm font-medium">Email & Password</div>
+                    <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Primary</span>
+              </div>
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="key-round" class="w-5 h-5 text-muted-foreground"></i>
+                  <div>
+                    <div class="text-sm font-medium">SSO (Okta)</div>
+                    <div class="text-xs text-muted-foreground">Configured by your organization</div>
+                  </div>
+                </div>
+                <span class="badge badge-secondary">Available</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences Tab -->
+      <div class="hidden" data-tab-panel="prefs">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Travel Preferences Summary</div>
+            <div class="card-description">Quick overview of your saved preferences</div>
+          </div>
+          <div class="card-content space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="text-sm font-medium mb-2">Destination Types</div>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="badge badge-primary">Beach</span>
+                  <span class="badge badge-primary">City</span>
+                  <span class="badge badge-primary">Island</span>
+                </div>
+              </div>
+              <div>
+                <div class="text-sm font-medium mb-2">Travel Style</div>
+                <span class="badge badge-secondary">Mid-Range</span>
+              </div>
+              <div>
+                <div class="text-sm font-medium mb-2">Climate</div>
+                <span class="badge badge-secondary">Tropical</span>
+              </div>
+              <div>
+                <div class="text-sm font-medium mb-2">Preferred Duration</div>
+                <span class="badge badge-secondary">1 week</span>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="text-sm font-medium mb-2">Activity Interests</div>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="badge badge-primary">Sightseeing</span>
+                  <span class="badge badge-primary">Hiking</span>
+                  <span class="badge badge-primary">Wellness & Spa</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-2">
+              <a href="preferences.html" class="btn-primary">
+                <i data-lucide="pencil" class="w-4 h-4"></i> Edit Preferences
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Privacy Tab -->
+      <div class="hidden" data-tab-panel="privacy">
+        <div class="space-y-6">
+          <!-- Data Export -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Download My Data</div>
+              <div class="card-description">Request a copy of all your personal data stored on Trvello</div>
+            </div>
+            <div class="card-content">
+              <p class="text-sm text-muted-foreground mb-3">Your data export includes profile information, travel plans, preferences, perk history, and activity logs. Processing may take up to 24 hours.</p>
+              <button class="btn-outline" onclick="showToast('Data export requested. You will receive an email when ready.','success');">
+                <i data-lucide="download" class="w-4 h-4"></i> Request Data Export
+              </button>
+            </div>
+          </div>
+
+          <!-- Consent Management -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Consent Management</div>
+              <div class="card-description">Manage how your data is used</div>
+            </div>
+            <div class="card-content space-y-4">
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div>
+                  <div class="text-sm font-medium">Analytics & Personalisation</div>
+                  <div class="text-xs text-muted-foreground">Help us improve destination matches and recommendations</div>
+                </div>
+                <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div>
+                  <div class="text-sm font-medium">Email Notifications</div>
+                  <div class="text-xs text-muted-foreground">Receive updates about new perks and destinations</div>
+                </div>
+                <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div>
+                  <div class="text-sm font-medium">Share Preferences with Company</div>
+                  <div class="text-xs text-muted-foreground">Allow Acme Corp admins to see your travel preferences</div>
+                </div>
+                <div class="toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delete Account -->
+          <div class="card border-destructive/30">
+            <div class="card-header">
+              <div class="card-title text-base text-destructive">Delete My Account</div>
+              <div class="card-description">Permanently remove your account and all associated data</div>
+            </div>
+            <div class="card-content">
+              <p class="text-sm text-muted-foreground mb-3">This action is irreversible. All your travel plans, preferences, and perk history will be permanently deleted. Your organization admin will be notified.</p>
+              <button class="btn-destructive" onclick="openDialog('delete-dialog')">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Request Account Deletion
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Delete Confirmation Dialog -->
+  <div class="dialog-overlay" id="delete-dialog">
+    <div class="dialog">
+      <div class="dialog-header">
+        <div class="dialog-title text-destructive">Delete Account</div>
+        <div class="dialog-description">Are you absolutely sure? This action cannot be undone. All your data will be permanently removed.</div>
+      </div>
+      <div class="dialog-body">
+        <div>
+          <label class="label" for="confirm-email">Type your email to confirm</label>
+          <input id="confirm-email" type="email" class="input" placeholder="rahul.sharma@acmecorp.com">
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-outline" onclick="closeDialog('delete-dialog')">Cancel</button>
+        <button class="btn-destructive" onclick="closeDialog('delete-dialog'); showToast('Account deletion request submitted.','destructive');">Delete Account</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

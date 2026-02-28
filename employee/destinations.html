@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinations — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
+        <a href="preferences.html" class="hover:text-foreground">Plan a Trip</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-foreground font-medium">Explore Destinations</span>
+      </nav>
+
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-2xl font-bold">Explore Destinations</h1>
+          <p class="text-muted-foreground mt-1">24 destinations match your preferences</p>
+        </div>
+        <a href="preferences.html" class="btn-outline btn-sm">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Edit Preferences
+        </a>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="card mb-6">
+        <div class="p-4 space-y-4">
+          <!-- Search Bar -->
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+            <input type="text" class="input pl-10" placeholder="Search destinations by name, country, or keyword...">
+          </div>
+          <!-- Filter Row -->
+          <div class="flex flex-wrap gap-3">
+            <select class="select w-auto min-w-[140px]">
+              <option>Any Duration</option>
+              <option>3–5 days</option>
+              <option selected>1 week</option>
+              <option>2 weeks</option>
+            </select>
+            <select class="select w-auto min-w-[140px]">
+              <option>Any Budget</option>
+              <option>Under ₹30K</option>
+              <option>₹30K–₹60K</option>
+              <option>₹60K–₹1L</option>
+              <option>₹1L+</option>
+            </select>
+            <select class="select w-auto min-w-[140px]">
+              <option>Any Style</option>
+              <option>Budget</option>
+              <option selected>Mid-Range</option>
+              <option>Luxury</option>
+              <option>Adventure</option>
+            </select>
+            <select class="select w-auto min-w-[140px]">
+              <option>Any Climate</option>
+              <option selected>Tropical</option>
+              <option>Temperate</option>
+              <option>Cold</option>
+            </select>
+            <div class="flex-1"></div>
+            <select class="select w-auto min-w-[150px]">
+              <option selected>Best Match</option>
+              <option>Price: Low–High</option>
+              <option>Price: High–Low</option>
+              <option>Rating</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Destination Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+
+        <!-- Card 1: Goa -->
+        <div class="card overflow-hidden hover:shadow-md transition-shadow group">
+          <div class="dest-img">
+            <i data-lucide="image"></i>
+            <div class="absolute top-3 right-3">
+              <span class="match-badge"><i data-lucide="sparkles" class="w-3 h-3"></i> 95% Match</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Goa</h3>
+              <div class="flex items-center gap-1 text-amber-500 text-sm">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 4.7
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> India
+            </p>
+            <p class="text-sm text-muted-foreground line-clamp-2">Sun-kissed beaches, vibrant nightlife, Portuguese heritage, and world-class seafood.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="badge badge-secondary text-xs">Beach</span>
+              <span class="badge badge-secondary text-xs">Nightlife</span>
+              <span class="badge badge-secondary text-xs">Food</span>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-sm font-semibold">₹35K – ₹55K</span>
+              <span class="text-xs text-muted-foreground">per person / week</span>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a href="destination-detail.html" class="btn-primary btn-sm flex-1 text-center">View Details</a>
+              <a href="plan-dates.html" class="btn-outline btn-sm flex-1 text-center">Add to Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Bali -->
+        <div class="card overflow-hidden hover:shadow-md transition-shadow group">
+          <div class="dest-img">
+            <i data-lucide="image"></i>
+            <div class="absolute top-3 right-3">
+              <span class="match-badge"><i data-lucide="sparkles" class="w-3 h-3"></i> 92% Match</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Bali</h3>
+              <div class="flex items-center gap-1 text-amber-500 text-sm">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 4.8
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Indonesia
+            </p>
+            <p class="text-sm text-muted-foreground line-clamp-2">Lush rice terraces, ancient temples, wellness retreats, and stunning sunsets at every turn.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="badge badge-secondary text-xs">Island</span>
+              <span class="badge badge-secondary text-xs">Wellness</span>
+              <span class="badge badge-secondary text-xs">Culture</span>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-sm font-semibold">₹45K – ₹70K</span>
+              <span class="text-xs text-muted-foreground">per person / week</span>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a href="destination-detail.html" class="btn-primary btn-sm flex-1 text-center">View Details</a>
+              <a href="plan-dates.html" class="btn-outline btn-sm flex-1 text-center">Add to Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Kerala -->
+        <div class="card overflow-hidden hover:shadow-md transition-shadow group">
+          <div class="dest-img">
+            <i data-lucide="image"></i>
+            <div class="absolute top-3 right-3">
+              <span class="match-badge"><i data-lucide="sparkles" class="w-3 h-3"></i> 90% Match</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Kerala</h3>
+              <div class="flex items-center gap-1 text-amber-500 text-sm">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 4.6
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> India
+            </p>
+            <p class="text-sm text-muted-foreground line-clamp-2">Serene backwaters, Ayurvedic spas, tea plantations, and lush tropical wildlife.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="badge badge-secondary text-xs">Wellness</span>
+              <span class="badge badge-secondary text-xs">Nature</span>
+              <span class="badge badge-secondary text-xs">Backwater</span>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-sm font-semibold">₹30K – ₹50K</span>
+              <span class="text-xs text-muted-foreground">per person / week</span>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a href="destination-detail.html" class="btn-primary btn-sm flex-1 text-center">View Details</a>
+              <a href="plan-dates.html" class="btn-outline btn-sm flex-1 text-center">Add to Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Maldives -->
+        <div class="card overflow-hidden hover:shadow-md transition-shadow group">
+          <div class="dest-img">
+            <i data-lucide="image"></i>
+            <div class="absolute top-3 right-3">
+              <span class="match-badge"><i data-lucide="sparkles" class="w-3 h-3"></i> 88% Match</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Maldives</h3>
+              <div class="flex items-center gap-1 text-amber-500 text-sm">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 4.9
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Maldives
+            </p>
+            <p class="text-sm text-muted-foreground line-clamp-2">Overwater villas, crystal-clear lagoons, world-class diving, and ultimate relaxation.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="badge badge-secondary text-xs">Island</span>
+              <span class="badge badge-secondary text-xs">Beach</span>
+              <span class="badge badge-secondary text-xs">Luxury</span>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-sm font-semibold">₹80K – ₹1.5L</span>
+              <span class="text-xs text-muted-foreground">per person / week</span>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a href="destination-detail.html" class="btn-primary btn-sm flex-1 text-center">View Details</a>
+              <a href="plan-dates.html" class="btn-outline btn-sm flex-1 text-center">Add to Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Manali -->
+        <div class="card overflow-hidden hover:shadow-md transition-shadow group">
+          <div class="dest-img">
+            <i data-lucide="image"></i>
+            <div class="absolute top-3 right-3">
+              <span class="match-badge"><i data-lucide="sparkles" class="w-3 h-3"></i> 85% Match</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Manali</h3>
+              <div class="flex items-center gap-1 text-amber-500 text-sm">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 4.5
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> India
+            </p>
+            <p class="text-sm text-muted-foreground line-clamp-2">Snow-capped peaks, adventure sports, apple orchards, and cosy mountain vibes.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="badge badge-secondary text-xs">Mountains</span>
+              <span class="badge badge-secondary text-xs">Adventure</span>
+              <span class="badge badge-secondary text-xs">Nature</span>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-sm font-semibold">₹20K – ₹40K</span>
+              <span class="text-xs text-muted-foreground">per person / week</span>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a href="destination-detail.html" class="btn-primary btn-sm flex-1 text-center">View Details</a>
+              <a href="plan-dates.html" class="btn-outline btn-sm flex-1 text-center">Add to Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Dubai -->
+        <div class="card overflow-hidden hover:shadow-md transition-shadow group">
+          <div class="dest-img">
+            <i data-lucide="image"></i>
+            <div class="absolute top-3 right-3">
+              <span class="match-badge"><i data-lucide="sparkles" class="w-3 h-3"></i> 82% Match</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Dubai</h3>
+              <div class="flex items-center gap-1 text-amber-500 text-sm">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 4.6
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> UAE
+            </p>
+            <p class="text-sm text-muted-foreground line-clamp-2">Futuristic skyline, luxury shopping, desert safaris, and world-class entertainment.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="badge badge-secondary text-xs">City</span>
+              <span class="badge badge-secondary text-xs">Shopping</span>
+              <span class="badge badge-secondary text-xs">Desert</span>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-sm font-semibold">₹60K – ₹1L</span>
+              <span class="text-xs text-muted-foreground">per person / week</span>
+            </div>
+            <div class="flex gap-2 pt-1">
+              <a href="destination-detail.html" class="btn-primary btn-sm flex-1 text-center">View Details</a>
+              <a href="plan-dates.html" class="btn-outline btn-sm flex-1 text-center">Add to Plan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-between">
+        <p class="text-sm text-muted-foreground">Showing 1–6 of 24 destinations</p>
+        <div class="flex items-center gap-1">
+          <button class="btn-outline btn-sm btn-icon" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+          <button class="btn-primary btn-sm w-8 h-8">1</button>
+          <button class="btn-outline btn-sm w-8 h-8">2</button>
+          <button class="btn-outline btn-sm w-8 h-8">3</button>
+          <button class="btn-outline btn-sm w-8 h-8">4</button>
+          <button class="btn-outline btn-sm btn-icon"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goa — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
+        <a href="preferences.html" class="hover:text-foreground">Plan a Trip</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <a href="destinations.html" class="hover:text-foreground">Destinations</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-foreground font-medium">Goa, India</span>
+      </nav>
+
+      <!-- Photo Gallery Grid -->
+      <div class="grid grid-cols-4 grid-rows-2 gap-2 mb-6 rounded-xl overflow-hidden" style="height: 360px">
+        <div class="col-span-2 row-span-2 dest-img !rounded-none !aspect-auto h-full">
+          <i data-lucide="image" class="w-8 h-8"></i>
+        </div>
+        <div class="dest-img !rounded-none !aspect-auto h-full"><i data-lucide="image" class="w-5 h-5"></i></div>
+        <div class="dest-img !rounded-none !aspect-auto h-full"><i data-lucide="image" class="w-5 h-5"></i></div>
+        <div class="dest-img !rounded-none !aspect-auto h-full"><i data-lucide="image" class="w-5 h-5"></i></div>
+        <div class="dest-img !rounded-none !aspect-auto h-full relative">
+          <i data-lucide="image" class="w-5 h-5"></i>
+          <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <span class="text-white font-semibold text-sm">+12 Photos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left: Details -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Title & Meta -->
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <h1 class="text-2xl font-bold">Goa, India</h1>
+              <span class="match-badge text-sm"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 95% Match</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> South India</span>
+              <span class="flex items-center gap-1 text-amber-500"><i data-lucide="star" class="w-4 h-4 fill-current"></i> 4.7 (2,340 reviews)</span>
+              <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> Best: Oct–Mar</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">About Goa</div>
+            </div>
+            <div class="card-content space-y-3 text-sm text-muted-foreground leading-relaxed">
+              <p>Goa, India's smallest state, is a tropical paradise on the western coast known for its stunning beaches, vibrant nightlife, and rich Portuguese heritage. From the lively shores of Baga and Calangute to the serene beauty of Palolem, every beach has its own character.</p>
+              <p>Beyond the beaches, explore centuries-old churches in Old Goa (a UNESCO World Heritage Site), spice plantations in the hinterland, and bustling local markets. The fusion of Indian and Portuguese cultures creates a unique culinary and architectural landscape.</p>
+              <p>Whether you're seeking adventure with water sports, relaxation at a beachside spa, or cultural immersion through local festivals, Goa offers an unmatched blend of experiences for every traveller.</p>
+            </div>
+          </div>
+
+          <!-- Highlights -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Destination Highlights</div>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <i data-lucide="thermometer-sun" class="w-4 h-4 text-blue-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Climate</div>
+                    <div class="text-xs text-muted-foreground">Tropical, 25–33°C</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
+                    <i data-lucide="calendar-check" class="w-4 h-4 text-green-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Best Season</div>
+                    <div class="text-xs text-muted-foreground">October – March</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center">
+                    <i data-lucide="languages" class="w-4 h-4 text-purple-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Language</div>
+                    <div class="text-xs text-muted-foreground">Konkani, English</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <i data-lucide="indian-rupee" class="w-4 h-4 text-amber-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Currency</div>
+                    <div class="text-xs text-muted-foreground">Indian Rupee (₹)</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-rose-100 flex items-center justify-center">
+                    <i data-lucide="clock" class="w-4 h-4 text-rose-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Time Zone</div>
+                    <div class="text-xs text-muted-foreground">IST (UTC+5:30)</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center">
+                    <i data-lucide="plane" class="w-4 h-4 text-indigo-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Nearest Airport</div>
+                    <div class="text-xs text-muted-foreground">GOI – Dabolim</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activities -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Activities Available</div>
+            </div>
+            <div class="card-content">
+              <div class="flex flex-wrap gap-2">
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="waves" class="w-3 h-3 mr-1 inline"></i> Water Sports</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="umbrella" class="w-3 h-3 mr-1 inline"></i> Beach Lounging</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="utensils" class="w-3 h-3 mr-1 inline"></i> Food Tours</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="landmark" class="w-3 h-3 mr-1 inline"></i> Heritage Walks</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="music" class="w-3 h-3 mr-1 inline"></i> Nightlife</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="heart-pulse" class="w-3 h-3 mr-1 inline"></i> Spa & Wellness</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="bike" class="w-3 h-3 mr-1 inline"></i> Cycling Tours</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="camera" class="w-3 h-3 mr-1 inline"></i> Photography</span>
+                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="ship" class="w-3 h-3 mr-1 inline"></i> Dolphin Cruise</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accommodation Options -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base">Accommodation Options</div>
+              <div class="card-description">Indicative pricing per night</div>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="border border-border rounded-lg p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="badge badge-secondary">Budget</span>
+                    <span class="text-xs text-muted-foreground">⭐⭐⭐</span>
+                  </div>
+                  <div class="text-lg font-bold">₹2,500</div>
+                  <div class="text-xs text-muted-foreground">per night</div>
+                  <ul class="text-xs text-muted-foreground space-y-1 pt-1">
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> AC room</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Breakfast included</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Wi-Fi</li>
+                  </ul>
+                </div>
+                <div class="border-2 border-primary rounded-lg p-4 space-y-2 relative">
+                  <div class="absolute -top-2.5 left-3 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">RECOMMENDED</div>
+                  <div class="flex items-center justify-between">
+                    <span class="badge badge-primary">Mid-Range</span>
+                    <span class="text-xs text-muted-foreground">⭐⭐⭐⭐</span>
+                  </div>
+                  <div class="text-lg font-bold">₹5,500</div>
+                  <div class="text-xs text-muted-foreground">per night</div>
+                  <ul class="text-xs text-muted-foreground space-y-1 pt-1">
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Pool access</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Half-board meals</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Beach proximity</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Spa access</li>
+                  </ul>
+                </div>
+                <div class="border border-border rounded-lg p-4 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="badge badge-warning">Luxury</span>
+                    <span class="text-xs text-muted-foreground">⭐⭐⭐⭐⭐</span>
+                  </div>
+                  <div class="text-lg font-bold">₹12,000</div>
+                  <div class="text-xs text-muted-foreground">per night</div>
+                  <ul class="text-xs text-muted-foreground space-y-1 pt-1">
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Private villa / suite</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> All-inclusive</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Private beach</li>
+                    <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Butler service</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar: Sticky Booking Card -->
+        <div class="space-y-4">
+          <div class="card sticky top-20">
+            <div class="card-header">
+              <div class="card-title text-base">Estimated Cost</div>
+              <div class="card-description">For 1 person, 7 nights (Mid-Range)</div>
+            </div>
+            <div class="card-content space-y-3">
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Accommodation</span>
+                  <span>₹38,500</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Est. Flights</span>
+                  <span>₹8,000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Activities</span>
+                  <span>₹5,000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Taxes & Fees</span>
+                  <span>₹3,500</span>
+                </div>
+                <div class="separator my-2"></div>
+                <div class="flex justify-between font-semibold text-base">
+                  <span>Total Estimated</span>
+                  <span>₹55,000</span>
+                </div>
+              </div>
+
+              <!-- Perk Applicability -->
+              <div class="bg-green-50 border border-green-200 rounded-lg p-3 space-y-1">
+                <div class="flex items-center gap-2 text-sm font-semibold text-green-700">
+                  <i data-lucide="badge-check" class="w-4 h-4"></i> Perks Applicable
+                </div>
+                <div class="text-xs text-green-600">
+                  You can apply up to <strong>₹19,000</strong> from your travel credits and anniversary bonus.
+                </div>
+                <div class="separator my-1.5" style="background-color: hsl(142 76% 36% / 0.2)"></div>
+                <div class="flex justify-between text-sm font-semibold text-green-700">
+                  <span>After Perks</span>
+                  <span>₹36,000</span>
+                </div>
+              </div>
+
+              <a href="plan-dates.html" class="btn-primary w-full mt-2">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Start Planning
+              </a>
+              <button class="btn-outline w-full">
+                <i data-lucide="heart" class="w-4 h-4"></i> Save to Wishlist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Personal Travel Planning Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#60A5FA", // A nice blue from the image
+            "background-light": "#FFFFFF",
+            "background-dark": "#1F2937", // A cool dark gray
+          },
+          fontFamily: {
+            display: ["Montserrat", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "0.5rem", // 8px
+          },
+        },
+      },
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 16px;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    .action-button-group label:hover .material-symbols-outlined,
+    .action-button-group label:hover span,
+    .action-button-group button:hover .material-symbols-outlined,
+    .action-button-group button:hover span {
+      color: #60A5FA;
+    }
+    .action-button-group input[type="radio"]:checked + .material-symbols-outlined {
+       color: #60A5FA;
+       font-variation-settings: 'FILL' 1, 'wght' 700;
+    }
+    .action-button-group input[type="radio"]:checked + .material-symbols-outlined + span {
+       color: #60A5FA;
+       font-weight: 600;
+    }
+    .peer:checked ~ .collapsible-content {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        opacity: 0;
+        margin-top: 0;
+    }
+     .peer:checked ~ .collapsible-prompt {
+        max-height: 500px;opacity: 1;
+        margin-top: 1rem;
+    }
+    .peer:checked ~ .collapsible-trips {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    .peer:checked ~ .collapsible-trigger .chevron-down {
+        display: none;
+    }
+    .peer:checked ~ .collapsible-trigger .chevron-up {
+        display: block;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200 p-4 sm:p-6 md:p-8">
+<div class="max-w-7xl mx-auto flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<div></div>
+<div class="flex items-center space-x-4">
+<button class="relative flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined !text-2xl">shopping_cart</span>
+<span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
+</button>
+<button class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined !text-3xl">account_circle</span>
+</button>
+</div>
+</div>
+<div class="bg-blue-50 dark:bg-gray-800/50 rounded-lg p-6 sm:p-8 mb-8 relative overflow-hidden shadow-lg">
+<div class="absolute bottom-0 left-0 w-full h-2/3">
+<svg class="w-full h-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1000 100" xmlns="http://www.w3.org/2000/svg">
+<path class="stroke-blue-200 dark:stroke-gray-600" d="M-100 80 Q 150 20, 400 60 T 900 30 T 1100 70" stroke-dasharray="8 8" stroke-width="3"></path>
+</svg>
+</div>
+<div class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-12 md:gap-8">
+<div class="w-full md:w-1/2 flex justify-start items-center">
+<div class="relative pl-4">
+<div class="absolute -left-1.5 -top-1.5 z-10">
+<span class="material-symbols-outlined text-teal-500 !text-5xl" style="font-variation-settings: 'FILL' 1, 'wght' 600;">flag</span>
+</div>
+<div class="absolute left-0 top-1/2 h-16 w-0.5 bg-gray-400 dark:bg-gray-500"></div>
+<div class="ml-4">
+<p class="text-3xl font-bold text-gray-900 dark:text-white">50+</p>
+<p class="text-base text-gray-600 dark:text-gray-400">Countries Covered</p>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex justify-end items-center">
+<div class="relative pl-4 text-right md:text-left">
+<div class="absolute -left-1.5 -top-1.5 z-10 md:left-auto md:-right-1.5">
+<span class="material-symbols-outlined text-pink-500 !text-5xl" style="font-variation-settings: 'FILL' 1, 'wght' 600;">flag</span>
+</div>
+<div class="absolute left-0 md:left-auto md:right-0 top-1/2 h-16 w-0.5 bg-gray-400 dark:bg-gray-500"></div>
+<div class="ml-4 md:ml-0 md:mr-4">
+<p class="text-3xl font-bold text-gray-900 dark:text-white">100+</p>
+<p class="text-base text-gray-600 dark:text-gray-400">Types of Trips</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<header class="bg-primary p-4 rounded-lg flex justify-between items-center mb-6">
+<div class="flex items-center space-x-4">
+<div class="bg-white/30 p-2 rounded">
+<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h1 class="text-xl md:text-3xl font-extrabold text-white tracking-wide uppercase">Personal Travel Planning Dashboard</h1>
+</div>
+<img alt="Decorative travel-themed icons" class="hidden sm:block h-12 rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAUlJeFqxSfxuGEewR-sBEeUu339z9WK-cAoPTVtqfhsGE17k-eMhpYMb3NSbmJzYBeM6agZX5BshoCbGSsgmroM5sD6-B3Ssjy5APMUQLI5__AChDVEBvQ1SEnAnKuQk4jZSt8LdKYKKbnMegNtnwQzQzkCxYwUGJxL03mdWPfsUU5P05NTOPxFiwAPht5UTILQ-FTHWyWTz_nG2CtimEcwfQfsUzh00mI42Umo7ikC7FNDYRyBad3wGqtULgIJigKy3cxvA2d2US"/>
+</header>
+<div class="flex flex-wrap gap-4 justify-center mb-8 text-sm">
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-sm bg-gray-200 dark:bg-gray-600"></div>
+<span class="font-medium text-gray-600 dark:text-gray-400">Weekend</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-sm bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600"></div>
+<span class="font-medium text-gray-600 dark:text-gray-400">Public Holiday</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-sm bg-yellow-300 dark:bg-yellow-600"></div>
+<span class="font-medium text-gray-600 dark:text-gray-400">Suggested Leave</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-yellow-500 dark:text-yellow-400" style="font-size: 20px; font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;">star</span>
+<span class="font-medium text-gray-600 dark:text-gray-400">Long Weekend</span>
+</div>
+</div>
+<main class="space-y-4 flex-grow">
+<div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start border-b border-gray-200 dark:border-gray-700 pb-4">
+<input class="peer absolute opacity-0 w-0 h-0" id="holiday-jan" type="checkbox"/>
+<div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 pt-4">
+<label class="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-primary/50 flex-grow collapsible-trigger cursor-pointer" for="holiday-jan">
+<div class="flex justify-between items-center">
+<div class="flex-1 text-left">
+<p class="font-bold text-gray-900 dark:text-white"><span class="text-primary font-extrabold">JAN</span> | NEW YEAR'S DAY</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Thu 1 - Sun 4</p>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200 text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined !text-sm">edit_calendar</span>
+<span>Customize Dates</span>
+</button>
+</div>
+</div>
+<div class="ml-2">
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-down">expand_more</span>
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-up hidden">expand_less</span>
+</div>
+</div>
+</label>
+<div class="collapsible-content space-y-4 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 justify-start">
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">THU</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">1</span>
+</div>
+<div class="text-center bg-yellow-300 dark:bg-yellow-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-yellow-800 dark:text-yellow-200">FRI</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">2</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SAT</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">3</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SUN</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">4</span>
+</div>
+</div>
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+</div>
+<div class="relative group flex items-center justify-start gap-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">man</span>
+<input aria-label="Number of men" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="3"/>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">woman</span>
+<input aria-label="Number of women" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="4"/>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-gray-800 dark:bg-gray-900 text-white text-xs rounded py-1 px-2">
+                Click to edit traveler numbers
+                <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800 dark:border-t-gray-900"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="collapsible-prompt bg-blue-50 dark:bg-gray-800/50 p-3 rounded-lg max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+<p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Why are you hiding this holiday?</p>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-jan" type="radio"/>
+<span class="ml-2">Not available</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-jan" type="radio"/>
+<span class="ml-2">Already have plans</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-jan" type="radio"/>
+<span class="ml-2">Not interested in these trips</span>
+</label>
+<input aria-label="Other reason" class="mt-2 w-full text-sm bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-2" placeholder="Other (please specify)" type="text"/>
+</div>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-300 px-3 py-1">Skip</button>
+<button class="text-xs font-bold text-white bg-primary hover:bg-blue-500 dark:hover:bg-blue-400 rounded px-3 py-1 transition-colors">Submit</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 lg:col-span-3 pt-4 collapsible-trips transition-opacity duration-300">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Bali" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1mTWMAApxfrVTt2noO0kWsuxlXV9vOpjQKY2E4e0zs83uMKmkoAv9qdeWwC5vU6JRe8OHSoIF5d-5F-1FeSpOC9hblk-Euz0fLA0LPNG5UXVbqa2dctj_k8i2jfyz1Tm1uuLgO2o-Sebces0KytW2Bv1mvhna0ruDQ0cH8Il5TxNGCMgT0Q1_v57mNZxweRGAiKX8NyeoeuXLPtP5wC-_9gIyh5L4XHJx6s_5ztbXm_82_AINu94GH1bEXAavuXXwxTtZFKI3NeH3"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Bali Getaway</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">4N/5D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Kuta, Ubud, Seminyak</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$899<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Thailand" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_fz1km4qhT62jq8_r-Qqc3b9VyVY4a5gassGGmCsw_0bZgKIJalLQHYE5J0ZiGSKmkZ1woQQTNaJQSV3aYYwKCpBjSe5aLKKnpekojh0Z2lVSPojw0m_RoOfeuaLMDttM5jaEbo54CgfIW-cAIyQxHcnO7I4_4vvlRGr19YozmzlJN4ENk1T-rxYxlRvz0qt0t_U2CMdqNf0SPrEudLLmNEeyjd6iug4BeGXQMRkpIM6RGeN8hhQiyz8SIlCy04UqflXtcea8l297"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Thai Adventure</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">3N/4D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Bangkok City Tour</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$650<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Vietnam" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDThLwoHDbGCAKtLK2hhl-x8BQTzxgQ6_aPaNPkHgq9MxX-TyG_6YgLhrJ7skDmIO9DdHRSjSaGum0L5O9FXYMxuZLk6faasRkQLtf8Osd9MiIcLaiaTg_-M0zmnscxjoh_eJPDI8XuvdeHQmuaJvRv2olQIpryOOAefkflt18TV0rw5WoP28aLIzz9r61GPbthGXF2F0enxhWO6Ph8smIacjJbIs1tH0sN7O0ohp2iRJieU7TNeaFwgzasVvi6E5XAsKY4Pk4gwywA"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Vietnam Explorer</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">4N/5D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Hanoi, Ha Long Bay Cruise</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$950<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start border-b border-gray-200 dark:border-gray-700 py-4">
+<input class="peer absolute opacity-0 w-0 h-0" id="holiday-feb" type="checkbox"/>
+<div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 pt-4">
+<label class="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-primary/50 flex-grow collapsible-trigger cursor-pointer" for="holiday-feb">
+<div class="flex justify-between items-center">
+<div class="flex-1 text-left">
+<p class="font-bold text-gray-900 dark:text-white"><span class="text-primary font-extrabold">FEB</span> | CHINESE NEW YEAR</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Tue 17 - Sun 22</p>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200 text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined !text-sm">edit_calendar</span>
+<span>Customize Dates</span>
+</button>
+</div>
+</div>
+<div class="ml-2">
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-down">expand_more</span>
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-up hidden">expand_less</span>
+</div>
+</div>
+</label>
+<div class="collapsible-content space-y-4 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 justify-start">
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2 justify-start">
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">TUE</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">17</span>
+</div>
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">WED</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">18</span>
+</div>
+<div class="text-center bg-yellow-300 dark:bg-yellow-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-yellow-800 dark:text-yellow-200">THU</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">19</span>
+</div>
+<div class="text-center bg-yellow-300 dark:bg-yellow-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-yellow-800 dark:text-yellow-200">FRI</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">20</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SAT</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">21</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SUN</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">22</span>
+</div>
+</div>
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+</div>
+<div class="relative group flex items-center justify-start gap-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">man</span>
+<input aria-label="Number of men" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="3"/>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">woman</span>
+<input aria-label="Number of women" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="4"/>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-gray-800 dark:bg-gray-900 text-white text-xs rounded py-1 px-2">
+                Click to edit traveler numbers
+                <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800 dark:border-t-gray-900"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="collapsible-prompt bg-blue-50 dark:bg-gray-800/50 p-3 rounded-lg max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+<p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Why are you hiding this holiday?</p>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-feb" type="radio"/>
+<span class="ml-2">Not available</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-feb" type="radio"/>
+<span class="ml-2">Already have plans</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-feb" type="radio"/>
+<span class="ml-2">Not interested in these trips</span>
+</label>
+<input aria-label="Other reason" class="mt-2 w-full text-sm bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-2" placeholder="Other (please specify)" type="text"/>
+</div>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-300 px-3 py-1">Skip</button>
+<button class="text-xs font-bold text-white bg-primary hover:bg-blue-500 dark:hover:bg-blue-400 rounded px-3 py-1 transition-colors">Submit</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 lg:col-span-3 pt-4 collapsible-trips transition-opacity duration-300">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Hong Kong" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrkU82kp9TiJMjhXZwu95Ghk2742ScIh4Gwyo0hgX6LYZR-8L122hU26cnBHlnwG5JlMBEwVXxB0vtWVWLM3N_vOWsntJfysPsC2bHFLSmWrs1xnwGN4AmPRHS9H81dDgzC1ooXRz0Sf-Oexf4ck-bHu69YiSNsoMKQsMOj7Da-_AIJq6uIg5qPjvTlODiNxlk8f5zSlRH2j0xyNwTTdVMNGynwxpT7LSNFG7I9O1T6ZAf67pLY6t6C2vaJAwcJlE1o9L6NYGgPgYu"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Hong Kong Fun</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">5N/6D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Disneyland, Victoria Peak</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$1200<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Vietnam" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDThLwoHDbGCAKtLK2hhl-x8BQTzxgQ6_aPaNPkHgq9MxX-TyG_6YgLhrJ7skDmIO9DdHRSjSaGum0L5O9FXYMxuZLk6faasRkQLtf8Osd9MiIcLaiaTg_-M0zmnscxjoh_eJPDI8XuvdeHQmuaJvRv2olQIpryOOAefkflt18TV0rw5WoP28aLIzz9r61GPbthGXF2F0enxhWO6Ph8smIacjJbIs1tH0sN7O0ohp2iRJieU7TNeaFwgzasVvi6E5XAsKY4Pk4gwywA"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Vietnam Explorer</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">5N/6D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Hanoi, Ha Long, Ninh Binh</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$950<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Thailand" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_fz1km4qhT62jq8_r-Qqc3b9VyVY4a5gassGGmCsw_0bZgKIJalLQHYE5J0ZiGSKmkZ1woQQTNaJQSV3aYYwKCpBjSe5aLKKnpekojh0Z2lVSPojw0m_RoOfeuaLMDttM5jaEbo54CgfIW-cAIyQxHcnO7I4_4vvlRGr19YozmzlJN4ENk1T-rxYxlRvz0qt0t_U2CMdqNf0SPrEudLLmNEeyjd6iug4BeGXQMRkpIM6RGeN8hhQiyz8SIlCy04UqflXtcea8l297"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Thai Beaches</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">5N/6D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Phuket, Krabi, Phi Phi Islands</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$1100<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Japan" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXyTjquTgo1t6ba40Tkh0u4P-fiNb7q5ipYBhsJsczWh7_fQKijr_v8DD-ngXWMl0cdj8Gvqnm0XWVJfm5OJ_pTT8F3zJL6AnDNImsAY4hXl3OX9PHFxq9l0nvySegy-mo2x-rs7vrz-BGkVrWmbtqIrVT1R9UZaKYpbb0ssmvCN6INVQSTKuL2eGJSidkuu9AG2bByF3JpvPAbAAyHY7WkXQVoBFDhvQ6zaXLfkhnTFG1jaawGxVZunLdBZiS1isANG0Yj0q2SSa7"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Japan Cherry Blossom</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">6N/7D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Tokyo, Kyoto, Mt. Fuji</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$2100<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start border-b border-gray-200 dark:border-gray-700 py-4">
+<input class="peer absolute opacity-0 w-0 h-0" id="holiday-apr" type="checkbox"/>
+<div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 pt-4">
+<label class="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-primary/50 flex-grow collapsible-trigger cursor-pointer" for="holiday-apr">
+<div class="flex justify-between items-center">
+<div class="flex-1 text-left">
+<p class="font-bold text-gray-900 dark:text-white flex items-center gap-1"><span class="text-primary font-extrabold">APR</span> | <span class="material-symbols-outlined text-yellow-500 dark:text-yellow-400 !text-base" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;">star</span> GOOD FRIDAY</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+<span>Fri 10 - Sun 12</span>
+<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Customized</span>
+</p>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200 text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined !text-sm">edit_calendar</span>
+<span>Customize Dates</span>
+</button>
+</div>
+</div>
+<div class="ml-2">
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-down">expand_more</span>
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-up hidden">expand_less</span>
+</div>
+</div>
+</label>
+<div class="collapsible-content space-y-4 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 justify-start">
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2 justify-start">
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">FRI</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">3</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SAT</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">4</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SUN</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">5</span>
+</div>
+</div>
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+</div>
+<div class="relative group flex items-center justify-start gap-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">man</span>
+<input aria-label="Number of men" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="3"/>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">woman</span>
+<input aria-label="Number of women" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="4"/>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-gray-800 dark:bg-gray-900 text-white text-xs rounded py-1 px-2">
+                Click to edit traveler numbers
+                <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800 dark:border-t-gray-900"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="collapsible-prompt bg-blue-50 dark:bg-gray-800/50 p-3 rounded-lg max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+<p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Why are you hiding this holiday?</p>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-apr" type="radio"/>
+<span class="ml-2">Not available</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-apr" type="radio"/>
+<span class="ml-2">Already have plans</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-apr" type="radio"/>
+<span class="ml-2">Not interested in these trips</span>
+</label>
+<input aria-label="Other reason" class="mt-2 w-full text-sm bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-2" placeholder="Other (please specify)" type="text"/>
+</div>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-300 px-3 py-1">Skip</button>
+<button class="text-xs font-bold text-white bg-primary hover:bg-blue-500 dark:hover:bg-blue-400 rounded px-3 py-1 transition-colors">Submit</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 lg:col-span-3 pt-4 collapsible-trips transition-opacity duration-300">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Phuket" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVUYXA1e-O7G05h-L2s4Ml1zfwVXyZFafzGcgxwLKmNXz61TNGZPvtSrUcZczFnsfyRysXzrA3ZwSC9f_JtkCeyXk4e-s4lUGe503Q7W09n1OjticcpafsN26a-6_fRZsnsHcXxSxU3bV-Qcrl_Ko9ewJ91CeHMlvCZOnGdaaiw3aulr-KFDRYLY5dbsjEgUx8RqlLEg3lpeTMPtB9aqAOjuKdjrMABN2weNVQdHJUwYopJ9MPAhyWFxA-3m-zk2G1DAcZjREpZk1z"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Phuket Beach Fun</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">2N/3D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Patong Beach, Kata Beach</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$450<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Bali" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1mTWMAApxfrVTt2noO0kWsuxlXV9vOpjQKY2E4e0zs83uMKmkoAv9qdeWwC5vU6JRe8OHSoIF5d-5F-1FeSpOC9hblk-Euz0fLA0LPNG5UXVbqa2dctj_k8i2jfyz1Tm1uuLgO2o-Sebces0KytW2Bv1mvhna0ruDQ0cH8Il5TxNGCMgT0Q1_v57mNZxweRGAiKX8NyeoeuXLPtP5wC-_9gIyh5L4XHJx6s_5ztbXm_82_AINu94GH1bEXAavuXXwxTtZFKI3NeH3"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">Bali Quickie</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">2N/3D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Seminyak, Beach Clubs</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$500<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex">
+<img alt="Kuala Lumpur" class="w-1/3 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAUlJeFqxSfxuGEewR-sBEeUu339z9WK-cAoPTVtqfhsGE17k-eMhpYMb3NSbmJzYBeM6agZX5BshoCbGSsgmroM5sD6-B3Ssjy5APMUQLI5__AChDVEBvQ1SEnAnKuQk4jZSt8LdKYKKbnMegNtnwQzQzkCxYwUGJxL03mdWPfsUU5P05NTOPxFiwAPht5UTILQ-FTHWyWTz_nG2CtimEcwfQfsUzh00mI42Umo7ikC7FNDYRyBad3wGqtULgIJigKy3cxvA2d2US"/>
+<div class="p-3 flex flex-col justify-between flex-grow text-xs w-2/3">
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-gray-900 dark:text-white">KL City Break</h3>
+<div class="border border-blue-500 text-blue-500 dark:text-blue-400 font-bold px-2 py-0.5 rounded ml-2 whitespace-nowrap">2N/3D</div>
+</div>
+<div class="space-y-1 text-gray-600 dark:text-gray-400">
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Places:</p>
+<p>Petronas Towers, Batu Caves</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Suitability:</p>
+<p>Family trip, weather preferences, food</p>
+</div>
+<div>
+<p class="font-semibold text-gray-700 dark:text-gray-300">Inclusions:</p>
+<p>Flight, Local Transfer, Breakfast</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-center mb-2">
+<p class="text-base font-bold text-gray-900 dark:text-white">$400<span class="text-xs font-normal text-gray-500 dark:text-gray-400">/pax</span></p>
+<button class="bg-primary/20 text-primary dark:bg-primary/30 dark:text-white font-bold py-1 px-3 rounded hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors">Details</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between items-center text-gray-500 dark:text-gray-400 action-button-group">
+<button class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">add_shopping_cart</span>
+<span class="transition-colors">Add to Cart</span>
+</button>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">forward</span>
+<span class="transition-colors">Suggest in Future</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">done</span>
+<span class="transition-colors">Already Visited</span>
+</label>
+<label class="cursor-pointer flex flex-col items-center text-center text-[10px] leading-tight">
+<span class="material-symbols-outlined !text-lg transition-colors">visibility_off</span>
+<span class="transition-colors">Not Interested</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-b border-gray-200 dark:border-gray-700">
+<div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
+<input class="peer absolute opacity-0 w-0 h-0" id="holiday-may1" type="checkbox"/>
+<div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 pt-4">
+<label class="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-primary/50 flex-grow collapsible-trigger cursor-pointer" for="holiday-may1">
+<div class="flex justify-between items-center">
+<div class="flex-1 text-left">
+<p class="font-bold text-gray-900 dark:text-white flex items-center gap-1"><span class="text-primary font-extrabold">MAY</span> | <span class="material-symbols-outlined text-yellow-500 dark:text-yellow-400 !text-base" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;">star</span> LABOUR DAY</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Fri 1 - Sun 3</p>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200 text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined !text-sm">edit_calendar</span>
+<span>Customize Dates</span>
+</button>
+</div>
+</div>
+<div class="ml-2">
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-down">expand_more</span>
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-up hidden">expand_less</span>
+</div>
+</div>
+</label>
+<div class="collapsible-content space-y-4 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 justify-start">
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2 justify-start">
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">FRI</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">1</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SAT</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">2</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SUN</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">3</span>
+</div>
+</div>
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+</div>
+<div class="relative group flex items-center justify-start gap-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">man</span>
+<input aria-label="Number of men" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="3"/>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">woman</span>
+<input aria-label="Number of women" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="4"/>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-gray-800 dark:bg-gray-900 text-white text-xs rounded py-1 px-2">
+                  Click to edit traveler numbers
+                  <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800 dark:border-t-gray-900"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="collapsible-prompt bg-blue-50 dark:bg-gray-800/50 p-3 rounded-lg max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+<p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Why are you hiding this holiday?</p>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may1" type="radio"/>
+<span class="ml-2">Not available</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may1" type="radio"/>
+<span class="ml-2">Already have plans</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may1" type="radio"/>
+<span class="ml-2">Not interested in these trips</span>
+</label>
+<input aria-label="Other reason" class="mt-2 w-full text-sm bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-2" placeholder="Other (please specify)" type="text"/>
+</div>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-300 px-3 py-1">Skip</button>
+<button class="text-xs font-bold text-white bg-primary hover:bg-blue-500 dark:hover:bg-blue-400 rounded px-3 py-1 transition-colors">Submit</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 lg:col-span-3 collapsible-trips transition-opacity duration-300">
+</div>
+</div>
+</div>
+<div class="border-b border-gray-200 dark:border-gray-700">
+<div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
+<input class="peer absolute opacity-0 w-0 h-0" id="holiday-may2" type="checkbox"/>
+<div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 pt-4">
+<label class="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-primary/50 flex-grow collapsible-trigger cursor-pointer" for="holiday-may2">
+<div class="flex justify-between items-center">
+<div class="flex-1 text-left">
+<p class="font-bold text-gray-900 dark:text-white"><span class="text-primary font-extrabold">MAY</span> | HARI RAYA HAJI</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Wed 27 - Sun 31</p>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200 text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined !text-sm">edit_calendar</span>
+<span>Customize Dates</span>
+</button>
+</div>
+</div>
+<div class="ml-2">
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-down">expand_more</span>
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-up hidden">expand_less</span>
+</div>
+</div>
+</label>
+<div class="collapsible-content space-y-4 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 justify-start">
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2 justify-start">
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">WED</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">27</span>
+</div>
+<div class="text-center bg-yellow-300 dark:bg-yellow-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-yellow-800 dark:text-yellow-200">THU</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">28</span>
+</div>
+<div class="text-center bg-yellow-300 dark:bg-yellow-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-yellow-800 dark:text-yellow-200">FRI</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">29</span>
+</div>
+<div class="text-center bg-gray-200 dark:bg-gray-600 border-2 border-dashed border-gray-400 dark:border-gray-500 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-gray-600 dark:text-gray-300">SAT</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">30</span>
+</div>
+<div class="text-center bg-red-200 dark:bg-red-800 border-2 border-dashed border-red-400 dark:border-red-500 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">SUN</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">31</span>
+</div>
+</div>
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+</div>
+<div class="relative group flex items-center justify-start gap-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">man</span>
+<input aria-label="Number of men" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="3"/>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">woman</span>
+<input aria-label="Number of women" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="4"/>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-gray-800 dark:bg-gray-900 text-white text-xs rounded py-1 px-2">
+                  Click to edit traveler numbers
+                  <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800 dark:border-t-gray-900"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="collapsible-prompt bg-blue-50 dark:bg-gray-800/50 p-3 rounded-lg max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+<p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Why are you hiding this holiday?</p>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may2" type="radio"/>
+<span class="ml-2">Not available</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may2" type="radio"/>
+<span class="ml-2">Already have plans</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may2" type="radio"/>
+<span class="ml-2">Not interested in these trips</span>
+</label>
+<input aria-label="Other reason" class="mt-2 w-full text-sm bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-2" placeholder="Other (please specify)" type="text"/>
+</div>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-300 px-3 py-1">Skip</button>
+<button class="text-xs font-bold text-white bg-primary hover:bg-blue-500 dark:hover:bg-blue-400 rounded px-3 py-1 transition-colors">Submit</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 lg:col-span-3 collapsible-trips transition-opacity duration-300">
+</div>
+</div>
+</div>
+<div class="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
+<input class="peer absolute opacity-0 w-0 h-0" id="holiday-may3" type="checkbox"/>
+<div class="md:col-span-1 lg:col-span-1 flex flex-col gap-4 pt-4">
+<label class="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-primary/50 flex-grow collapsible-trigger cursor-pointer" for="holiday-may3">
+<div class="flex justify-between items-center">
+<div class="flex-1 text-left">
+<p class="font-bold text-gray-900 dark:text-white flex items-center gap-1"><span class="text-primary font-extrabold">MAY</span> | <span class="material-symbols-outlined text-yellow-500 dark:text-yellow-400 !text-base" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;">star</span> VESAK DAY</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Sun 31 - Mon 1</p>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200 text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined !text-sm">edit_calendar</span>
+<span>Customize Dates</span>
+</button>
+</div>
+</div>
+<div class="ml-2">
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-down">expand_more</span>
+<span class="material-symbols-outlined !text-2xl text-gray-500 dark:text-gray-400 chevron-up hidden">expand_less</span>
+</div>
+</div>
+</label>
+<div class="collapsible-content space-y-4 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 justify-start">
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2 justify-start">
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">SUN</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">31</span>
+</div>
+<div class="text-center bg-red-200 dark:bg-red-800 border border-red-400 dark:border-red-600 p-2 rounded-lg w-16">
+<span class="text-xs font-semibold text-red-600 dark:text-red-300">MON</span>
+<span class="block text-2xl font-bold text-gray-800 dark:text-white">1</span>
+</div>
+</div>
+<div class="flex flex-col">
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">add_circle</span></button>
+<button class="text-primary hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-200"><span class="material-symbols-outlined !text-lg">remove_circle</span></button>
+</div>
+</div>
+<div class="relative group flex items-center justify-start gap-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">man</span>
+<input aria-label="Number of men" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="3"/>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined !text-xl">woman</span>
+<input aria-label="Number of women" class="w-10 text-center bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-1" min="0" type="number" value="4"/>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-gray-800 dark:bg-gray-900 text-white text-xs rounded py-1 px-2">
+                Click to edit traveler numbers
+                <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800 dark:border-t-gray-900"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="collapsible-prompt bg-blue-50 dark:bg-gray-800/50 p-3 rounded-lg max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out">
+<p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Why are you hiding this holiday?</p>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may3" type="radio"/>
+<span class="ml-2">Not available</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may3" type="radio"/>
+<span class="ml-2">Already have plans</span>
+</label>
+<label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+<input class="form-radio h-4 w-4 text-primary focus:ring-primary" name="reason-may3" type="radio"/>
+<span class="ml-2">Not interested in these trips</span>
+</label>
+<input aria-label="Other reason" class="mt-2 w-full text-sm bg-gray-100 dark:bg-gray-700 rounded border-gray-300 dark:border-gray-600 focus:ring-primary focus:border-primary p-2" placeholder="Other (please specify)" type="text"/>
+</div>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-300 px-3 py-1">Skip</button>
+<button class="text-xs font-bold text-white bg-primary hover:bg-blue-500 dark:hover:bg-blue-400 rounded px-3 py-1 transition-colors">Submit</button>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 lg:col-span-3 collapsible-trips transition-opacity duration-300">
+</div>
+</div>
+</main>
+</div>
+</body></html>

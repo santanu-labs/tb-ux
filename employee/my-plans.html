@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Plans — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link active"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-2xl font-bold">My Travel Plans</h1>
+          <p class="text-muted-foreground mt-1">Manage and track all your travel plans</p>
+        </div>
+        <a href="preferences.html" class="btn-primary">
+          <i data-lucide="plus" class="w-4 h-4"></i> New Plan
+        </a>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="tabs-list mb-6" data-tabs>
+        <button class="tab-trigger active" data-tab="all">All (4)</button>
+        <button class="tab-trigger" data-tab="draft">Draft (1)</button>
+        <button class="tab-trigger" data-tab="saved">Saved (1)</button>
+        <button class="tab-trigger" data-tab="completed">Completed (2)</button>
+      </div>
+
+      <!-- Plan Cards -->
+      <div class="space-y-4" data-tab-panel="all">
+
+        <!-- Plan 1: Goa (Upcoming/Saved) -->
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="font-semibold text-base">Goa, India</h3>
+                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
+                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Mar 15 – Mar 22, 2025</span>
+                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 7 nights</span>
+                  </div>
+                </div>
+                <span class="badge badge-primary">Saved</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="font-semibold">₹55,000</span>
+                <span class="text-green-600 text-xs">₹19,000 in perks applied</span>
+              </div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-primary btn-sm">View</a>
+                <a href="plan-dates.html" class="btn-outline btn-sm">Edit</a>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan 2: Bali (Draft) -->
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="font-semibold text-base">Bali, Indonesia</h3>
+                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
+                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Dates not set</span>
+                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> —</span>
+                  </div>
+                </div>
+                <span class="badge badge-warning">Draft</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="font-semibold">₹65,000</span>
+                <span class="text-xs text-muted-foreground">Estimated</span>
+              </div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-dates.html" class="btn-primary btn-sm">Continue Planning</a>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan 3: Kerala (Completed) -->
+        <div class="card hover:shadow-md transition-shadow opacity-90">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="font-semibold text-base">Kerala, India</h3>
+                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
+                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Feb 1 – Feb 6, 2025</span>
+                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 5 nights</span>
+                  </div>
+                </div>
+                <span class="badge badge-success">Completed</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="font-semibold">₹38,500</span>
+                <span class="text-green-600 text-xs">₹6,000 in perks applied</span>
+              </div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-outline btn-sm">View Summary</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan 4: Manali (Completed) -->
+        <div class="card hover:shadow-md transition-shadow opacity-90">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="font-semibold text-base">Manali, India</h3>
+                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
+                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Dec 20 – Dec 27, 2024</span>
+                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 7 nights</span>
+                  </div>
+                </div>
+                <span class="badge badge-success">Completed</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="font-semibold">₹28,000</span>
+              </div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-outline btn-sm">View Summary</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Draft Tab -->
+      <div class="space-y-4 hidden" data-tab-panel="draft">
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Bali, Indonesia</h3>
+                <span class="badge badge-warning">Draft</span>
+              </div>
+              <div class="text-sm text-muted-foreground">Dates not set · ₹65,000 estimated</div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-dates.html" class="btn-primary btn-sm">Continue Planning</a>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Tab -->
+      <div class="space-y-4 hidden" data-tab-panel="saved">
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Goa, India</h3>
+                <span class="badge badge-primary">Saved</span>
+              </div>
+              <div class="text-sm text-muted-foreground">Mar 15–22, 2025 · 7 nights · ₹55,000</div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-primary btn-sm">View</a>
+                <a href="plan-dates.html" class="btn-outline btn-sm">Edit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed Tab -->
+      <div class="space-y-4 hidden" data-tab-panel="completed">
+        <div class="card">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Kerala, India</h3>
+                <span class="badge badge-success">Completed</span>
+              </div>
+              <div class="text-sm text-muted-foreground">Feb 1–6, 2025 · 5 nights · ₹38,500</div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-outline btn-sm">View Summary</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Manali, India</h3>
+                <span class="badge badge-success">Completed</span>
+              </div>
+              <div class="text-sm text-muted-foreground">Dec 20–27, 2024 · 7 nights · ₹28,000</div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-outline btn-sm">View Summary</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

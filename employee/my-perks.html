@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Perks — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link active"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+      <!-- Page Header -->
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold">My Perks & Benefits</h1>
+        <p class="text-muted-foreground mt-1">View and track your travel benefits from Acme Corp</p>
+      </div>
+
+      <!-- Perks Balance Overview -->
+      <div class="card mb-6">
+        <div class="p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="text-center sm:text-left">
+              <div class="text-sm text-muted-foreground mb-1">Total Available</div>
+              <div class="text-3xl font-bold text-green-600">₹25,000</div>
+              <div class="text-xs text-muted-foreground mt-1">Across all active perks</div>
+            </div>
+            <div class="text-center sm:text-left">
+              <div class="text-sm text-muted-foreground mb-1">Used So Far</div>
+              <div class="text-3xl font-bold">₹6,000</div>
+              <div class="text-xs text-muted-foreground mt-1">Applied to Kerala trip</div>
+            </div>
+            <div class="text-center sm:text-left">
+              <div class="text-sm text-muted-foreground mb-1">Remaining</div>
+              <div class="text-3xl font-bold text-primary">₹19,000</div>
+              <div class="text-xs text-muted-foreground mt-1">Ready to use</div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
+              <span>Utilisation: 24%</span>
+              <span>₹6,000 of ₹25,000</span>
+            </div>
+            <div class="progress-bar h-2.5">
+              <div class="progress-bar-fill success" style="width: 24%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Perks -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-4">Active Perks</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Perk 1: Travel Credit -->
+          <div class="card">
+            <div class="p-5 space-y-3">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                    <i data-lucide="credit-card" class="w-5 h-5 text-green-600"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Travel Credit</div>
+                    <div class="text-xs text-muted-foreground">Annual benefit</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Active</span>
+              </div>
+              <p class="text-sm text-muted-foreground">Annual travel credit provided by Acme Corp to all employees. Can be applied to any travel plan on Trvello.</p>
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">Total Value</span>
+                  <span class="font-medium">₹15,000</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">Used</span>
+                  <span class="font-medium">₹6,000</span>
+                </div>
+                <div class="flex justify-between text-sm font-semibold text-green-600">
+                  <span>Remaining</span>
+                  <span>₹9,000</span>
+                </div>
+                <div class="progress-bar h-1.5 mt-1">
+                  <div class="progress-bar-fill success" style="width: 60%"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs text-muted-foreground pt-1">
+                <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Valid: Jan 1 – Dec 31, 2025</span>
+              </div>
+              <!-- Collapsible Usage History -->
+              <details class="border-t border-border pt-3 mt-3">
+                <summary class="text-sm font-medium cursor-pointer text-primary hover:underline">View Usage History</summary>
+                <div class="mt-2 space-y-2">
+                  <div class="flex items-center justify-between text-sm py-1.5">
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="minus-circle" class="w-3.5 h-3.5 text-destructive"></i>
+                      <span>Kerala Trip — Applied</span>
+                    </div>
+                    <div class="text-right">
+                      <div class="font-medium text-destructive">−₹6,000</div>
+                      <div class="text-xs text-muted-foreground">Feb 1, 2025</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-sm py-1.5">
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-green-600"></i>
+                      <span>Annual credit assigned</span>
+                    </div>
+                    <div class="text-right">
+                      <div class="font-medium text-green-600">+₹15,000</div>
+                      <div class="text-xs text-muted-foreground">Jan 1, 2025</div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Perk 2: Work Anniversary Bonus -->
+          <div class="card">
+            <div class="p-5 space-y-3">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-purple-600"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Work Anniversary Bonus</div>
+                    <div class="text-xs text-muted-foreground">3-year milestone</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Active</span>
+              </div>
+              <p class="text-sm text-muted-foreground">Congratulations on completing 3 years at Acme Corp! This bonus can be applied to your next travel plan.</p>
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">Total Value</span>
+                  <span class="font-medium">₹10,000</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">Used</span>
+                  <span class="font-medium">₹0</span>
+                </div>
+                <div class="flex justify-between text-sm font-semibold text-purple-600">
+                  <span>Remaining</span>
+                  <span>₹10,000</span>
+                </div>
+                <div class="progress-bar h-1.5 mt-1">
+                  <div class="progress-bar-fill" style="width: 100%; background-color: hsl(270 60% 55%)"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs text-muted-foreground pt-1">
+                <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Valid: Feb 15 – Jun 30, 2025</span>
+                <span class="text-amber-600 font-medium">Expires in 3 months</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Perk 3: Hotel Discount -->
+          <div class="card">
+            <div class="p-5 space-y-3">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <i data-lucide="percent" class="w-5 h-5 text-amber-600"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Hotel Discount</div>
+                    <div class="text-xs text-muted-foreground">Partner offer</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Active</span>
+              </div>
+              <p class="text-sm text-muted-foreground">15% off on select partner hotels when booking through Trvello. Automatically applied at checkout.</p>
+              <div class="flex items-center gap-2 text-lg font-bold text-amber-600">
+                <span>15% OFF</span>
+              </div>
+              <div class="flex items-center justify-between text-xs text-muted-foreground pt-1">
+                <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Valid: Jan 1 – Sep 30, 2025</span>
+                <span>Unlimited uses</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Perk 4: Expired -->
+          <div class="card opacity-60">
+            <div class="p-5 space-y-3">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                    <i data-lucide="gift" class="w-5 h-5 text-gray-400"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Birthday Bonus 2024</div>
+                    <div class="text-xs text-muted-foreground">Annual birthday perk</div>
+                  </div>
+                </div>
+                <span class="badge badge-outline">Expired</span>
+              </div>
+              <p class="text-sm text-muted-foreground">Birthday travel bonus for 2024. This perk has expired.</p>
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">Value</span>
+                  <span class="font-medium">₹5,000</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-muted-foreground">Used</span>
+                  <span class="font-medium">₹0 (unused)</span>
+                </div>
+              </div>
+              <div class="text-xs text-destructive">Expired on Dec 31, 2024</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perk History Table -->
+      <div class="card">
+        <div class="card-header flex-row items-center justify-between">
+          <div class="card-title text-base">Perk Transaction History</div>
+        </div>
+        <div class="card-content">
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Perk</th>
+                  <th>Action</th>
+                  <th class="text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-muted-foreground">Feb 15, 2025</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-purple-100 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-3 h-3 text-purple-600"></i>
+                      </div>
+                      Work Anniversary Bonus
+                    </div>
+                  </td>
+                  <td><span class="badge badge-success">Assigned</span></td>
+                  <td class="text-right font-medium text-green-600">+₹10,000</td>
+                </tr>
+                <tr>
+                  <td class="text-muted-foreground">Feb 1, 2025</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-green-100 flex items-center justify-center">
+                        <i data-lucide="credit-card" class="w-3 h-3 text-green-600"></i>
+                      </div>
+                      Travel Credit
+                    </div>
+                  </td>
+                  <td><span class="badge badge-secondary">Used</span></td>
+                  <td class="text-right font-medium text-destructive">−₹6,000</td>
+                </tr>
+                <tr>
+                  <td class="text-muted-foreground">Jan 1, 2025</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-green-100 flex items-center justify-center">
+                        <i data-lucide="credit-card" class="w-3 h-3 text-green-600"></i>
+                      </div>
+                      Travel Credit
+                    </div>
+                  </td>
+                  <td><span class="badge badge-success">Assigned</span></td>
+                  <td class="text-right font-medium text-green-600">+₹15,000</td>
+                </tr>
+                <tr>
+                  <td class="text-muted-foreground">Jan 1, 2025</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-amber-100 flex items-center justify-center">
+                        <i data-lucide="percent" class="w-3 h-3 text-amber-600"></i>
+                      </div>
+                      Hotel Discount
+                    </div>
+                  </td>
+                  <td><span class="badge badge-success">Assigned</span></td>
+                  <td class="text-right font-medium">15% off</td>
+                </tr>
+                <tr>
+                  <td class="text-muted-foreground">Dec 31, 2024</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center">
+                        <i data-lucide="gift" class="w-3 h-3 text-gray-400"></i>
+                      </div>
+                      Birthday Bonus 2024
+                    </div>
+                  </td>
+                  <td><span class="badge badge-destructive">Expired</span></td>
+                  <td class="text-right font-medium text-muted-foreground">₹5,000 (unused)</td>
+                </tr>
+                <tr>
+                  <td class="text-muted-foreground">Aug 10, 2024</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center">
+                        <i data-lucide="gift" class="w-3 h-3 text-gray-400"></i>
+                      </div>
+                      Birthday Bonus 2024
+                    </div>
+                  </td>
+                  <td><span class="badge badge-success">Assigned</span></td>
+                  <td class="text-right font-medium text-green-600">+₹5,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -80,7 +80,7 @@
           <span class="font-semibold">acmecorp.trvello.com</span>
         </div>
 
-        <form class="space-y-4" onsubmit="event.preventDefault(); window.location.href='admin/dashboard.html';">
+        <form class="space-y-4" onsubmit="event.preventDefault(); window.location.href='employee/dashboard.html';">
           <div>
             <label class="label" for="email">Email</label>
             <input id="email" type="email" class="input w-full" placeholder="you@acmecorp.com" required>
@@ -109,6 +109,10 @@
             Sign in with SSO
           </button>
         </form>
+
+        <p class="text-center text-xs text-muted-foreground">
+          <a href="admin/dashboard.html" class="text-primary hover:underline">Sign in as Admin →</a>
+        </p>
 
         <div class="text-center text-xs text-muted-foreground space-x-2">
           <a href="#" class="hover:underline">Terms of Service</a>

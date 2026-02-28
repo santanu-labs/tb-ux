@@ -136,8 +136,8 @@ function initTabs() {
   document.querySelectorAll('[data-tabs]').forEach(tabGroup => {
     const triggers = tabGroup.querySelectorAll('.tab-trigger[data-tab]');
     if (!triggers.length) return;
-    // Search for panels in the closest shared parent (admin-content or body)
-    const scope = tabGroup.closest('.admin-content') || tabGroup.parentElement || document;
+    // Search for panels in the closest shared parent (admin-content, emp-content, or body)
+    const scope = tabGroup.closest('.admin-content') || tabGroup.closest('.emp-content') || tabGroup.parentElement || document;
     const panels = scope.querySelectorAll('[data-tab-panel]');
 
     triggers.forEach(trigger => {
@@ -320,6 +320,211 @@ function createToastContainer() {
   return c;
 }
 
+// ---- Holiday Planner Toggle (Employee Dashboard) ----
+function toggleHoliday(cardEl) {
+  const row = cardEl.closest('.holiday-row');
+  if (!row) return;
+  row.classList.toggle('collapsed');
+}
+
+// ---- Date Range Extend / Shrink (Employee Dashboard) ----
+var _dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function initDateExtendButtons() {
+  document.querySelectorAll('.date-extend-btn button').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var group = btn.closest('.date-extend-btn');
+      var container = group.closest('.day-tiles');
+      var groups = container.querySelectorAll('.date-extend-btn');
+      var isLeft = (group === groups[0]);
+      var buttons = Array.from(group.querySelectorAll('button'));
+      var isPlus = (buttons.indexOf(btn) === 0);
+
+      if (isLeft && isPlus)       addDayToRange(container, 'before');
+      else if (isLeft && !isPlus) removeDayFromRange(container, 'before');
+      else if (!isLeft && isPlus) addDayToRange(container, 'after');
+      else                        removeDayFromRange(container, 'after');
+    });
+  });
+}
+
+function _getMonthYear(container) {
+  var cal = container.closest('.holiday-details').querySelector('.month-calendar');
+  return { m: parseInt(cal.dataset.month), y: parseInt(cal.dataset.year) };
+}
+
+function addDayToRange(container, side) {
+  var my = _getMonthYear(container);
+  var tiles = container.querySelectorAll('.day-tile');
+  if (!tiles.length) return;
+
+  var refTile, curDay, newMonth, newYear, newDay;
+  if (side === 'before') {
+    refTile = tiles[0];
+    curDay = parseInt(refTile.querySelector('.day-tile-num').textContent);
+    newDay = curDay - 1;
+    newMonth = my.m;
+    newYear = my.y;
+    // Cross into previous month
+    if (newDay < 1) {
+      newMonth = my.m - 1;
+      newYear = my.y;
+      if (newMonth < 1) { newMonth = 12; newYear = my.y - 1; }
+      newDay = new Date(newYear, newMonth, 0).getDate();
+    }
+  } else {
+    refTile = tiles[tiles.length - 1];
+    curDay = parseInt(refTile.querySelector('.day-tile-num').textContent);
+    var totalInMonth = new Date(my.y, my.m, 0).getDate();
+    newDay = curDay + 1;
+    newMonth = my.m;
+    newYear = my.y;
+    // Cross into next month
+    if (newDay > totalInMonth) {
+      newMonth = my.m + 1;
+      newYear = my.y;
+      if (newMonth > 12) { newMonth = 1; newYear = my.y + 1; }
+      newDay = 1;
+    }
+  }
+
+  var _monthShort = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var date = new Date(newYear, newMonth - 1, newDay);
+  var dow = date.getDay();
+  var isWknd = (dow === 0 || dow === 6);
+  var type = isWknd ? 'weekend' : 'leave';
+
+  var el = document.createElement('div');
+  el.className = 'day-tile day-tile-' + type;
+  // Show month label if crossing month boundary
+  var crossMonth = (newMonth !== my.m);
+  var numLabel = crossMonth ? _monthShort[newMonth] + ' ' + newDay : String(newDay);
+  el.innerHTML = '<span class="day-tile-label">' + _dayNames[dow] + '</span><span class="day-tile-num">' + numLabel + '</span>';
+  if (crossMonth) el.dataset.crossMonth = newMonth + '-' + newYear;
+
+  if (side === 'before') {
+    container.insertBefore(el, refTile);
+  } else {
+    container.insertBefore(el, container.querySelectorAll('.date-extend-btn')[1]);
+  }
+
+  _syncAfterChange(container, newDay, type, 'add');
+  showToast(_dayNames[dow] + ' ' + numLabel + ' added', 'success');
+}
+
+function removeDayFromRange(container, side) {
+  var tiles = container.querySelectorAll('.day-tile');
+  if (tiles.length <= 1) { showToast('Must keep at least 1 day', 'default'); return; }
+
+  var tile = (side === 'before') ? tiles[0] : tiles[tiles.length - 1];
+
+  if (tile.classList.contains('day-tile-holiday')) {
+    showToast('Cannot remove a public holiday', 'default');
+    return;
+  }
+
+  var num = parseInt(tile.querySelector('.day-tile-num').textContent);
+  var label = tile.querySelector('.day-tile-label').textContent;
+  tile.remove();
+
+  _syncAfterChange(container, num, null, 'remove');
+  showToast(label + ' ' + num + ' removed', 'default');
+}
+
+function _syncAfterChange(container, dayNum, type, action) {
+  // 1) Update header date range text
+  var tiles = container.querySelectorAll('.day-tile');
+  if (tiles.length) {
+    var fL = tiles[0].querySelector('.day-tile-label').textContent;
+    var fN = tiles[0].querySelector('.day-tile-num').textContent;
+    var lL = tiles[tiles.length-1].querySelector('.day-tile-label').textContent;
+    var lN = tiles[tiles.length-1].querySelector('.day-tile-num').textContent;
+    var row = container.closest('.holiday-row');
+    var hd = row && row.querySelector('.holiday-dates');
+    if (hd) hd.textContent = fL + ' ' + fN + ' \u2014 ' + lL + ' ' + lN;
+  }
+
+  // 2) Update month-calendar data-days & re-render if open
+  var cal = container.closest('.holiday-details').querySelector('.month-calendar');
+  if (cal) {
+    var days = JSON.parse(cal.dataset.days || '{}');
+    if (action === 'add') days[String(dayNum)] = type;
+    else delete days[String(dayNum)];
+    cal.dataset.days = JSON.stringify(days);
+    if (cal.classList.contains('active')) generateMonthCalendar(cal);
+  }
+}
+
+// ---- Calendar Month View Toggle ----
+function toggleCalendarView(btn) {
+  var details = btn.closest('.holiday-details');
+  if (!details) return;
+  var dayTiles = details.querySelector('.day-tiles');
+  var calContainer = details.querySelector('.month-calendar');
+  if (!calContainer) return;
+  var isActive = calContainer.classList.contains('active');
+  if (isActive) {
+    calContainer.classList.remove('active');
+    dayTiles.style.display = '';
+    btn.innerHTML = '<i data-lucide="calendar-days" class="w-3 h-3"></i> Month View';
+  } else {
+    if (!calContainer.innerHTML.trim()) generateMonthCalendar(calContainer);
+    calContainer.classList.add('active');
+    dayTiles.style.display = 'none';
+    btn.innerHTML = '<i data-lucide="list" class="w-3 h-3"></i> Compact';
+  }
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function generateMonthCalendar(el) {
+  var m = parseInt(el.dataset.month);
+  var y = parseInt(el.dataset.year);
+  var sel = JSON.parse(el.dataset.days || '{}');
+  var names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var first = new Date(y, m - 1, 1).getDay();
+  var total = new Date(y, m, 0).getDate();
+  var h = '<div class="flex items-center justify-between mb-1"><span class="text-xs font-bold">' + names[m-1] + ' ' + y + '</span></div><div class="month-cal-grid">';
+  days.forEach(function(d){ h += '<div class="month-cal-header">' + d + '</div>'; });
+  for (var i = 0; i < first; i++) h += '<div class="month-cal-day empty"></div>';
+  for (var d = 1; d <= total; d++) {
+    var c = 'month-cal-day';
+    var k = String(d);
+    if (sel[k]) {
+      var t = sel[k];
+      if (t === 'holiday') c += ' cal-holiday cal-selected';
+      else if (t === 'leave') c += ' cal-leave cal-selected';
+      else if (t === 'weekend') c += ' cal-weekend cal-selected';
+    } else {
+      var dow = new Date(y, m - 1, d).getDay();
+      if (dow === 0 || dow === 6) c += ' cal-weekend';
+    }
+    h += '<div class="' + c + '">' + d + '</div>';
+  }
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+// ---- Package Show More / Less ----
+function initPkgShowMore() {
+  document.querySelectorAll('.pkg-show-more').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var container = btn.closest('.holiday-packages');
+      if (!container) return;
+      var isExpanded = container.classList.contains('show-all');
+      container.classList.toggle('show-all');
+      var total = container.querySelectorAll('.pkg-card').length;
+      if (isExpanded) {
+        btn.innerHTML = '<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i> Show ' + (total - 4) + ' more packages';
+      } else {
+        btn.innerHTML = '<i data-lucide="chevron-up" class="w-3.5 h-3.5"></i> Show less';
+      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+  });
+}
+
 // ---- Init Everything ----
 document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
@@ -334,4 +539,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initSmoothScroll();
   initGallery();
+  initDateExtendButtons();
+  initPkgShowMore();
 });

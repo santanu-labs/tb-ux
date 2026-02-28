@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accept Terms — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-muted/30 text-foreground min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-lg">
+    <!-- Stepper -->
+    <div class="flex items-center justify-center mb-8">
+      <div class="stepper">
+        <div class="stepper-step completed">
+          <div class="stepper-dot"><i data-lucide="check" class="w-4 h-4"></i></div>
+          <span class="stepper-label">Welcome</span>
+        </div>
+        <div class="stepper-line completed"></div>
+        <div class="stepper-step completed">
+          <div class="stepper-dot"><i data-lucide="check" class="w-4 h-4"></i></div>
+          <span class="stepper-label">Profile</span>
+        </div>
+        <div class="stepper-line completed"></div>
+        <div class="stepper-step completed">
+          <div class="stepper-dot"><i data-lucide="check" class="w-4 h-4"></i></div>
+          <span class="stepper-label">Password</span>
+        </div>
+        <div class="stepper-line completed"></div>
+        <div class="stepper-step active">
+          <div class="stepper-dot">4</div>
+          <span class="stepper-label">Terms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terms Card -->
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title text-xl">Accept Terms &amp; Policies</h1>
+        <p class="card-description">Please review and accept the following before accessing your account.</p>
+      </div>
+      <div class="card-content space-y-5">
+
+        <!-- Terms of Service -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="label mb-0">Terms of Service</label>
+            <a href="#" class="text-xs text-primary hover:underline">Open in new tab ↗</a>
+          </div>
+          <div class="border rounded-lg p-4 h-32 overflow-y-auto text-xs text-muted-foreground bg-muted/30 space-y-2">
+            <p><strong>1. Acceptance of Terms</strong></p>
+            <p>By accessing or using the Trvello platform, you agree to be bound by these Terms of Service. If you do not agree to all the terms, you may not access or use the service.</p>
+            <p><strong>2. Description of Service</strong></p>
+            <p>Trvello provides a corporate travel benefits platform enabling employees to discover destinations, plan trips, and utilise company-assigned travel perks. The service is provided "as is" and may be updated from time to time.</p>
+            <p><strong>3. User Accounts</strong></p>
+            <p>Your account is created and managed by your organisation's administrator. You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account.</p>
+            <p><strong>4. Acceptable Use</strong></p>
+            <p>You agree to use the platform solely for the purpose of managing your travel benefits as provided by your employer. Any misuse, fraudulent activity, or violation of company policies may result in account suspension.</p>
+            <p><strong>5. Intellectual Property</strong></p>
+            <p>All content, trademarks, and intellectual property on the Trvello platform are owned by Trvello or its licensors. You may not reproduce, distribute, or create derivative works without express permission.</p>
+          </div>
+        </div>
+
+        <!-- Privacy Policy -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="label mb-0">Privacy Policy</label>
+            <a href="#" class="text-xs text-primary hover:underline">Open in new tab ↗</a>
+          </div>
+          <div class="border rounded-lg p-4 h-32 overflow-y-auto text-xs text-muted-foreground bg-muted/30 space-y-2">
+            <p><strong>1. Data Collection</strong></p>
+            <p>We collect personal information you provide during registration and use of the platform, including name, email, travel preferences, and usage activity. We also collect technical data such as browser type, IP address, and device information.</p>
+            <p><strong>2. Use of Data</strong></p>
+            <p>Your data is used to provide and improve the service, personalise your experience, match you with relevant destinations, and support your organisation's travel benefits program.</p>
+            <p><strong>3. Data Sharing</strong></p>
+            <p>We share your data with your employer's organisation administrators as necessary for the travel benefits program. We do not sell personal data to third parties. Data may be shared with service providers who assist in operating the platform.</p>
+            <p><strong>4. Data Retention</strong></p>
+            <p>We retain personal data for as long as your account is active or as needed to provide services. You may request data deletion as described in the "Your Rights" section.</p>
+            <p><strong>5. Your Rights</strong></p>
+            <p>You have the right to access, correct, or delete your personal data. You may also export your data or request restriction of processing by contacting support.</p>
+          </div>
+        </div>
+
+        <!-- Organisation Policies -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="label mb-0">Acme Corp Travel Policy</label>
+            <span class="text-[10px] badge badge-outline">Company-specific</span>
+          </div>
+          <div class="border rounded-lg p-4 h-24 overflow-y-auto text-xs text-muted-foreground bg-muted/30 space-y-2">
+            <p>As an Acme Corp employee, you agree to use travel benefits solely for approved personal or business travel. Benefits are non-transferable and must be used within the specified validity period. Misuse of travel perks may result in disciplinary action per Acme Corp's HR policies.</p>
+            <p>All travel plans created through Trvello are subject to Acme Corp's expense and travel policies. Please consult your department manager for any clarifications on eligible travel activities.</p>
+          </div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="space-y-3">
+          <label class="flex items-start gap-3 cursor-pointer" id="cb-tos">
+            <input type="checkbox" class="checkbox mt-0.5" onchange="checkAll()">
+            <span class="text-sm">I have read and accept the <strong>Terms of Service</strong></span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer" id="cb-privacy">
+            <input type="checkbox" class="checkbox mt-0.5" onchange="checkAll()">
+            <span class="text-sm">I have read and accept the <strong>Privacy Policy</strong></span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer" id="cb-org">
+            <input type="checkbox" class="checkbox mt-0.5" onchange="checkAll()">
+            <span class="text-sm">I accept <strong>Acme Corp's travel benefit policies</strong></span>
+          </label>
+        </div>
+      </div>
+      <div class="card-footer justify-between pt-4">
+        <a href="set-password.html" class="btn-ghost text-sm text-muted-foreground">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+        </a>
+        <button id="complete-btn" class="btn-primary" disabled onclick="window.location.href='../dashboard.html'">
+          Complete Setup
+          <i data-lucide="check" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-muted-foreground mt-4">Step 4 of 4</p>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    lucide.createIcons();
+
+    function checkAll() {
+      const boxes = document.querySelectorAll('.checkbox');
+      const allChecked = Array.from(boxes).every(cb => cb.checked);
+      document.getElementById('complete-btn').disabled = !allChecked;
+    }
+  </script>
+</body>
+</html>

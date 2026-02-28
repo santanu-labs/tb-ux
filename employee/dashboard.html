@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Trvello</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/shadcn-tokens.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        border: 'hsl(var(--border))',
+                        input: 'hsl(var(--input))',
+                        ring: 'hsl(var(--ring))',
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+                        secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+                        muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+                        accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+                        destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+                        card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+                    },
+                    borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-sans bg-background text-foreground">
+
+    <div class="emp-layout">
+        <!-- Top Navbar -->
+        <header class="emp-navbar">
+            <div class="flex items-center gap-6">
+                <a href="dashboard.html" class="emp-navbar-brand">
+                    <div class="brand-icon"><i data-lucide="globe"></i></div>
+                    <span class="brand-name">Trvello</span>
+                    <span class="brand-org">Acme Corp</span>
+                </a>
+                <nav class="emp-nav-links">
+                    <a href="dashboard.html" class="emp-nav-link active"><i data-lucide="layout-dashboard"></i>
+                        Dashboard</a>
+                    <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+                    <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+                </nav>
+            </div>
+            <div class="emp-nav-right">
+                <div class="perk-pill-group flex-1 justify-center">
+                    <!-- Travel Credit pill -->
+                    <a href="my-perks.html" class="perk-pill">
+                        <span class="perk-pill-icon bg-green-100"><i data-lucide="credit-card"
+                                class="text-green-600"></i></span>
+                        <span class="text-green-700">₹9,000</span>
+                        <!-- Popover -->
+                        <div class="perk-popover">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center">
+                                    <i data-lucide="credit-card" class="w-3.5 h-3.5 text-green-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold">Travel Credit</div>
+                                    <div class="text-[0.6875rem] text-muted-foreground">Annual benefit</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-base font-bold text-green-600">₹9,000</span>
+                                <span class="text-[0.6875rem] text-muted-foreground">of ₹15,000</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill success" style="width: 60%"></div>
+                            </div>
+                            <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Dec 2025</div>
+                        </div>
+                    </a>
+
+                    <!-- Anniversary Bonus pill -->
+                    <a href="my-perks.html" class="perk-pill">
+                        <span class="perk-pill-icon bg-purple-100"><i data-lucide="sparkles"
+                                class="text-purple-600"></i></span>
+                        <span class="text-purple-700">₹10,000</span>
+                        <!-- Popover -->
+                        <div class="perk-popover">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center">
+                                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold">Work Anniversary Bonus</div>
+                                    <div class="text-[0.6875rem] text-muted-foreground">3-year milestone</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-base font-bold text-purple-600">₹10,000</span>
+                                <span class="text-[0.6875rem] text-muted-foreground">unused</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 100%; background-color: hsl(270 60% 55%)">
+                                </div>
+                            </div>
+                            <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Jun 2025</div>
+                        </div>
+                    </a>
+
+                    <!-- Hotel Discount pill -->
+                    <a href="my-perks.html" class="perk-pill">
+                        <span class="perk-pill-icon bg-amber-100"><i data-lucide="percent"
+                                class="text-amber-600"></i></span>
+                        <span class="text-amber-700">15% off</span>
+                        <!-- Popover -->
+                        <div class="perk-popover">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                                    <i data-lucide="percent" class="w-3.5 h-3.5 text-amber-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold">Hotel Discount</div>
+                                    <div class="text-[0.6875rem] text-muted-foreground">Partner offer</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-base font-bold text-amber-600">15% off</span>
+                                <span class="badge badge-success"
+                                    style="font-size:0.625rem;padding:0.125rem 0.375rem;">Active</span>
+                            </div>
+                            <div class="text-[0.6875rem] text-muted-foreground">Unlimited uses · Expires Sep 2025</div>
+                        </div>
+                    </a>
+                </div>
+                <button class="btn-ghost btn-icon relative" title="Notifications">
+                    <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+                </button>
+                <div class="dropdown">
+                    <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+                        <div class="avatar text-xs">RS</div>
+                    </button>
+                    <div class="dropdown-menu w-48">
+                        <div class="px-3 py-2 border-b border-border">
+                            <div class="text-sm font-semibold">Rahul Sharma</div>
+                            <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+                        </div>
+                        <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i>
+                            Profile</a>
+                        <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal"
+                                class="w-4 h-4"></i> Preferences</a>
+                        <div class="my-1 border-t border-border"></div>
+                        <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out"
+                                class="w-4 h-4"></i> Sign Out</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="emp-content">
+            <!-- Welcome Hero -->
+            <div class="emp-hero mb-6">
+                <div class="relative z-10">
+                    <h1 class="text-2xl font-bold mb-1">Welcome back, Rahul! 👋</h1>
+                    <p class="text-white/80 text-sm">Your next trip to Goa is in <strong>12 days</strong>. Ready for
+                        some sunshine?</p>
+                </div>
+            </div>
+
+            <!-- Quick Stats — Compact -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+                <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="text-[0.6875rem] text-muted-foreground leading-tight">Planned Trips</div>
+                            <div class="text-lg font-bold leading-tight">2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="plane" class="w-3.5 h-3.5 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-[0.6875rem] text-muted-foreground leading-tight">Trips Done</div>
+                            <div class="text-lg font-bold leading-tight">3</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="piggy-bank" class="w-3.5 h-3.5 text-amber-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-[0.6875rem] text-muted-foreground leading-tight">Savings</div>
+                            <div class="text-lg font-bold leading-tight">₹12.4K</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-teal-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-[0.6875rem] text-muted-foreground leading-tight">Leave Balance</div>
+                            <div class="text-lg font-bold leading-tight">18 <span class="text-xs font-normal text-muted-foreground">days</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="calendar-clock" class="w-3.5 h-3.5 text-orange-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-[0.6875rem] text-muted-foreground leading-tight">Leaves Planned</div>
+                            <div class="text-lg font-bold leading-tight">6 <span class="text-xs font-normal text-muted-foreground">days</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================
+                 Holiday Travel Planner
+                 ======================================== -->
+            <div class="sticky top-16 z-30 bg-background pb-3 pt-1 -mx-6 px-6 border-b border-border/50" style="backdrop-filter: blur(8px); background-color: hsl(var(--background) / 0.92);">
+              <div class="flex items-center justify-between mb-2">
+                <h2 class="text-lg font-bold">Upcoming Holidays & Matching Packages</h2>
+                <button class="btn-outline btn-sm flex items-center gap-1.5">
+                  <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Preferences
+                </button>
+              </div>
+
+              <!-- Legend -->
+              <div class="holiday-legend mb-0">
+                <div class="holiday-legend-item">
+                  <div class="holiday-legend-swatch" style="background:hsl(var(--muted))"></div> Weekend
+                </div>
+                <div class="holiday-legend-item">
+                  <div class="holiday-legend-swatch" style="background:hsl(0 80% 90%);border:1px solid hsl(0 65% 72%)"></div> Public Holiday
+                </div>
+                <div class="holiday-legend-item">
+                  <div class="holiday-legend-swatch" style="background:hsl(48 96% 70%)"></div> Suggested Leave
+                </div>
+                <div class="holiday-legend-item">
+                  <i data-lucide="star" class="w-4 h-4 long-weekend-star"></i> Long Weekend
+                </div>
+              </div>
+            </div>
+
+            <!-- =============== HOLI — Mar 2026 =============== -->
+            <div class="holiday-row booked" data-holiday="holi">
+              <!-- Left: Holiday Info (disabled for booked) -->
+              <div class="holiday-info">
+                <div class="holiday-card" onclick="toggleHoliday(this)">
+                  <div class="holiday-card-head">
+                    <div>
+                      <p class="flex items-center gap-1.5">
+                        <span class="holiday-month">MAR</span>
+                        <span class="text-muted-foreground">|</span>
+                        <span class="holiday-name">HOLI</span>
+                        <span class="booked-badge"><i data-lucide="check-circle"></i> Booked</span>
+                      </p>
+                      <div class="flex items-center justify-between mt-1.5">
+                        <span class="holiday-dates">Wed 4 — Sun 8</span>
+                      </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground chevron"></i>
+                  </div>
+                </div>
+
+                <div class="holiday-details">
+                  <div class="day-tiles">
+                    <div class="date-extend-btn">
+                      <button title="Add day before" disabled><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button title="Remove day" disabled><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="day-tile day-tile-holiday">
+                      <span class="day-tile-label">Wed</span>
+                      <span class="day-tile-num">4</span>
+                    </div>
+                    <div class="day-tile day-tile-leave">
+                      <span class="day-tile-label">Thu</span>
+                      <span class="day-tile-num">5</span>
+                    </div>
+                    <div class="day-tile day-tile-leave">
+                      <span class="day-tile-label">Fri</span>
+                      <span class="day-tile-num">6</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sat</span>
+                      <span class="day-tile-num">7</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sun</span>
+                      <span class="day-tile-num">8</span>
+                    </div>
+                    <div class="date-extend-btn">
+                      <button title="Add day after" disabled><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button title="Remove day" disabled><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                  </div>
+                  <div class="traveller-row mt-3">
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="user" class="w-4 h-4"></i>
+                      Adults <input type="number" value="2" min="0" disabled>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="baby" class="w-4 h-4"></i>
+                      Kids <input type="number" value="1" min="0" disabled>
+                    </div>
+                  </div>
+                  <div class="month-calendar" data-month="3" data-year="2026" data-days='{"4":"holiday","5":"leave","6":"leave","7":"weekend","8":"weekend"}'></div>
+                </div>
+              </div>
+
+              <!-- Right: Booked Details Card -->
+              <div class="holiday-packages">
+                <div class="booked-card">
+                  <!-- Header with image + title -->
+                  <div class="booked-card-header">
+                    <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=200&h=150&fit=crop" alt="Goa Beach" class="booked-card-thumb">
+                    <div>
+                      <div class="booked-card-title">Goa Beach Carnival</div>
+                      <div class="text-xs text-muted-foreground mt-0.5">4 Nights / 5 Days · Baga, Anjuna, Palolem</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="badge badge-success text-[0.625rem]">Confirmed</span>
+                        <span class="text-xs text-muted-foreground">Booking #TRV-2026-00842</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Info Grid -->
+                  <div class="booked-card-body">
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Travel Dates</span>
+                      <span class="booked-info-value">4 Mar — 8 Mar 2026</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Travellers</span>
+                      <span class="booked-info-value">2 Adults, 1 Kid</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Total Cost</span>
+                      <span class="booked-info-value text-green-600">₹85,500</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Flight</span>
+                      <span class="booked-info-value">DEL → GOI · IndiGo 6E-2145</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Hotel</span>
+                      <span class="booked-info-value">Taj Fort Aguada, Goa</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Includes</span>
+                      <span class="booked-info-value">Flight, Hotel, Breakfast, Transfers</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Perks Used</span>
+                      <span class="booked-info-value text-purple-600">₹15,000 Travel Credit</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Leaves Applied</span>
+                      <span class="booked-info-value">Thu 5, Fri 6 Mar (2 days)</span>
+                    </div>
+                    <div class="booked-info-item">
+                      <span class="booked-info-label">Emergency Contact</span>
+                      <span class="booked-info-value">Priya Sharma · +91 98765 43210</span>
+                    </div>
+                  </div>
+
+                  <!-- Trip Progress Timeline -->
+                  <div class="trip-timeline">
+                    <div class="trip-timeline-title">Trip Progress</div>
+                    <div class="timeline-track">
+                      <div class="timeline-progress" style="width: calc(40% - 10px)"></div>
+
+                      <div class="timeline-milestone done">
+                        <div class="milestone-dot"><i data-lucide="check"></i></div>
+                        <span class="milestone-label">Booked</span>
+                        <span class="milestone-date">15 Feb</span>
+                      </div>
+
+                      <div class="timeline-milestone done">
+                        <div class="milestone-dot"><i data-lucide="check"></i></div>
+                        <span class="milestone-label">Payment</span>
+                        <span class="milestone-date">15 Feb</span>
+                      </div>
+
+                      <div class="timeline-milestone active">
+                        <div class="milestone-dot"><i data-lucide="loader"></i></div>
+                        <span class="milestone-label">Leave<br>Approved</span>
+                        <span class="milestone-date">Pending</span>
+                      </div>
+
+                      <div class="timeline-milestone upcoming">
+                        <div class="milestone-dot"><i data-lucide="file-text"></i></div>
+                        <span class="milestone-label">Documents</span>
+                        <span class="milestone-date">—</span>
+                      </div>
+
+                      <div class="timeline-milestone upcoming">
+                        <div class="milestone-dot"><i data-lucide="ticket"></i></div>
+                        <span class="milestone-label">Tickets<br>Issued</span>
+                        <span class="milestone-date">—</span>
+                      </div>
+
+                      <div class="timeline-milestone upcoming">
+                        <div class="milestone-dot"><i data-lucide="plane-takeoff"></i></div>
+                        <span class="milestone-label">Trip Day!</span>
+                        <span class="milestone-date">4 Mar</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- =============== GOOD FRIDAY — Apr 2026 =============== -->
+            <div class="holiday-row" data-holiday="good-friday">
+              <div class="holiday-info">
+                <div class="holiday-card" onclick="toggleHoliday(this)">
+                  <div class="holiday-card-head">
+                    <div>
+                      <p class="flex items-center gap-1.5">
+                        <span class="holiday-month">APR</span>
+                        <span class="text-muted-foreground">|</span>
+                        <i data-lucide="star" class="w-3.5 h-3.5 long-weekend-star"></i>
+                        <span class="holiday-name">GOOD FRIDAY</span>
+                      </p>
+                      <div class="flex items-center justify-between mt-1.5">
+                        <span class="holiday-dates">Fri 3 — Sun 5</span>
+                        <button class="text-primary text-xs font-semibold flex items-center gap-1 hover:underline" onclick="event.stopPropagation()">
+                          <i data-lucide="calendar-range" class="w-3 h-3"></i> Customize
+                        </button>
+                      </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground chevron"></i>
+                  </div>
+                </div>
+
+                <div class="holiday-details">
+                  <div class="day-tiles">
+                    <div class="date-extend-btn">
+                      <button><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="day-tile day-tile-holiday">
+                      <span class="day-tile-label">Fri</span>
+                      <span class="day-tile-num">3</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sat</span>
+                      <span class="day-tile-num">4</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sun</span>
+                      <span class="day-tile-num">5</span>
+                    </div>
+                    <div class="date-extend-btn">
+                      <button><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                  </div>
+                  <div class="traveller-row mt-3">
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="user" class="w-4 h-4"></i>
+                      Adults <input type="number" value="2" min="0">
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="baby" class="w-4 h-4"></i>
+                      Kids <input type="number" value="1" min="0">
+                    </div>
+                    <button class="traveller-apply-btn" title="Apply" onclick="showToast('Traveller count updated','success')"><i data-lucide="check" class="w-3.5 h-3.5"></i></button>
+                  </div>
+                  <div class="flex items-center gap-2 mt-2">
+                    <button class="cal-toggle-btn" onclick="toggleCalendarView(this)"><i data-lucide="calendar-days" class="w-3 h-3"></i> Month View</button>
+                  </div>
+                  <div class="month-calendar" data-month="4" data-year="2026" data-days='{"3":"holiday","4":"weekend","5":"weekend"}'></div>
+                </div>
+
+                <div class="holiday-dismiss">
+                  <div class="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                    <p class="text-sm font-semibold mb-2">Why are you hiding this holiday?</p>
+                    <div class="space-y-1.5 text-sm">
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-gf" class="accent-primary"> Not available</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-gf" class="accent-primary"> Already have plans</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-gf" class="accent-primary"> Not interested</label>
+                      <input type="text" class="input mt-1 text-sm" placeholder="Other (please specify)">
+                    </div>
+                    <div class="flex justify-end gap-2 mt-2">
+                      <button class="text-xs text-muted-foreground hover:text-foreground font-medium px-2 py-1">Skip</button>
+                      <button class="btn-primary btn-sm text-xs">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="holiday-packages">
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-high"><i data-lucide="sparkles"></i> 91%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" alt="Pondicherry"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 91%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Beach preference</p>
+                        <p class="match-factor match-yes">✓ Culture match</p>
+                        <p class="match-factor match-yes">✓ Relaxation vibe</p>
+                        <p class="match-factor match-yes">✓ Budget range</p>
+                        <p class="match-factor match-yes">✓ Duration matches leave</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Pondicherry Escape</span>
+                        <span class="pkg-card-duration">2N/3D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Promenade, Auroville, Cafés</p>
+                        <p><strong>Match:</strong> Beach, culture, relaxation</p>
+                        <p><strong>Includes:</strong> Flight, Boutique Stay, Breakfast</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹16,800<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-mid"><i data-lucide="sparkles"></i> 76%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Coorg Coffee Plantation"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 76%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Nature lover</p>
+                        <p class="match-factor match-yes">✓ Hillstation match</p>
+                        <p class="match-factor match-yes">✓ Scenic preference</p>
+                        <p class="match-factor match-yes">✓ Budget range</p>
+                        <p class="match-factor match-no">✗ Beach preference</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Coorg Coffee Trail</span>
+                        <span class="pkg-card-duration">2N/3D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Abbey Falls, Raja's Seat</p>
+                        <p><strong>Match:</strong> Nature, hillstation, scenic</p>
+                        <p><strong>Includes:</strong> Cab, Homestay, All Meals</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹14,500<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- =============== INDEPENDENCE DAY — Aug 2026 =============== -->
+            <div class="holiday-row" data-holiday="independence">
+              <div class="holiday-info">
+                <div class="holiday-card" onclick="toggleHoliday(this)">
+                  <div class="holiday-card-head">
+                    <div>
+                      <p class="flex items-center gap-1.5">
+                        <span class="holiday-month">AUG</span>
+                        <span class="text-muted-foreground">|</span>
+                        <i data-lucide="star" class="w-3.5 h-3.5 long-weekend-star"></i>
+                        <span class="holiday-name">INDEPENDENCE DAY</span>
+                      </p>
+                      <div class="flex items-center justify-between mt-1.5">
+                        <span class="holiday-dates">Sat 15 — Mon 17</span>
+                        <button class="text-primary text-xs font-semibold flex items-center gap-1 hover:underline" onclick="event.stopPropagation()">
+                          <i data-lucide="calendar-range" class="w-3 h-3"></i> Customize
+                        </button>
+                      </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground chevron"></i>
+                  </div>
+                </div>
+
+                <div class="holiday-details">
+                  <div class="day-tiles">
+                    <div class="date-extend-btn">
+                      <button><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sat</span>
+                      <span class="day-tile-num">15</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sun</span>
+                      <span class="day-tile-num">16</span>
+                    </div>
+                    <div class="day-tile day-tile-leave">
+                      <span class="day-tile-label">Mon</span>
+                      <span class="day-tile-num">17</span>
+                    </div>
+                    <div class="date-extend-btn">
+                      <button><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                  </div>
+                  <div class="traveller-row mt-3">
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="user" class="w-4 h-4"></i>
+                      Adults <input type="number" value="2" min="0">
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="baby" class="w-4 h-4"></i>
+                      Kids <input type="number" value="1" min="0">
+                    </div>
+                    <button class="traveller-apply-btn" title="Apply" onclick="showToast('Traveller count updated','success')"><i data-lucide="check" class="w-3.5 h-3.5"></i></button>
+                  </div>
+                  <div class="flex items-center gap-2 mt-2">
+                    <button class="cal-toggle-btn" onclick="toggleCalendarView(this)"><i data-lucide="calendar-days" class="w-3 h-3"></i> Month View</button>
+                  </div>
+                  <div class="month-calendar" data-month="8" data-year="2026" data-days='{"15":"weekend","16":"weekend","17":"leave"}'></div>
+                </div>
+
+                <div class="holiday-dismiss">
+                  <div class="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                    <p class="text-sm font-semibold mb-2">Why are you hiding this holiday?</p>
+                    <div class="space-y-1.5 text-sm">
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-ind" class="accent-primary"> Not available</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-ind" class="accent-primary"> Already have plans</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-ind" class="accent-primary"> Not interested</label>
+                      <input type="text" class="input mt-1 text-sm" placeholder="Other (please specify)">
+                    </div>
+                    <div class="flex justify-end gap-2 mt-2">
+                      <button class="text-xs text-muted-foreground hover:text-foreground font-medium px-2 py-1">Skip</button>
+                      <button class="btn-primary btn-sm text-xs">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="holiday-packages">
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-mid"><i data-lucide="sparkles"></i> 84%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&h=300&fit=crop" alt="Manali Mountains"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 84%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Adventure lover</p>
+                        <p class="match-factor match-yes">✓ Mountain preference</p>
+                        <p class="match-factor match-yes">✓ Cool weather match</p>
+                        <p class="match-factor match-yes">✓ Budget range</p>
+                        <p class="match-factor match-no">✗ Beach preference</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Manali Adventure</span>
+                        <span class="pkg-card-duration">2N/3D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Solang Valley, Rohtang</p>
+                        <p><strong>Match:</strong> Adventure, mountains, cool weather</p>
+                        <p><strong>Includes:</strong> Flight, Resort, Breakfast</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹18,900<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-mid"><i data-lucide="sparkles"></i> 79%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&h=300&fit=crop" alt="Ladakh Pangong Lake"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 79%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Adventure lover</p>
+                        <p class="match-factor match-yes">✓ Scenic match</p>
+                        <p class="match-factor match-yes">✓ Off-beat preference</p>
+                        <p class="match-factor match-no">✗ Budget range</p>
+                        <p class="match-factor match-no">✗ Family comfort</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Ladakh Explorer</span>
+                        <span class="pkg-card-duration">2N/3D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Pangong Lake, Nubra Valley</p>
+                        <p><strong>Match:</strong> Adventure, scenic, off-beat</p>
+                        <p><strong>Includes:</strong> Flight, Camp Stay, All Meals</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹22,500<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- =============== DIWALI — Oct 2026 =============== -->
+            <div class="holiday-row" data-holiday="diwali">
+              <div class="holiday-info">
+                <div class="holiday-card" onclick="toggleHoliday(this)">
+                  <div class="holiday-card-head">
+                    <div>
+                      <p class="flex items-center gap-1.5">
+                        <span class="holiday-month">OCT</span>
+                        <span class="text-muted-foreground">|</span>
+                        <span class="holiday-name">DIWALI</span>
+                      </p>
+                      <div class="flex items-center justify-between mt-1.5">
+                        <span class="holiday-dates">Wed 14 — Sun 18</span>
+                        <button class="text-primary text-xs font-semibold flex items-center gap-1 hover:underline" onclick="event.stopPropagation()">
+                          <i data-lucide="calendar-range" class="w-3 h-3"></i> Customize
+                        </button>
+                      </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground chevron"></i>
+                  </div>
+                </div>
+
+                <div class="holiday-details">
+                  <div class="day-tiles">
+                    <div class="date-extend-btn">
+                      <button><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="day-tile day-tile-holiday">
+                      <span class="day-tile-label">Wed</span>
+                      <span class="day-tile-num">14</span>
+                    </div>
+                    <div class="day-tile day-tile-leave">
+                      <span class="day-tile-label">Thu</span>
+                      <span class="day-tile-num">15</span>
+                    </div>
+                    <div class="day-tile day-tile-leave">
+                      <span class="day-tile-label">Fri</span>
+                      <span class="day-tile-num">16</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sat</span>
+                      <span class="day-tile-num">17</span>
+                    </div>
+                    <div class="day-tile day-tile-weekend">
+                      <span class="day-tile-label">Sun</span>
+                      <span class="day-tile-num">18</span>
+                    </div>
+                    <div class="date-extend-btn">
+                      <button><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                      <button><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                    </div>
+                  </div>
+                  <div class="traveller-row mt-3">
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="user" class="w-4 h-4"></i>
+                      Adults <input type="number" value="2" min="0">
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="baby" class="w-4 h-4"></i>
+                      Kids <input type="number" value="1" min="0">
+                    </div>
+                    <button class="traveller-apply-btn" title="Apply" onclick="showToast('Traveller count updated','success')"><i data-lucide="check" class="w-3.5 h-3.5"></i></button>
+                  </div>
+                  <div class="flex items-center gap-2 mt-2">
+                    <button class="cal-toggle-btn" onclick="toggleCalendarView(this)"><i data-lucide="calendar-days" class="w-3 h-3"></i> Month View</button>
+                  </div>
+                  <div class="month-calendar" data-month="10" data-year="2026" data-days='{"14":"holiday","15":"leave","16":"leave","17":"weekend","18":"weekend"}'></div>
+                </div>
+
+                <div class="holiday-dismiss">
+                  <div class="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                    <p class="text-sm font-semibold mb-2">Why are you hiding this holiday?</p>
+                    <div class="space-y-1.5 text-sm">
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-diw" class="accent-primary"> Not available</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-diw" class="accent-primary"> Already have plans</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="reason-diw" class="accent-primary"> Not interested</label>
+                      <input type="text" class="input mt-1 text-sm" placeholder="Other (please specify)">
+                    </div>
+                    <div class="flex justify-end gap-2 mt-2">
+                      <button class="text-xs text-muted-foreground hover:text-foreground font-medium px-2 py-1">Skip</button>
+                      <button class="btn-primary btn-sm text-xs">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="holiday-packages">
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-high"><i data-lucide="sparkles"></i> 93%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&h=300&fit=crop&crop=bottom" alt="Bali Temple"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 93%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Beach lover</p>
+                        <p class="match-factor match-yes">✓ Spa preference</p>
+                        <p class="match-factor match-yes">✓ Warm weather</p>
+                        <p class="match-factor match-yes">✓ International travel</p>
+                        <p class="match-factor match-yes">✓ Budget range</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Bali Paradise</span>
+                        <span class="pkg-card-duration">4N/5D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Ubud, Seminyak, Kuta</p>
+                        <p><strong>Match:</strong> Beach, spa, warm weather</p>
+                        <p><strong>Includes:</strong> Flight, Villa, Breakfast</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹42,000<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-high"><i data-lucide="sparkles"></i> 87%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=400&h=300&fit=crop" alt="Thailand Beach"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 87%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Nightlife match</p>
+                        <p class="match-factor match-yes">✓ Food lover</p>
+                        <p class="match-factor match-yes">✓ Beaches preference</p>
+                        <p class="match-factor match-yes">✓ International travel</p>
+                        <p class="match-factor match-no">✗ Budget slightly over</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Thailand Getaway</span>
+                        <span class="pkg-card-duration">4N/5D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Bangkok, Pattaya, Phi Phi</p>
+                        <p><strong>Match:</strong> Nightlife, food, beaches</p>
+                        <p><strong>Includes:</strong> Flight, Resort, Transfers</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹38,500<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-mid"><i data-lucide="sparkles"></i> 72%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop" alt="Dubai Skyline"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 72%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Luxury match</p>
+                        <p class="match-factor match-yes">✓ Shopping preference</p>
+                        <p class="match-factor match-yes">✓ International travel</p>
+                        <p class="match-factor match-no">✗ Budget range</p>
+                        <p class="match-factor match-no">✗ Nature lover</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Dubai Dazzle</span>
+                        <span class="pkg-card-duration">4N/5D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Burj Khalifa, Desert Safari</p>
+                        <p><strong>Match:</strong> Luxury, shopping, nightlife</p>
+                        <p><strong>Includes:</strong> Flight, 5-Star Hotel, Tours</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹55,000<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Package 4 — Sri Lanka -->
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-mid"><i data-lucide="sparkles"></i> 74%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1586013049104-ae68f9e2d397?w=400&h=300&fit=crop" alt="Sri Lanka"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 74%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Culture match</p>
+                        <p class="match-factor match-yes">✓ Beach preference</p>
+                        <p class="match-factor match-yes">✓ International travel</p>
+                        <p class="match-factor match-no">✗ Budget range</p>
+                        <p class="match-factor match-no">✗ Family comfort</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Sri Lanka Heritage</span>
+                        <span class="pkg-card-duration">4N/5D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Colombo, Kandy, Sigiriya</p>
+                        <p><strong>Match:</strong> Culture, heritage, temples</p>
+                        <p><strong>Includes:</strong> Flight, Hotel, All Meals</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹35,000<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Package 5 — Maldives -->
+                <div class="pkg-card">
+                  <div class="pkg-match-badge match-high"><i data-lucide="sparkles"></i> 90%</div>
+                  <div class="pkg-card-img"><img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&h=300&fit=crop" alt="Maldives"></div>
+                  <div class="pkg-card-body">
+                    <div class="pkg-match-detail">
+                      <p class="font-bold text-sm mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i> AI Match: 90%</p>
+                      <div class="space-y-0.5">
+                        <p class="match-factor match-yes">✓ Beach lover</p>
+                        <p class="match-factor match-yes">✓ Luxury match</p>
+                        <p class="match-factor match-yes">✓ Warm weather</p>
+                        <p class="match-factor match-yes">✓ Romantic vibe</p>
+                        <p class="match-factor match-no">✗ Budget range</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="pkg-card-title">Maldives Bliss</span>
+                        <span class="pkg-card-duration">4N/5D</span>
+                      </div>
+                      <div class="pkg-card-meta space-y-0.5">
+                        <p><strong>Places:</strong> Malé, Water Villa, Snorkel</p>
+                        <p><strong>Match:</strong> Beach, luxury, wellness</p>
+                        <p><strong>Includes:</strong> Flight, Villa, All-Inclusive</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between items-center mb-1 mt-2">
+                        <span class="pkg-card-price">₹72,000<span>/person</span></span>
+                        <a href="destination-detail.html" class="btn-primary btn-sm text-xs">Details</a>
+                      </div>
+                      <div class="pkg-actions">
+                        <button class="pkg-action-btn"><i data-lucide="shopping-cart"></i>Add to Plan</button>
+                        <button class="pkg-action-btn"><i data-lucide="clock"></i>Later</button>
+                        <button class="pkg-action-btn"><i data-lucide="check-circle"></i>Visited</button>
+                        <button class="pkg-action-btn"><i data-lucide="eye-off"></i>Not Interested</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="pkg-show-more"><i data-lucide="chevron-down" class="w-3.5 h-3.5"></i> Show 1 more package</button>
+              </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../js/main.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

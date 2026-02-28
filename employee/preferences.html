@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Preferences — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+      <!-- Page Header -->
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold">Set Your Travel Preferences</h1>
+        <p class="text-muted-foreground mt-1">Help us find destinations that match your style. You can update these anytime.</p>
+      </div>
+
+      <!-- Info Banner -->
+      <div class="flex items-start gap-3 p-4 bg-primary/5 border border-primary/20 rounded-lg mb-8">
+        <i data-lucide="info" class="w-5 h-5 text-primary flex-shrink-0 mt-0.5"></i>
+        <div class="text-sm">
+          <span class="font-semibold text-primary">How it works:</span>
+          <span class="text-muted-foreground">Your preferences are used to calculate a personalised match score for each destination. The more preferences you set, the better your matches.</span>
+        </div>
+      </div>
+
+      <form class="space-y-8" onsubmit="event.preventDefault(); showToast('Preferences saved!','success'); setTimeout(() => window.location.href='destinations.html', 800);">
+
+        <!-- Destination Types -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Destination Types</div>
+            <div class="card-description">Select all that appeal to you</div>
+          </div>
+          <div class="card-content">
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">
+                <i data-lucide="umbrella" class="w-3.5 h-3.5"></i> Beach
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="mountain" class="w-3.5 h-3.5"></i> Mountains
+              </button>
+              <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">
+                <i data-lucide="building" class="w-3.5 h-3.5"></i> City
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="trees" class="w-3.5 h-3.5"></i> Countryside
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="sun" class="w-3.5 h-3.5"></i> Desert
+              </button>
+              <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">
+                <i data-lucide="palmtree" class="w-3.5 h-3.5"></i> Island
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="landmark" class="w-3.5 h-3.5"></i> Historical
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Travel Style -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Travel Style</div>
+            <div class="card-description">Choose one that best describes you</div>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="style-card" onclick="selectStyleCard(this)">
+                <div class="text-2xl mb-2">💰</div>
+                <div class="font-semibold text-sm">Budget</div>
+                <div class="text-xs text-muted-foreground mt-1">Value for money</div>
+              </div>
+              <div class="style-card selected" onclick="selectStyleCard(this)">
+                <div class="text-2xl mb-2">⭐</div>
+                <div class="font-semibold text-sm">Mid-Range</div>
+                <div class="text-xs text-muted-foreground mt-1">Comfort & quality</div>
+              </div>
+              <div class="style-card" onclick="selectStyleCard(this)">
+                <div class="text-2xl mb-2">💎</div>
+                <div class="font-semibold text-sm">Luxury</div>
+                <div class="text-xs text-muted-foreground mt-1">Premium experiences</div>
+              </div>
+              <div class="style-card" onclick="selectStyleCard(this)">
+                <div class="text-2xl mb-2">🏕️</div>
+                <div class="font-semibold text-sm">Adventure</div>
+                <div class="text-xs text-muted-foreground mt-1">Off the beaten path</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Climate Preference -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Climate Preference</div>
+            <div class="card-description">What weather do you enjoy most?</div>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="climate" value="tropical" checked class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">🌴 Tropical</div>
+                  <div class="text-xs text-muted-foreground">Warm & humid</div>
+                </div>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="climate" value="temperate" class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">🌤️ Temperate</div>
+                  <div class="text-xs text-muted-foreground">Mild & pleasant</div>
+                </div>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="climate" value="cold" class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">❄️ Cold</div>
+                  <div class="text-xs text-muted-foreground">Snow & chill</div>
+                </div>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="climate" value="any" class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">🌍 Any</div>
+                  <div class="text-xs text-muted-foreground">No preference</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Interests -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Activity Interests</div>
+            <div class="card-description">Pick your favourite travel activities</div>
+          </div>
+          <div class="card-content">
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">
+                <i data-lucide="camera" class="w-3.5 h-3.5"></i> Sightseeing
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="waves" class="w-3.5 h-3.5"></i> Water Sports
+              </button>
+              <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">
+                <i data-lucide="footprints" class="w-3.5 h-3.5"></i> Hiking
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="utensils" class="w-3.5 h-3.5"></i> Food & Culture
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="music" class="w-3.5 h-3.5"></i> Nightlife
+              </button>
+              <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">
+                <i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i> Wellness & Spa
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="paw-print" class="w-3.5 h-3.5"></i> Wildlife
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="bike" class="w-3.5 h-3.5"></i> Cycling
+              </button>
+              <button type="button" class="chip" onclick="this.classList.toggle('selected')">
+                <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preferred Duration -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-base">Preferred Duration</div>
+            <div class="card-description">How long do you typically travel?</div>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="duration" value="short" class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">3–5 days</div>
+                  <div class="text-xs text-muted-foreground">Weekend trip</div>
+                </div>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="duration" value="week" checked class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">1 week</div>
+                  <div class="text-xs text-muted-foreground">Standard break</div>
+                </div>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="duration" value="two-weeks" class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">2 weeks</div>
+                  <div class="text-xs text-muted-foreground">Extended holiday</div>
+                </div>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="radio" name="duration" value="flexible" class="accent-primary">
+                <div>
+                  <div class="text-sm font-medium">Flexible</div>
+                  <div class="text-xs text-muted-foreground">No preference</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-3">
+          <button type="submit" class="btn-primary">Save Preferences</button>
+          <a href="destinations.html" class="btn-outline">Explore Destinations →</a>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    function selectStyleCard(el) {
+      el.parentElement.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  </script>
+</body>
+</html>

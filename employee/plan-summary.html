@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan Summary — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content max-w-3xl">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
+        <a href="destinations.html" class="hover:text-foreground">Destinations</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <a href="destination-detail.html" class="hover:text-foreground">Goa</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-foreground font-medium">Plan Summary</span>
+      </nav>
+
+      <!-- Stepper -->
+      <div class="stepper mb-8">
+        <div class="stepper-step completed">
+          <div class="stepper-dot"><i data-lucide="check" class="w-4 h-4"></i></div>
+          <span class="stepper-label">Select Dates</span>
+        </div>
+        <div class="stepper-line completed"></div>
+        <div class="stepper-step active">
+          <div class="stepper-dot">2</div>
+          <span class="stepper-label">Review</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-dot">3</div>
+          <span class="stepper-label">Save</span>
+        </div>
+      </div>
+
+      <!-- Plan Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-bold">Plan Summary</h1>
+          <p class="text-muted-foreground text-sm mt-1">Review your trip details before saving</p>
+        </div>
+        <span class="badge badge-warning py-1 px-3">Draft</span>
+      </div>
+
+      <!-- Destination Summary Card -->
+      <div class="card mb-6">
+        <div class="p-5 flex flex-col sm:flex-row gap-4">
+          <div class="w-full sm:w-44 h-28 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+            <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+          </div>
+          <div class="flex-1 space-y-1.5">
+            <h2 class="text-lg font-semibold">Goa, India</h2>
+            <div class="flex flex-wrap gap-3 text-sm text-muted-foreground">
+              <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Mar 15 – Mar 22, 2025</span>
+              <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 7 nights / 8 days</span>
+              <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i> 1 traveller</span>
+            </div>
+            <div class="flex gap-2 text-sm">
+              <span class="badge badge-secondary">Mid-Range</span>
+              <span class="badge badge-secondary">Flexible dates (±3 days)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Breakdown -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <div class="card-title text-base">Cost Breakdown</div>
+        </div>
+        <div class="card-content">
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="bed" class="w-4 h-4 text-muted-foreground"></i>
+                <span>Accommodation (7 nights × ₹5,500)</span>
+              </div>
+              <span class="font-medium">₹38,500</span>
+            </div>
+            <div class="separator"></div>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="plane" class="w-4 h-4 text-muted-foreground"></i>
+                <span>Estimated Flights (round trip)</span>
+              </div>
+              <span class="font-medium">₹8,000</span>
+            </div>
+            <div class="separator"></div>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="compass" class="w-4 h-4 text-muted-foreground"></i>
+                <span>Activities & Tours</span>
+              </div>
+              <span class="font-medium">₹5,000</span>
+            </div>
+            <div class="separator"></div>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="receipt" class="w-4 h-4 text-muted-foreground"></i>
+                <span>Taxes & Service Fees</span>
+              </div>
+              <span class="font-medium">₹3,500</span>
+            </div>
+            <div class="separator"></div>
+            <div class="flex items-center justify-between py-3 text-base font-semibold">
+              <span>Total Estimated Cost</span>
+              <span>₹55,000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Structure (Display Only) -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <div class="card-title text-base">Payment Structure</div>
+          <div class="card-description">Illustrative breakdown — actual payment in future release</div>
+        </div>
+        <div class="card-content space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="border border-border rounded-lg p-4 text-center">
+              <div class="text-xs text-muted-foreground mb-1">Full Payment</div>
+              <div class="text-lg font-bold">₹55,000</div>
+              <div class="text-xs text-muted-foreground">One-time</div>
+            </div>
+            <div class="border border-border rounded-lg p-4 text-center">
+              <div class="text-xs text-muted-foreground mb-1">3-Month EMI</div>
+              <div class="text-lg font-bold">₹18,750</div>
+              <div class="text-xs text-muted-foreground">/month (incl. 2.5%)</div>
+            </div>
+            <div class="border border-border rounded-lg p-4 text-center">
+              <div class="text-xs text-muted-foreground mb-1">6-Month EMI</div>
+              <div class="text-lg font-bold">₹9,625</div>
+              <div class="text-xs text-muted-foreground">/month (incl. 5%)</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+            <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+            <span>Payment options are shown for illustration purposes only. Actual payment processing will be available in a future release.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perks Impact -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <div class="card-title text-base">Perks Impact</div>
+          <div class="card-description">How your travel perks affect this plan</div>
+        </div>
+        <div class="card-content space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-green-100 flex items-center justify-center">
+                  <i data-lucide="credit-card" class="w-3.5 h-3.5 text-green-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">Travel Credit</span>
+                  <span class="text-muted-foreground ml-1">(₹9,000 available)</span>
+                </div>
+              </div>
+              <span class="font-semibold text-green-600">−₹9,000</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded bg-purple-100 flex items-center justify-center">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">Anniversary Bonus</span>
+                  <span class="text-muted-foreground ml-1">(₹10,000 available)</span>
+                </div>
+              </div>
+              <span class="font-semibold text-green-600">−₹10,000</span>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-muted-foreground">Original Cost</span>
+              <span class="line-through text-muted-foreground">₹55,000</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-green-700 font-medium">Total Perks Applied</span>
+              <span class="text-green-700 font-semibold">−₹19,000</span>
+            </div>
+            <div class="separator" style="background-color: hsl(142 76% 36% / 0.2)"></div>
+            <div class="flex justify-between text-lg font-bold">
+              <span>You Pay</span>
+              <span class="text-green-700">₹36,000</span>
+            </div>
+          </div>
+
+          <div class="text-sm text-muted-foreground space-y-1">
+            <div class="flex items-center gap-2">
+              <i data-lucide="wallet" class="w-4 h-4"></i>
+              <span>Remaining travel credit after this plan: <strong>₹0</strong></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Remaining anniversary bonus after this plan: <strong>₹0</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        <button class="btn-primary w-full sm:w-auto" onclick="showToast('Plan saved successfully!','success'); setTimeout(() => window.location.href='my-plans.html', 800);">
+          <i data-lucide="save" class="w-4 h-4"></i> Save Plan
+        </button>
+        <a href="plan-dates.html" class="btn-outline w-full sm:w-auto">
+          <i data-lucide="pencil" class="w-4 h-4"></i> Edit Plan
+        </a>
+        <button class="btn-ghost w-full sm:w-auto">
+          <i data-lucide="printer" class="w-4 h-4"></i> Print Summary
+        </button>
+        <a href="dashboard.html" class="text-sm text-muted-foreground hover:text-foreground ml-auto hidden sm:block">Back to Dashboard</a>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

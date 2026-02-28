@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-muted/30 text-foreground min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-lg">
+    <!-- Step Indicator -->
+    <div class="flex items-center justify-center mb-8">
+      <div class="stepper">
+        <div class="stepper-step active">
+          <div class="stepper-dot">1</div>
+          <span class="stepper-label">Welcome</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-dot">2</div>
+          <span class="stepper-label">Profile</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-dot">3</div>
+          <span class="stepper-label">Password</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-dot">4</div>
+          <span class="stepper-label">Terms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="card">
+      <div class="card-header text-center pt-10 pb-2">
+        <!-- Logos -->
+        <div class="flex items-center justify-center gap-3 mb-6">
+          <div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
+            <i data-lucide="globe" class="w-6 h-6 text-white"></i>
+          </div>
+          <div class="text-2xl text-muted-foreground/30 font-light">×</div>
+          <div class="w-12 h-12 rounded-xl bg-muted border border-border flex items-center justify-center">
+            <i data-lucide="building-2" class="w-6 h-6 text-foreground"></i>
+          </div>
+        </div>
+
+        <h1 class="text-2xl font-bold mb-2">Welcome to Acme Corp's<br>Travel Benefits</h1>
+        <p class="text-muted-foreground text-sm">You've been invited to join Trvello — your company's travel perk platform. Let's get you set up in just a few steps.</p>
+      </div>
+      <div class="card-content pt-4 pb-2">
+        <!-- Value props -->
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+            <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="compass" class="w-4 h-4 text-blue-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Discover Destinations</p>
+              <p class="text-xs text-muted-foreground">Get AI-matched travel recommendations based on your preferences</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+            <div class="w-9 h-9 rounded-lg bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="gift" class="w-4 h-4 text-green-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Use Your Perks</p>
+              <p class="text-xs text-muted-foreground">Redeem travel credits and discounts assigned by your company</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+            <div class="w-9 h-9 rounded-lg bg-violet-50 border border-violet-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="map-pin" class="w-4 h-4 text-violet-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Plan & Save</p>
+              <p class="text-xs text-muted-foreground">Build detailed trip plans with cost breakdowns and perk integration</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer justify-center pb-8">
+        <a href="complete-profile.html" class="btn-primary btn-lg w-full max-w-xs text-center">
+          Get Started
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-muted-foreground mt-4">Step 1 of 4</p>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

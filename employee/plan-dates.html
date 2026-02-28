@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Dates — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content max-w-3xl">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
+        <a href="destinations.html" class="hover:text-foreground">Destinations</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <a href="destination-detail.html" class="hover:text-foreground">Goa</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-foreground font-medium">Select Dates</span>
+      </nav>
+
+      <!-- Stepper -->
+      <div class="stepper mb-8">
+        <div class="stepper-step active">
+          <div class="stepper-dot">1</div>
+          <span class="stepper-label">Select Dates</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-dot">2</div>
+          <span class="stepper-label">Review</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-dot">3</div>
+          <span class="stepper-label">Save</span>
+        </div>
+      </div>
+
+      <!-- Selected Destination Card (Compact) -->
+      <div class="card mb-6">
+        <div class="p-4 flex items-center gap-4">
+          <div class="w-16 h-16 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+            <i data-lucide="image" class="w-5 h-5 text-muted-foreground"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold">Goa, India</h3>
+            <div class="flex items-center gap-3 text-sm text-muted-foreground mt-0.5">
+              <span class="flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 text-amber-500 fill-current"></i> 4.7</span>
+              <span class="match-badge text-xs"><i data-lucide="sparkles" class="w-3 h-3"></i> 95% Match</span>
+            </div>
+          </div>
+          <a href="destination-detail.html" class="btn-ghost btn-sm text-muted-foreground">
+            <i data-lucide="external-link" class="w-4 h-4"></i> Details
+          </a>
+        </div>
+      </div>
+
+      <!-- Date Selection Form -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <div class="card-title text-base">Choose Your Travel Dates</div>
+          <div class="card-description">Select your check-in and check-out dates</div>
+        </div>
+        <div class="card-content space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="label" for="start-date">Start Date</label>
+              <input id="start-date" type="date" class="input" value="2025-03-15" onchange="calcDuration()">
+            </div>
+            <div>
+              <label class="label" for="end-date">End Date</label>
+              <input id="end-date" type="date" class="input" value="2025-03-22" onchange="calcDuration()">
+            </div>
+          </div>
+
+          <!-- Duration Display -->
+          <div class="bg-muted/50 rounded-lg p-4 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <i data-lucide="calendar-range" class="w-5 h-5 text-primary"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold" id="duration-display">7 nights / 8 days</div>
+              <div class="text-xs text-muted-foreground">Sat, 15 Mar → Sat, 22 Mar 2025</div>
+            </div>
+          </div>
+
+          <!-- Flexibility Toggle -->
+          <div class="flex items-center justify-between p-4 border border-border rounded-lg">
+            <div class="flex items-center gap-3">
+              <i data-lucide="move-horizontal" class="w-5 h-5 text-muted-foreground"></i>
+              <div>
+                <div class="text-sm font-medium">My dates are flexible</div>
+                <div class="text-xs text-muted-foreground">±3 days — we'll show you the best rates</div>
+              </div>
+            </div>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+
+          <!-- Travellers -->
+          <div>
+            <label class="label mb-2">Number of Travellers</label>
+            <div class="flex items-center gap-3" data-counter>
+              <button type="button" data-decrement class="btn-outline btn-icon w-9 h-9">
+                <i data-lucide="minus" class="w-4 h-4"></i>
+              </button>
+              <input type="number" class="input w-16 text-center" value="1" min="1" max="10">
+              <button type="button" data-increment class="btn-outline btn-icon w-9 h-9">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+              </button>
+              <span class="text-sm text-muted-foreground">traveller(s)</span>
+            </div>
+          </div>
+
+          <!-- Accommodation Preference -->
+          <div>
+            <label class="label mb-2">Accommodation Tier</label>
+            <div class="grid grid-cols-3 gap-3">
+              <label class="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5 text-center">
+                <input type="radio" name="tier" value="budget" class="accent-primary">
+                <span class="text-sm font-medium">Budget</span>
+                <span class="text-xs text-muted-foreground">₹2,500/night</span>
+              </label>
+              <label class="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5 text-center">
+                <input type="radio" name="tier" value="mid" checked class="accent-primary">
+                <span class="text-sm font-medium">Mid-Range</span>
+                <span class="text-xs text-muted-foreground">₹5,500/night</span>
+              </label>
+              <label class="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5 text-center">
+                <input type="radio" name="tier" value="luxury" class="accent-primary">
+                <span class="text-sm font-medium">Luxury</span>
+                <span class="text-xs text-muted-foreground">₹12,000/night</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-between">
+        <a href="destination-detail.html" class="btn-outline">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Destination
+        </a>
+        <a href="plan-summary.html" class="btn-primary">
+          Review Plan <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    function calcDuration() {
+      const start = new Date(document.getElementById('start-date').value);
+      const end = new Date(document.getElementById('end-date').value);
+      if (start && end && end > start) {
+        const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
+        const days = nights + 1;
+        document.getElementById('duration-display').textContent = nights + ' nights / ' + days + ' days';
+      }
+    }
+  </script>
+</body>
+</html>
