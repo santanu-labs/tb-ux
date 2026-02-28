@@ -1950,6 +1950,27 @@ body {
   border-bottom: 1px solid hsl(var(--border));
   background: hsl(var(--primary) / 0.03);
 }
+.booked-details-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: var(--radius);
+  background: hsl(var(--primary) / 0.06);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.booked-details-btn:hover {
+  background: hsl(var(--primary) / 0.12);
+  border-color: hsl(var(--primary) / 0.5);
+}
 .booked-card-thumb {
   width: 100px;
   height: 72px;

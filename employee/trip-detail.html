@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Details — Goa Beach Carnival — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .trip-hero {
+      position: relative;
+      height: 280px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .trip-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .trip-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+    }
+    .trip-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
+      background: hsl(142 76% 36% / 0.9);
+      color: #fff;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 0.5rem;
+    }
+    .countdown-card {
+      background: hsl(var(--primary) / 0.06);
+      border: 1px solid hsl(var(--primary) / 0.15);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .countdown-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      line-height: 1;
+    }
+    /* ─── Day Block ─── */
+    .itin-day {
+      margin-bottom: 0.25rem;
+    }
+    .itin-day-head {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0;
+      cursor: pointer;
+      user-select: none;
+    }
+    .itin-day:first-child .itin-day-head { padding-top: 0; }
+    .itin-day + .itin-day { border-top: 1px solid hsl(var(--border)); }
+    .itin-day-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      font-size: 0.8125rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .itin-day-title {
+      flex: 1;
+    }
+    .itin-day-title strong {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      display: block;
+    }
+    .itin-day-title span {
+      font-size: 0.6875rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .itin-day-summary {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+    .itin-day-summary .itin-micro {
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── Sub Steps ─── */
+    .itin-steps {
+      padding: 0 0 0.5rem 0;
+    }
+    .itin-step {
+      display: flex;
+      gap: 0.625rem;
+      position: relative;
+      padding-bottom: 0.125rem;
+    }
+    /* Left mini rail */
+    .itin-step-rail {
+      width: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .itin-step-rail::after {
+      content: '';
+      position: absolute;
+      top: 28px;
+      bottom: -2px;
+      left: 50%;
+      width: 1.5px;
+      background: hsl(var(--border));
+      transform: translateX(-50%);
+    }
+    .itin-step:last-child .itin-step-rail::after {
+      display: none;
+    }
+    .itin-step-time {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      line-height: 1;
+      margin-bottom: 0.2rem;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .itin-step-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    /* Right card */
+    .itin-step-body {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.625rem;
+      padding: 0.5rem 0.625rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px);
+      margin-bottom: 0.375rem;
+      transition: background 0.12s;
+    }
+    .itin-step-body:hover {
+      background: hsl(var(--accent) / 0.5);
+    }
+    .itin-step-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .itin-step-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .itin-step-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    .itin-step-desc {
+      font-size: 0.6875rem;
+      color: hsl(var(--muted-foreground));
+      margin-top: 0.1rem;
+      line-height: 1.4;
+    }
+    .itin-step-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .itin-step-tag {
+      font-size: 0.5625rem;
+      padding: 0.125rem 0.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .itin-step-dur {
+      font-size: 0.625rem;
+      color: hsl(var(--muted-foreground));
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    /* ─── View Toggle ─── */
+    .itin-view-toggle {
+      display: flex;
+      background: hsl(var(--muted));
+      border-radius: 10px;
+      padding: 3px;
+      position: relative;
+      gap: 2px;
+    }
+    .itin-view-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      color: hsl(var(--muted-foreground));
+      transition: color 0.2s;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .itin-view-btn.active {
+      color: hsl(var(--primary));
+      font-weight: 600;
+    }
+    .itin-view-slider {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      height: calc(100% - 6px);
+      border-radius: 8px;
+      background: hsl(var(--background));
+      border: 1.5px solid hsl(var(--primary));
+      box-shadow: 0 1px 4px hsl(var(--primary) / 0.15);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+
+    /* ─── Calendar View ─── */
+    .itin-calendar-view { display: none; }
+    .itin-calendar-view.active { display: block; }
+    .itin-list-view.active { display: block; }
+    .itin-list-view { display: none; }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .cal-hour-col {
+      background: hsl(var(--muted) / 0.5);
+      border-right: 1px solid hsl(var(--border));
+    }
+    .cal-hour-label {
+      height: 48px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 0.2rem;
+      font-size: 0.5625rem;
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      border-bottom: 1px solid hsl(var(--border) / 0.5);
+    }
+    .cal-body { position: relative; }
+    .cal-row {
+      height: 48px;
+      border-bottom: 1px solid hsl(var(--border) / 0.4);
+    }
+    .cal-row:last-child { border-bottom: none; }
+
+    .cal-event {
+      position: absolute;
+      left: 4px; right: 4px;
+      border-radius: 8px;
+      padding: 0.3rem 0.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      overflow: hidden;
+      cursor: default;
+      transition: box-shadow 0.12s, transform 0.12s;
+      border-left: 3px solid;
+    }
+    .cal-event:hover {
+      box-shadow: 0 3px 12px hsl(var(--foreground) / 0.08);
+      transform: translateY(-1px);
+    }
+    .cal-event-icon {
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .cal-event-info { flex: 1; min-width: 0; }
+    .cal-event-name {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cal-event-time {
+      font-size: 0.5625rem;
+      opacity: 0.75;
+      line-height: 1;
+      margin-top: 1px;
+    }
+
+    /* Day tabs */
+    .cal-day-tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+    .cal-day-tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem 0.25rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+      z-index: 1;
+    }
+    .cal-day-tab:hover:not(.active) { background: hsl(var(--muted)); }
+    .cal-day-tab.active { color: hsl(var(--primary)); }
+    .cal-day-tab .cal-tab-day {
+      font-size: 0.875rem; font-weight: 700; line-height: 1.2;
+    }
+    .cal-day-tab .cal-tab-dow {
+      font-size: 0.5625rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: hsl(var(--muted-foreground));
+    }
+    .cal-day-tab.active .cal-tab-dow { color: hsl(var(--primary)); }
+    .cal-day-tab .cal-tab-month {
+      font-size: 0.5rem; color: hsl(var(--muted-foreground));
+    }
+    .cal-tab-slider {
+      position: absolute;
+      top: 0; left: 0; height: 100%;
+      border-radius: 10px;
+      background: hsl(var(--primary) / 0.08);
+      border: 1.5px solid hsl(var(--primary));
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+    .cal-day-grid { display: none; }
+    .cal-day-grid.active { display: grid; }
+
+    /* ─── Schedule View (dates vertical × hours horizontal) ─── */
+    .itin-schedule-view { display: none; }
+    .itin-schedule-view.active { display: block; }
+
+    .sched-wrap {
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      overflow-x: auto;
+      overflow-y: visible;
+    }
+    .sched-grid {
+      display: grid;
+      min-width: 1100px;
+      grid-template-columns: 80px repeat(17, 1fr);
+    }
+    .sched-corner {
+      background: hsl(var(--muted) / 0.5);
+      border-right: 1px solid hsl(var(--border));
+      border-bottom: 1px solid hsl(var(--border));
+      position: sticky;
+      left: 0;
+      z-index: 3;
+    }
+    .sched-hour-head {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      text-align: center;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid hsl(var(--border));
+      border-right: 1px solid hsl(var(--border) / 0.3);
+      background: hsl(var(--muted) / 0.5);
+      white-space: nowrap;
+    }
+    .sched-day-label {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: hsl(var(--background));
+      border-right: 1px solid hsl(var(--border));
+      border-bottom: 1px solid hsl(var(--border) / 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.35rem;
+      gap: 0.15rem;
+    }
+    .sched-day-label .sd-dow {
+      font-size: 0.625rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: hsl(var(--muted-foreground));
+    }
+    .sched-day-label .sd-num {
+      font-size: 1.05rem; font-weight: 700;
+      color: hsl(var(--foreground)); line-height: 1;
+    }
+    .sched-day-label .sd-mon {
+      font-size: 0.625rem; color: hsl(var(--muted-foreground));
+    }
+    .sched-row-cell {
+      border-bottom: 1px solid hsl(var(--border) / 0.4);
+      border-right: 1px solid hsl(var(--border) / 0.15);
+      position: relative;
+      min-height: 76px;
+    }
+    .sched-event {
+      position: absolute;
+      top: 5px; bottom: 5px;
+      border-radius: 8px;
+      padding: 0.35rem 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: default;
+      overflow: hidden;
+      transition: box-shadow 0.12s, transform 0.12s;
+      border-top: 2.5px solid;
+      z-index: 1;
+      min-width: 0;
+    }
+    .sched-event:hover {
+      box-shadow: 0 3px 12px hsl(var(--foreground) / 0.08);
+      transform: translateY(-1px);
+    }
+    .sched-event-icon {
+      width: 26px; height: 26px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sched-event-icon svg { width: 14px; height: 14px; }
+    .sched-event-text { flex: 1; min-width: 0; }
+    .sched-event-name {
+      font-size: 0.75rem; font-weight: 600;
+      line-height: 1.15;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sched-event-time {
+      font-size: 0.625rem; opacity: 0.7; line-height: 1;
+    }
+
+    .flight-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+    }
+    .flight-route {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+    }
+    .flight-code {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .flight-time {
+      font-size: 0.75rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .flight-line {
+      flex: 1;
+      height: 1px;
+      background: hsl(var(--border));
+      position: relative;
+    }
+    .flight-line::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      background: hsl(var(--primary));
+      border-radius: 50%;
+    }
+    .ai-sug-card {
+      border: 1px solid hsl(var(--primary) / 0.2);
+      background: hsl(var(--primary) / 0.03);
+      border-radius: var(--radius);
+      padding: 0.875rem;
+      transition: border-color 0.15s;
+    }
+    .ai-sug-card:hover {
+      border-color: hsl(var(--primary) / 0.4);
+    }
+    .ai-sug-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: calc(var(--radius) - 2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .doc-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      transition: background 0.15s;
+    }
+    .doc-item:hover {
+      background: hsl(var(--accent));
+    }
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+    }
+  </style>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Trvello</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <div class="perk-pill-group flex-1 justify-center">
+          <!-- Travel Credit pill -->
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-green-100"><i data-lucide="credit-card" class="text-green-600"></i></span>
+            <span class="text-green-700">₹9,000</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center">
+                  <i data-lucide="credit-card" class="w-3.5 h-3.5 text-green-600"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">Travel Credit</div>
+                  <div class="text-[0.6875rem] text-muted-foreground">Annual benefit</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-base font-bold text-green-600">₹9,000</span>
+                <span class="text-[0.6875rem] text-muted-foreground">of ₹15,000</span>
+              </div>
+              <div class="progress-bar"><div class="progress-bar-fill success" style="width: 60%"></div></div>
+              <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Dec 2026</div>
+            </div>
+          </a>
+          <!-- Anniversary pill -->
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-purple-100"><i data-lucide="sparkles" class="text-purple-600"></i></span>
+            <span class="text-purple-700">₹10,000</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-600"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">Work Anniversary Bonus</div>
+                  <div class="text-[0.6875rem] text-muted-foreground">3-year milestone</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-base font-bold text-purple-600">₹10,000</span>
+                <span class="text-[0.6875rem] text-muted-foreground">unused</span>
+              </div>
+              <div class="progress-bar"><div class="progress-bar-fill" style="width: 100%; background-color: hsl(270 60% 55%)"></div></div>
+              <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Jun 2026</div>
+            </div>
+          </a>
+          <!-- Hotel Discount pill -->
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-amber-100"><i data-lucide="percent" class="text-amber-600"></i></span>
+            <span class="text-amber-700">15% off</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <i data-lucide="percent" class="w-3.5 h-3.5 text-amber-600"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">Hotel Discount</div>
+                  <div class="text-[0.6875rem] text-muted-foreground">Partner offer</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-base font-bold text-amber-600">15% off</span>
+                <span class="badge badge-success" style="font-size:0.625rem;padding:0.125rem 0.375rem;">Active</span>
+              </div>
+              <div class="text-[0.6875rem] text-muted-foreground">Unlimited uses · Expires Sep 2026</div>
+            </div>
+          </a>
+        </div>
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
+        <a href="dashboard.html" class="hover:text-foreground">Dashboard</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <a href="my-plans.html" class="hover:text-foreground">My Plans</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-foreground font-medium">Goa Beach Carnival</span>
+      </nav>
+
+      <!-- Hero Banner -->
+      <div class="trip-hero">
+        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1200&h=400&fit=crop" alt="Goa Beach">
+        <div class="trip-hero-overlay">
+          <div class="trip-hero-badge"><i data-lucide="check-circle" class="w-3 h-3"></i> Confirmed</div>
+          <h1 class="text-2xl font-bold text-white mb-0.5">Goa Beach Carnival</h1>
+          <p class="text-white/75 text-sm">4 Nights / 5 Days · Baga, Anjuna, Palolem · Booking #TRV-2026-00842</p>
+        </div>
+      </div>
+
+      <!-- Countdown + Quick Info -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="countdown-card md:col-span-1">
+          <div>
+            <div class="countdown-num">4</div>
+            <div class="text-xs text-muted-foreground mt-0.5">days to go</div>
+          </div>
+          <div class="text-sm">
+            <div class="font-semibold">Wed, 4 Mar 2026</div>
+            <div class="text-xs text-muted-foreground">Trip starts</div>
+          </div>
+        </div>
+        <div class="stat-card !p-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+          </div>
+          <div>
+            <div class="text-sm font-semibold">2 Adults, 1 Kid</div>
+            <div class="text-xs text-muted-foreground">Travellers</div>
+          </div>
+        </div>
+        <div class="stat-card !p-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="indian-rupee" class="w-4 h-4 text-green-600"></i>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-green-600">₹85,500</div>
+            <div class="text-xs text-muted-foreground">Total Cost</div>
+          </div>
+        </div>
+        <div class="stat-card !p-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="gift" class="w-4 h-4 text-purple-600"></i>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-purple-600">₹15,000 saved</div>
+            <div class="text-xs text-muted-foreground">Perks Applied</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TRIP PROGRESS TIMELINE ============ -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <div class="card-title text-base flex items-center gap-2">
+            <i data-lucide="milestone" class="w-4 h-4 text-primary"></i> Trip Progress
+          </div>
+          <div class="card-description">Track your booking milestones</div>
+        </div>
+        <div class="card-content">
+          <div class="trip-timeline" style="padding:0; border:none; background:none;">
+            <div class="timeline-track">
+              <div class="timeline-progress" style="width: calc(40% - 10px)"></div>
+
+              <div class="timeline-milestone done">
+                <div class="milestone-dot"><i data-lucide="check"></i></div>
+                <span class="milestone-label">Booked</span>
+                <span class="milestone-date">15 Feb</span>
+              </div>
+              <div class="timeline-milestone done">
+                <div class="milestone-dot"><i data-lucide="check"></i></div>
+                <span class="milestone-label">Payment</span>
+                <span class="milestone-date">15 Feb</span>
+              </div>
+              <div class="timeline-milestone active">
+                <div class="milestone-dot"><i data-lucide="loader"></i></div>
+                <span class="milestone-label">Leave<br>Approved</span>
+                <span class="milestone-date">Pending</span>
+              </div>
+              <div class="timeline-milestone upcoming">
+                <div class="milestone-dot"><i data-lucide="file-text"></i></div>
+                <span class="milestone-label">Documents</span>
+                <span class="milestone-date">—</span>
+              </div>
+              <div class="timeline-milestone upcoming">
+                <div class="milestone-dot"><i data-lucide="ticket"></i></div>
+                <span class="milestone-label">Tickets<br>Issued</span>
+                <span class="milestone-date">—</span>
+              </div>
+              <div class="timeline-milestone upcoming">
+                <div class="milestone-dot"><i data-lucide="plane-takeoff"></i></div>
+                <span class="milestone-label">Trip Day!</span>
+                <span class="milestone-date">4 Mar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Milestone detail callout -->
+          <div class="mt-4 flex items-start gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500"></i>
+            <div>
+              <strong>Action Required:</strong> Your leave request for Thu 5 Mar and Fri 6 Mar is pending approval from your manager. Please follow up if not approved by 1 Mar.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <!-- ============ LEFT COLUMN ============ -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Itinerary -->
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="route" class="w-4 h-4 text-primary"></i> Day-by-Day Itinerary
+              </div>
+              <div class="itin-view-toggle" id="itinViewToggle">
+                <div class="itin-view-slider" id="itinViewSlider"></div>
+                <div class="itin-view-btn active" data-view="list" onclick="switchItinView('list')">
+                  <i data-lucide="list" class="w-3 h-3"></i> List
+                </div>
+                <div class="itin-view-btn" data-view="calendar" onclick="switchItinView('calendar')">
+                  <i data-lucide="calendar-days" class="w-3 h-3"></i> Calendar
+                </div>
+                <!-- <div class="itin-view-btn" data-view="schedule" onclick="switchItinView('schedule')">
+                  <i data-lucide="gantt-chart" class="w-3 h-3"></i> Schedule
+                </div> -->
+              </div>
+            </div>
+            <div class="card-content" style="padding-top:0;">
+
+            <!-- ===== LIST VIEW ===== -->
+            <div class="itin-list-view active" id="itinListView">
+
+              <!-- ─── DAY 1 ─── -->
+              <div class="itin-day">
+                <div class="itin-day-head">
+                  <div class="itin-day-badge">D1</div>
+                  <div class="itin-day-title">
+                    <strong>Arrival in Goa · Welcome Evening</strong>
+                    <span>Wed, 4 Mar · 4 activities</span>
+                  </div>
+                  <div class="itin-day-summary">
+                    <div class="itin-micro bg-blue-100" title="Flight"><i data-lucide="plane-landing" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                    <div class="itin-micro bg-gray-100" title="Transfer"><i data-lucide="car" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                    <div class="itin-micro bg-amber-100" title="Cruise"><i data-lucide="ship" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                    <div class="itin-micro bg-rose-100" title="Dinner"><i data-lucide="utensils" class="w-2.5 h-2.5 text-rose-600"></i></div>
+                  </div>
+                </div>
+                <div class="itin-steps">
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">08:45</div>
+                      <div class="itin-step-dot bg-blue-100"><i data-lucide="plane-landing" class="w-3 h-3 text-blue-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=100&h=100&fit=crop" alt="Flight" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Flight DEL → GOI</div>
+                        <div class="itin-step-desc">IndiGo 6E-2145 · Non-stop</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-blue-100 text-blue-700">Flight</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h 45m</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">11:30</div>
+                      <div class="itin-step-dot bg-gray-100"><i data-lucide="car" class="w-3 h-3 text-gray-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Airport Transfer → Hotel</div>
+                        <div class="itin-step-desc">Private cab to Taj Fort Aguada, Sinquerim</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-gray-100 text-gray-700">Transfer</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 45m</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">14:00</div>
+                      <div class="itin-step-dot bg-green-100"><i data-lucide="bed" class="w-3 h-3 text-green-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=100&h=100&fit=crop" alt="Hotel" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Hotel Check-in & Rest</div>
+                        <div class="itin-step-desc">Taj Fort Aguada · Deluxe Sea-View Room</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-green-100 text-green-700">Hotel</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">17:00</div>
+                      <div class="itin-step-dot bg-amber-100"><i data-lucide="ship" class="w-3 h-3 text-amber-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=100&h=100&fit=crop" alt="Cruise" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Sunset Cruise + Welcome Dinner</div>
+                        <div class="itin-step-desc">Mandovi River cruise with live music & buffet dinner onboard</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-amber-100 text-amber-700">Activity</span>
+                          <span class="itin-step-tag bg-rose-100 text-rose-700">Dinner</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── DAY 2 ─── -->
+              <div class="itin-day">
+                <div class="itin-day-head">
+                  <div class="itin-day-badge">D2</div>
+                  <div class="itin-day-title">
+                    <strong>North Goa Exploration</strong>
+                    <span>Thu, 5 Mar · 5 activities</span>
+                  </div>
+                  <div class="itin-day-summary">
+                    <div class="itin-micro bg-cyan-100" title="Beach"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                    <div class="itin-micro bg-orange-100" title="Sports"><i data-lucide="zap" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                    <div class="itin-micro bg-stone-100" title="Fort"><i data-lucide="landmark" class="w-2.5 h-2.5 text-stone-600"></i></div>
+                    <div class="itin-micro bg-pink-100" title="Shopping"><i data-lucide="shopping-bag" class="w-2.5 h-2.5 text-pink-600"></i></div>
+                    <div class="itin-micro bg-purple-100" title="Nightlife"><i data-lucide="music" class="w-2.5 h-2.5 text-purple-600"></i></div>
+                  </div>
+                </div>
+                <div class="itin-steps">
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">08:00</div>
+                      <div class="itin-step-dot bg-cyan-100"><i data-lucide="waves" class="w-3 h-3 text-cyan-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=100&h=100&fit=crop" alt="Baga Beach" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Baga Beach — Morning</div>
+                        <div class="itin-step-desc">Swim, sunbathe & relax at Goa's most famous beach</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-cyan-100 text-cyan-700">Beach</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">09:30</div>
+                      <div class="itin-step-dot bg-orange-100"><i data-lucide="zap" class="w-3 h-3 text-orange-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Water Sports Session</div>
+                        <div class="itin-step-desc">Parasailing, jet ski & banana boat ride</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-orange-100 text-orange-700">Adventure</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">14:00</div>
+                      <div class="itin-step-dot bg-stone-100"><i data-lucide="landmark" class="w-3 h-3 text-stone-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=100&h=100&fit=crop" alt="Chapora Fort" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Fort Aguada & Chapora Fort</div>
+                        <div class="itin-step-desc">Iconic Dil Chahta Hai viewpoint · Panoramic ocean views</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-stone-100 text-stone-700">Sightseeing</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">17:00</div>
+                      <div class="itin-step-dot bg-pink-100"><i data-lucide="shopping-bag" class="w-3 h-3 text-pink-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Anjuna Flea Market</div>
+                        <div class="itin-step-desc">Handicrafts, souvenirs, clothes & street food stalls</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-pink-100 text-pink-700">Shopping</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">21:00</div>
+                      <div class="itin-step-dot bg-purple-100"><i data-lucide="music" class="w-3 h-3 text-purple-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Tito's Lane — Night Out</div>
+                        <div class="itin-step-desc">Goa's famous nightlife strip · Clubs & live music</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-purple-100 text-purple-700">Nightlife</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── DAY 3 ─── -->
+              <div class="itin-day">
+                <div class="itin-day-head">
+                  <div class="itin-day-badge">D3</div>
+                  <div class="itin-day-title">
+                    <strong>Old Goa Heritage · Spice Plantation</strong>
+                    <span>Fri, 6 Mar · 4 activities</span>
+                  </div>
+                  <div class="itin-day-summary">
+                    <div class="itin-micro bg-orange-100" title="Heritage"><i data-lucide="church" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                    <div class="itin-micro bg-rose-100" title="Lunch"><i data-lucide="utensils" class="w-2.5 h-2.5 text-rose-600"></i></div>
+                    <div class="itin-micro bg-green-100" title="Farm"><i data-lucide="leaf" class="w-2.5 h-2.5 text-green-600"></i></div>
+                    <div class="itin-micro bg-amber-100" title="Elephant"><i data-lucide="heart" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                  </div>
+                </div>
+                <div class="itin-steps">
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">09:00</div>
+                      <div class="itin-step-dot bg-orange-100"><i data-lucide="church" class="w-3 h-3 text-orange-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?w=100&h=100&fit=crop" alt="Old Goa" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Old Goa Heritage Walk</div>
+                        <div class="itin-step-desc">Basilica of Bom Jesus · Se Cathedral · UNESCO sites</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-orange-100 text-orange-700">Heritage</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">12:00</div>
+                      <div class="itin-step-dot bg-rose-100"><i data-lucide="utensils" class="w-3 h-3 text-rose-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Goan Thali Lunch</div>
+                        <div class="itin-step-desc">Authentic fish curry rice, vindaloo & bebinca at local restaurant</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-rose-100 text-rose-700">Food</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">14:00</div>
+                      <div class="itin-step-dot bg-green-100"><i data-lucide="leaf" class="w-3 h-3 text-green-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100&h=100&fit=crop" alt="Spice" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Sahakari Spice Farm</div>
+                        <div class="itin-step-desc">Guided plantation tour · Spice tastings & herbal demos</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-green-100 text-green-700">Nature</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">16:30</div>
+                      <div class="itin-step-dot bg-amber-100"><i data-lucide="heart" class="w-3 h-3 text-amber-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Elephant Interaction & Traditional Lunch</div>
+                        <div class="itin-step-desc">Meet elephants at the farm, traditional Goan feast served on banana leaves</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-amber-100 text-amber-700">Experience</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── DAY 4 ─── -->
+              <div class="itin-day">
+                <div class="itin-day-head">
+                  <div class="itin-day-badge">D4</div>
+                  <div class="itin-day-title">
+                    <strong>South Goa Serenity</strong>
+                    <span>Sat, 7 Mar · 5 activities</span>
+                  </div>
+                  <div class="itin-day-summary">
+                    <div class="itin-micro bg-blue-100" title="Dolphins"><i data-lucide="fish" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                    <div class="itin-micro bg-teal-100" title="Kayak"><i data-lucide="sailboat" class="w-2.5 h-2.5 text-teal-600"></i></div>
+                    <div class="itin-micro bg-cyan-100" title="Beach"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                    <div class="itin-micro bg-emerald-100" title="Lagoon"><i data-lucide="droplets" class="w-2.5 h-2.5 text-emerald-600"></i></div>
+                    <div class="itin-micro bg-purple-100" title="Spa"><i data-lucide="heart-pulse" class="w-2.5 h-2.5 text-purple-600"></i></div>
+                  </div>
+                </div>
+                <div class="itin-steps">
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">07:00</div>
+                      <div class="itin-step-dot bg-blue-100"><i data-lucide="fish" class="w-3 h-3 text-blue-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=100&h=100&fit=crop" alt="Dolphins" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Dolphin Spotting Boat Ride</div>
+                        <div class="itin-step-desc">Early morning boat ride from Palolem · High chance of dolphin sighting</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-blue-100 text-blue-700">Wildlife</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">09:00</div>
+                      <div class="itin-step-dot bg-teal-100"><i data-lucide="sailboat" class="w-3 h-3 text-teal-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=100&h=100&fit=crop" alt="Kayaking" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Mangrove Kayaking</div>
+                        <div class="itin-step-desc">Paddle through quiet mangrove channels · Spot kingfishers & crabs</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-teal-100 text-teal-700">Adventure</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">11:00</div>
+                      <div class="itin-step-dot bg-cyan-100"><i data-lucide="waves" class="w-3 h-3 text-cyan-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=100&h=100&fit=crop" alt="Palolem" class="itin-step-thumb">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Palolem Beach + Lunch</div>
+                        <div class="itin-step-desc">Relax on South Goa's prettiest crescent beach · Seafood shack lunch</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-cyan-100 text-cyan-700">Beach</span>
+                          <span class="itin-step-tag bg-rose-100 text-rose-700">Lunch</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">15:00</div>
+                      <div class="itin-step-dot bg-emerald-100"><i data-lucide="droplets" class="w-3 h-3 text-emerald-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Cola Beach Secret Lagoon</div>
+                        <div class="itin-step-desc">Hidden freshwater lagoon behind the beach · Swim & unwind</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-emerald-100 text-emerald-700">Nature</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">19:00</div>
+                      <div class="itin-step-dot bg-purple-100"><i data-lucide="heart-pulse" class="w-3 h-3 text-purple-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Farewell Spa Dinner</div>
+                        <div class="itin-step-desc">Candlelit dinner at the resort spa restaurant · Sea-facing table</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-purple-100 text-purple-700">Wellness</span>
+                          <span class="itin-step-tag bg-rose-100 text-rose-700">Dinner</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── DAY 5 ─── -->
+              <div class="itin-day">
+                <div class="itin-day-head">
+                  <div class="itin-day-badge" style="background:hsl(var(--muted-foreground));">D5</div>
+                  <div class="itin-day-title">
+                    <strong>Departure</strong>
+                    <span>Sun, 8 Mar · 3 activities</span>
+                  </div>
+                  <div class="itin-day-summary">
+                    <div class="itin-micro bg-yellow-100" title="Breakfast"><i data-lucide="coffee" class="w-2.5 h-2.5 text-yellow-600"></i></div>
+                    <div class="itin-micro bg-gray-100" title="Checkout"><i data-lucide="log-out" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                    <div class="itin-micro bg-blue-100" title="Flight"><i data-lucide="plane-takeoff" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                  </div>
+                </div>
+                <div class="itin-steps">
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">08:00</div>
+                      <div class="itin-step-dot bg-yellow-100"><i data-lucide="coffee" class="w-3 h-3 text-yellow-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Leisurely Breakfast</div>
+                        <div class="itin-step-desc">Buffet breakfast at hotel · Pool-side seating</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-yellow-100 text-yellow-700">Meal</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">11:00</div>
+                      <div class="itin-step-dot bg-gray-100"><i data-lucide="log-out" class="w-3 h-3 text-gray-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Hotel Checkout + Airport Transfer</div>
+                        <div class="itin-step-desc">Private cab to Dabolim Airport (GOI)</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-gray-100 text-gray-700">Transfer</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="itin-step">
+                    <div class="itin-step-rail">
+                      <div class="itin-step-time">14:15</div>
+                      <div class="itin-step-dot bg-blue-100"><i data-lucide="plane-takeoff" class="w-3 h-3 text-blue-600"></i></div>
+                    </div>
+                    <div class="itin-step-body">
+                      <div class="itin-step-info">
+                        <div class="itin-step-name">Flight GOI → DEL</div>
+                        <div class="itin-step-desc">IndiGo 6E-2146 · Arrive Delhi 5:05 PM</div>
+                        <div class="itin-step-meta">
+                          <span class="itin-step-tag bg-blue-100 text-blue-700">Flight</span>
+                          <span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h 50m</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /itin-list-view -->
+
+            <!-- ===== CALENDAR VIEW ===== -->
+            <div class="itin-calendar-view" id="itinCalView">
+
+              <!-- Day Tabs -->
+              <div class="cal-day-tabs" id="calDayTabs">
+                <div class="cal-tab-slider" id="calTabSlider"></div>
+                <div class="cal-day-tab active" data-cal-day="0" onclick="switchCalDay(0)">
+                  <div class="cal-tab-dow">Wed</div>
+                  <div class="cal-tab-day">4</div>
+                  <div class="cal-tab-month">Mar</div>
+                </div>
+                <div class="cal-day-tab" data-cal-day="1" onclick="switchCalDay(1)">
+                  <div class="cal-tab-dow">Thu</div>
+                  <div class="cal-tab-day">5</div>
+                  <div class="cal-tab-month">Mar</div>
+                </div>
+                <div class="cal-day-tab" data-cal-day="2" onclick="switchCalDay(2)">
+                  <div class="cal-tab-dow">Fri</div>
+                  <div class="cal-tab-day">6</div>
+                  <div class="cal-tab-month">Mar</div>
+                </div>
+                <div class="cal-day-tab" data-cal-day="3" onclick="switchCalDay(3)">
+                  <div class="cal-tab-dow">Sat</div>
+                  <div class="cal-tab-day">7</div>
+                  <div class="cal-tab-month">Mar</div>
+                </div>
+                <div class="cal-day-tab" data-cal-day="4" onclick="switchCalDay(4)">
+                  <div class="cal-tab-dow">Sun</div>
+                  <div class="cal-tab-day">8</div>
+                  <div class="cal-tab-month">Mar</div>
+                </div>
+              </div>
+
+              <!-- Day 1 Grid: 07:00–21:00 -->
+              <div class="cal-day-grid active" data-cal-grid="0">
+                <div class="cal-grid">
+                  <div class="cal-hour-col">
+                    <div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div><div class="cal-hour-label">07 PM</div><div class="cal-hour-label">08 PM</div><div class="cal-hour-label">09 PM</div>
+                  </div>
+                  <div class="cal-body">
+                    <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                    <!-- Flight DEL→GOI 08:45–11:30 -->
+                    <div class="cal-event bg-blue-50" style="top:calc(1.75*48px);height:calc(2.75*48px);border-color:#3b82f6;">
+                      <div class="cal-event-icon bg-blue-100"><i data-lucide="plane" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">✈ Flight DEL → GOI</div>
+                        <div class="cal-event-time">08:45 AM – 11:30 AM · 2h 45m</div>
+                      </div>
+                    </div>
+                    <!-- Airport Transfer 11:30–12:15 -->
+                    <div class="cal-event bg-gray-50" style="top:calc(4.5*48px);height:calc(0.75*48px);border-color:#6b7280;">
+                      <div class="cal-event-icon bg-gray-100"><i data-lucide="car" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🚗 Airport → Hotel</div>
+                        <div class="cal-event-time">11:30 AM – 12:15 PM · 45m</div>
+                      </div>
+                    </div>
+                    <!-- Hotel Check-in 14:00–16:00 -->
+                    <div class="cal-event bg-green-50" style="top:calc(7*48px);height:calc(2*48px);border-color:#22c55e;">
+                      <div class="cal-event-icon bg-green-100"><i data-lucide="bed" class="w-2.5 h-2.5 text-green-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🏨 Hotel Check-in & Rest</div>
+                        <div class="cal-event-time">02:00 PM – 04:00 PM · 2h</div>
+                      </div>
+                    </div>
+                    <!-- Sunset Cruise + Dinner 17:00–20:00 -->
+                    <div class="cal-event bg-amber-50" style="top:calc(10*48px);height:calc(3*48px);border-color:#f59e0b;">
+                      <div class="cal-event-icon bg-amber-100"><i data-lucide="ship" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🌅 Sunset Cruise + Dinner</div>
+                        <div class="cal-event-time">05:00 PM – 08:00 PM · 3h</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Day 2 Grid: 07:00–23:00 -->
+              <div class="cal-day-grid" data-cal-grid="1">
+                <div class="cal-grid">
+                  <div class="cal-hour-col">
+                    <div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div><div class="cal-hour-label">07 PM</div><div class="cal-hour-label">08 PM</div><div class="cal-hour-label">09 PM</div><div class="cal-hour-label">10 PM</div>
+                  </div>
+                  <div class="cal-body">
+                    <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                    <!-- Baga Beach 08:00–09:30 -->
+                    <div class="cal-event bg-cyan-50" style="top:calc(1*48px);height:calc(1.5*48px);border-color:#06b6d4;">
+                      <div class="cal-event-icon bg-cyan-100"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🏖 Baga Beach — Morning</div>
+                        <div class="cal-event-time">08:00 AM – 09:30 AM · 1.5h</div>
+                      </div>
+                    </div>
+                    <!-- Water Sports 09:30–11:30 -->
+                    <div class="cal-event bg-orange-50" style="top:calc(2.5*48px);height:calc(2*48px);border-color:#f97316;">
+                      <div class="cal-event-icon bg-orange-100"><i data-lucide="zap" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">⚡ Water Sports Session</div>
+                        <div class="cal-event-time">09:30 AM – 11:30 AM · 2h</div>
+                      </div>
+                    </div>
+                    <!-- Forts 14:00–16:30 -->
+                    <div class="cal-event bg-stone-50" style="top:calc(7*48px);height:calc(2.5*48px);border-color:#78716c;">
+                      <div class="cal-event-icon bg-stone-100"><i data-lucide="landmark" class="w-2.5 h-2.5 text-stone-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🏰 Fort Aguada & Chapora</div>
+                        <div class="cal-event-time">02:00 PM – 04:30 PM · 2.5h</div>
+                      </div>
+                    </div>
+                    <!-- Anjuna Market 17:00–19:00 -->
+                    <div class="cal-event bg-pink-50" style="top:calc(10*48px);height:calc(2*48px);border-color:#ec4899;">
+                      <div class="cal-event-icon bg-pink-100"><i data-lucide="shopping-bag" class="w-2.5 h-2.5 text-pink-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🛍 Anjuna Flea Market</div>
+                        <div class="cal-event-time">05:00 PM – 07:00 PM · 2h</div>
+                      </div>
+                    </div>
+                    <!-- Tito's Lane 21:00–23:00 -->
+                    <div class="cal-event bg-purple-50" style="top:calc(14*48px);height:calc(2*48px);border-color:#a855f7;">
+                      <div class="cal-event-icon bg-purple-100"><i data-lucide="music" class="w-2.5 h-2.5 text-purple-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🎵 Tito's Lane — Night Out</div>
+                        <div class="cal-event-time">09:00 PM – 11:00 PM · 2h</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Day 3 Grid: 08:00–18:00 -->
+              <div class="cal-day-grid" data-cal-grid="2">
+                <div class="cal-grid">
+                  <div class="cal-hour-col">
+                    <div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div>
+                  </div>
+                  <div class="cal-body">
+                    <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                    <!-- Heritage Walk 09:00–11:30 -->
+                    <div class="cal-event bg-orange-50" style="top:calc(1*48px);height:calc(2.5*48px);border-color:#f97316;">
+                      <div class="cal-event-icon bg-orange-100"><i data-lucide="church" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">⛪ Old Goa Heritage Walk</div>
+                        <div class="cal-event-time">09:00 AM – 11:30 AM · 2.5h</div>
+                      </div>
+                    </div>
+                    <!-- Goan Thali 12:00–13:00 -->
+                    <div class="cal-event bg-rose-50" style="top:calc(4*48px);height:calc(1*48px);border-color:#f43f5e;">
+                      <div class="cal-event-icon bg-rose-100"><i data-lucide="utensils" class="w-2.5 h-2.5 text-rose-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🍛 Goan Thali Lunch</div>
+                        <div class="cal-event-time">12:00 PM – 01:00 PM · 1h</div>
+                      </div>
+                    </div>
+                    <!-- Spice Farm 14:00–16:00 -->
+                    <div class="cal-event bg-green-50" style="top:calc(6*48px);height:calc(2*48px);border-color:#22c55e;">
+                      <div class="cal-event-icon bg-green-100"><i data-lucide="leaf" class="w-2.5 h-2.5 text-green-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🌿 Sahakari Spice Farm</div>
+                        <div class="cal-event-time">02:00 PM – 04:00 PM · 2h</div>
+                      </div>
+                    </div>
+                    <!-- Elephant Interaction 16:30–18:00 -->
+                    <div class="cal-event bg-amber-50" style="top:calc(8.5*48px);height:calc(1.5*48px);border-color:#f59e0b;">
+                      <div class="cal-event-icon bg-amber-100"><i data-lucide="heart" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🐘 Elephant Interaction</div>
+                        <div class="cal-event-time">04:30 PM – 06:00 PM · 1.5h</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Day 4 Grid: 06:00–21:00 -->
+              <div class="cal-day-grid" data-cal-grid="3">
+                <div class="cal-grid">
+                  <div class="cal-hour-col">
+                    <div class="cal-hour-label">06 AM</div><div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div><div class="cal-hour-label">07 PM</div><div class="cal-hour-label">08 PM</div><div class="cal-hour-label">09 PM</div>
+                  </div>
+                  <div class="cal-body">
+                    <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                    <!-- Dolphin 07:00–08:30 -->
+                    <div class="cal-event bg-blue-50" style="top:calc(1*48px);height:calc(1.5*48px);border-color:#3b82f6;">
+                      <div class="cal-event-icon bg-blue-100"><i data-lucide="fish" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🐬 Dolphin Spotting Boat</div>
+                        <div class="cal-event-time">07:00 AM – 08:30 AM · 1.5h</div>
+                      </div>
+                    </div>
+                    <!-- Kayaking 09:00–10:30 -->
+                    <div class="cal-event bg-teal-50" style="top:calc(3*48px);height:calc(1.5*48px);border-color:#14b8a6;">
+                      <div class="cal-event-icon bg-teal-100"><i data-lucide="sailboat" class="w-2.5 h-2.5 text-teal-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🛶 Mangrove Kayaking</div>
+                        <div class="cal-event-time">09:00 AM – 10:30 AM · 1.5h</div>
+                      </div>
+                    </div>
+                    <!-- Palolem 11:00–14:00 -->
+                    <div class="cal-event bg-cyan-50" style="top:calc(5*48px);height:calc(3*48px);border-color:#06b6d4;">
+                      <div class="cal-event-icon bg-cyan-100"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🏖 Palolem Beach + Lunch</div>
+                        <div class="cal-event-time">11:00 AM – 02:00 PM · 3h</div>
+                      </div>
+                    </div>
+                    <!-- Cola Beach 15:00–17:00 -->
+                    <div class="cal-event bg-emerald-50" style="top:calc(9*48px);height:calc(2*48px);border-color:#10b981;">
+                      <div class="cal-event-icon bg-emerald-100"><i data-lucide="droplets" class="w-2.5 h-2.5 text-emerald-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">💧 Cola Beach Secret Lagoon</div>
+                        <div class="cal-event-time">03:00 PM – 05:00 PM · 2h</div>
+                      </div>
+                    </div>
+                    <!-- Spa Dinner 19:00–21:00 -->
+                    <div class="cal-event bg-purple-50" style="top:calc(13*48px);height:calc(2*48px);border-color:#a855f7;">
+                      <div class="cal-event-icon bg-purple-100"><i data-lucide="heart-pulse" class="w-2.5 h-2.5 text-purple-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🍷 Farewell Spa Dinner</div>
+                        <div class="cal-event-time">07:00 PM – 09:00 PM · 2h</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Day 5 Grid: 07:00–17:00 -->
+              <div class="cal-day-grid" data-cal-grid="4">
+                <div class="cal-grid">
+                  <div class="cal-hour-col">
+                    <div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div>
+                  </div>
+                  <div class="cal-body">
+                    <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                    <!-- Breakfast 08:00–09:00 -->
+                    <div class="cal-event bg-yellow-50" style="top:calc(1*48px);height:calc(1*48px);border-color:#eab308;">
+                      <div class="cal-event-icon bg-yellow-100"><i data-lucide="coffee" class="w-2.5 h-2.5 text-yellow-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">☕ Leisurely Breakfast</div>
+                        <div class="cal-event-time">08:00 AM – 09:00 AM · 1h</div>
+                      </div>
+                    </div>
+                    <!-- Checkout 11:00–12:00 -->
+                    <div class="cal-event bg-gray-50" style="top:calc(4*48px);height:calc(1*48px);border-color:#6b7280;">
+                      <div class="cal-event-icon bg-gray-100"><i data-lucide="log-out" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">🚗 Checkout + Airport Transfer</div>
+                        <div class="cal-event-time">11:00 AM – 12:00 PM · 1h</div>
+                      </div>
+                    </div>
+                    <!-- Flight GOI→DEL 14:15–17:05 -->
+                    <div class="cal-event bg-blue-50" style="top:calc(7.25*48px);height:calc(2.83*48px);border-color:#3b82f6;">
+                      <div class="cal-event-icon bg-blue-100"><i data-lucide="plane-takeoff" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                      <div class="cal-event-info">
+                        <div class="cal-event-name">✈ Flight GOI → DEL</div>
+                        <div class="cal-event-time">02:15 PM – 05:05 PM · 2h 50m</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /itin-calendar-view -->
+
+            <!-- ===== SCHEDULE VIEW (dates vertical × hours horizontal) ===== -->
+            <div class="itin-schedule-view" id="itinSchedView">
+              <div class="sched-wrap">
+                <div class="sched-grid">
+                  <!-- Header: corner + 17 hour cols (06–22) -->
+                  <div class="sched-corner"></div>
+                  <div class="sched-hour-head">06</div>
+                  <div class="sched-hour-head">07</div>
+                  <div class="sched-hour-head">08</div>
+                  <div class="sched-hour-head">09</div>
+                  <div class="sched-hour-head">10</div>
+                  <div class="sched-hour-head">11</div>
+                  <div class="sched-hour-head">12</div>
+                  <div class="sched-hour-head">13</div>
+                  <div class="sched-hour-head">14</div>
+                  <div class="sched-hour-head">15</div>
+                  <div class="sched-hour-head">16</div>
+                  <div class="sched-hour-head">17</div>
+                  <div class="sched-hour-head">18</div>
+                  <div class="sched-hour-head">19</div>
+                  <div class="sched-hour-head">20</div>
+                  <div class="sched-hour-head">21</div>
+                  <div class="sched-hour-head">22</div>
+
+                  <!-- ── Wed 4 Mar ── -->
+                  <div class="sched-day-label">
+                    <span class="sd-dow">Wed</span>
+                    <span class="sd-num">4</span>
+                    <span class="sd-mon">Mar</span>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Flight 08:45–11:30 -->
+                    <div class="sched-event bg-blue-50" style="left:75%;width:calc(2.75 * 100%);border-color:#3b82f6;">
+                      <div class="sched-event-icon bg-blue-100"><i data-lucide="plane" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">✈ DEL → GOI</div>
+                        <div class="sched-event-time">08:45 – 11:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Transfer 11:30–12:15 -->
+                    <div class="sched-event bg-gray-50" style="left:50%;width:calc(0.75 * 100%);border-color:#6b7280;">
+                      <div class="sched-event-icon bg-gray-100"><i data-lucide="car" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🚗 Transfer</div>
+                        <div class="sched-event-time">11:30 – 12:15</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Hotel 14:00–16:00 -->
+                    <div class="sched-event bg-green-50" style="left:0;width:calc(2 * 100%);border-color:#22c55e;">
+                      <div class="sched-event-icon bg-green-100"><i data-lucide="bed" class="w-2.5 h-2.5 text-green-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🏨 Check-in & Rest</div>
+                        <div class="sched-event-time">14:00 – 16:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Cruise 17:00–20:00 -->
+                    <div class="sched-event bg-amber-50" style="left:0;width:calc(3 * 100%);border-color:#f59e0b;">
+                      <div class="sched-event-icon bg-amber-100"><i data-lucide="ship" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🌅 Cruise + Dinner</div>
+                        <div class="sched-event-time">17:00 – 20:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+
+                  <!-- ── Thu 5 Mar ── -->
+                  <div class="sched-day-label">
+                    <span class="sd-dow">Thu</span>
+                    <span class="sd-num">5</span>
+                    <span class="sd-mon">Mar</span>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Beach 08:00–09:30 -->
+                    <div class="sched-event bg-cyan-50" style="left:0;width:calc(1.5 * 100%);border-color:#06b6d4;">
+                      <div class="sched-event-icon bg-cyan-100"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🏖 Baga Beach</div>
+                        <div class="sched-event-time">08:00 – 09:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell">
+                    <!-- Water Sports 09:30–11:30 -->
+                    <div class="sched-event bg-orange-50" style="left:50%;width:calc(2 * 100%);border-color:#f97316;">
+                      <div class="sched-event-icon bg-orange-100"><i data-lucide="zap" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">⚡ Water Sports</div>
+                        <div class="sched-event-time">09:30 – 11:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Forts 14:00–16:30 -->
+                    <div class="sched-event bg-stone-50" style="left:0;width:calc(2.5 * 100%);border-color:#78716c;">
+                      <div class="sched-event-icon bg-stone-100"><i data-lucide="landmark" class="w-2.5 h-2.5 text-stone-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🏰 Forts</div>
+                        <div class="sched-event-time">14:00 – 16:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Market 17:00–19:00 -->
+                    <div class="sched-event bg-pink-50" style="left:0;width:calc(2 * 100%);border-color:#ec4899;">
+                      <div class="sched-event-icon bg-pink-100"><i data-lucide="shopping-bag" class="w-2.5 h-2.5 text-pink-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🛍 Anjuna Market</div>
+                        <div class="sched-event-time">17:00 – 19:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Tito's 21:00–23:00 -->
+                    <div class="sched-event bg-purple-50" style="left:0;width:calc(2 * 100%);border-color:#a855f7;">
+                      <div class="sched-event-icon bg-purple-100"><i data-lucide="music" class="w-2.5 h-2.5 text-purple-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🎵 Tito's Lane</div>
+                        <div class="sched-event-time">21:00 – 23:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+
+                  <!-- ── Fri 6 Mar ── -->
+                  <div class="sched-day-label">
+                    <span class="sd-dow">Fri</span>
+                    <span class="sd-num">6</span>
+                    <span class="sd-mon">Mar</span>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Heritage 09:00–11:30 -->
+                    <div class="sched-event bg-orange-50" style="left:0;width:calc(2.5 * 100%);border-color:#f97316;">
+                      <div class="sched-event-icon bg-orange-100"><i data-lucide="church" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">⛪ Heritage Walk</div>
+                        <div class="sched-event-time">09:00 – 11:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Lunch 12:00–13:00 -->
+                    <div class="sched-event bg-rose-50" style="left:0;width:calc(1 * 100%);border-color:#f43f5e;">
+                      <div class="sched-event-icon bg-rose-100"><i data-lucide="utensils" class="w-2.5 h-2.5 text-rose-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🍛 Goan Thali</div>
+                        <div class="sched-event-time">12:00 – 13:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Spice Farm 14:00–16:00 -->
+                    <div class="sched-event bg-green-50" style="left:0;width:calc(2 * 100%);border-color:#22c55e;">
+                      <div class="sched-event-icon bg-green-100"><i data-lucide="leaf" class="w-2.5 h-2.5 text-green-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🌿 Spice Farm</div>
+                        <div class="sched-event-time">14:00 – 16:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Elephant 16:30–18:00 -->
+                    <div class="sched-event bg-amber-50" style="left:50%;width:calc(1.5 * 100%);border-color:#f59e0b;">
+                      <div class="sched-event-icon bg-amber-100"><i data-lucide="heart" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🐘 Elephant</div>
+                        <div class="sched-event-time">16:30 – 18:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+
+                  <!-- ── Sat 7 Mar ── -->
+                  <div class="sched-day-label">
+                    <span class="sd-dow">Sat</span>
+                    <span class="sd-num">7</span>
+                    <span class="sd-mon">Mar</span>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Dolphin 07:00–08:30 -->
+                    <div class="sched-event bg-blue-50" style="left:0;width:calc(1.5 * 100%);border-color:#3b82f6;">
+                      <div class="sched-event-icon bg-blue-100"><i data-lucide="fish" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🐬 Dolphins</div>
+                        <div class="sched-event-time">07:00 – 08:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Kayaking 09:00–10:30 -->
+                    <div class="sched-event bg-teal-50" style="left:0;width:calc(1.5 * 100%);border-color:#14b8a6;">
+                      <div class="sched-event-icon bg-teal-100"><i data-lucide="sailboat" class="w-2.5 h-2.5 text-teal-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🛶 Kayaking</div>
+                        <div class="sched-event-time">09:00 – 10:30</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Palolem 11:00–14:00 -->
+                    <div class="sched-event bg-cyan-50" style="left:0;width:calc(3 * 100%);border-color:#06b6d4;">
+                      <div class="sched-event-icon bg-cyan-100"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🏖 Palolem + Lunch</div>
+                        <div class="sched-event-time">11:00 – 14:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Cola 15:00–17:00 -->
+                    <div class="sched-event bg-emerald-50" style="left:0;width:calc(2 * 100%);border-color:#10b981;">
+                      <div class="sched-event-icon bg-emerald-100"><i data-lucide="droplets" class="w-2.5 h-2.5 text-emerald-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">💧 Cola Beach</div>
+                        <div class="sched-event-time">15:00 – 17:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Spa Dinner 19:00–21:00 -->
+                    <div class="sched-event bg-purple-50" style="left:0;width:calc(2 * 100%);border-color:#a855f7;">
+                      <div class="sched-event-icon bg-purple-100"><i data-lucide="heart-pulse" class="w-2.5 h-2.5 text-purple-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🍷 Spa Dinner</div>
+                        <div class="sched-event-time">19:00 – 21:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+
+                  <!-- ── Sun 8 Mar ── -->
+                  <div class="sched-day-label">
+                    <span class="sd-dow">Sun</span>
+                    <span class="sd-num">8</span>
+                    <span class="sd-mon">Mar</span>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Breakfast 08:00–09:00 -->
+                    <div class="sched-event bg-yellow-50" style="left:0;width:calc(1 * 100%);border-color:#eab308;">
+                      <div class="sched-event-icon bg-yellow-100"><i data-lucide="coffee" class="w-2.5 h-2.5 text-yellow-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">☕ Breakfast</div>
+                        <div class="sched-event-time">08:00 – 09:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Checkout 11:00–12:00 -->
+                    <div class="sched-event bg-gray-50" style="left:0;width:calc(1 * 100%);border-color:#6b7280;">
+                      <div class="sched-event-icon bg-gray-100"><i data-lucide="log-out" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">🚗 Checkout</div>
+                        <div class="sched-event-time">11:00 – 12:00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell">
+                    <!-- Flight 14:15–17:05 -->
+                    <div class="sched-event bg-blue-50" style="left:25%;width:calc(2.83 * 100%);border-color:#3b82f6;">
+                      <div class="sched-event-icon bg-blue-100"><i data-lucide="plane-takeoff" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                      <div class="sched-event-text">
+                        <div class="sched-event-name">✈ GOI → DEL</div>
+                        <div class="sched-event-time">14:15 – 17:05</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                  <div class="sched-row-cell"></div>
+                </div>
+              </div>
+            </div><!-- /itin-schedule-view -->
+
+            </div>
+          </div>
+
+          <!-- Flight Details -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="plane" class="w-4 h-4 text-primary"></i> Flight Details
+              </div>
+            </div>
+            <div class="card-content space-y-4">
+              <!-- Outbound -->
+              <div>
+                <div class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Outbound · Wed 4 Mar</div>
+                <div class="flight-card">
+                  <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="plane-takeoff" class="w-4.5 h-4.5 text-blue-600"></i>
+                  </div>
+                  <div class="flight-route">
+                    <div>
+                      <div class="flight-code">DEL</div>
+                      <div class="flight-time">08:45 AM</div>
+                    </div>
+                    <div class="flight-line"></div>
+                    <div class="text-center">
+                      <div class="text-[0.6875rem] text-muted-foreground">2h 45m · Non-stop</div>
+                      <div class="text-[0.625rem] font-medium text-primary">IndiGo 6E-2145</div>
+                    </div>
+                    <div class="flight-line" style="transform: scaleX(-1)"></div>
+                    <div class="text-right">
+                      <div class="flight-code">GOI</div>
+                      <div class="flight-time">11:30 AM</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Return -->
+              <div>
+                <div class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Return · Sun 8 Mar</div>
+                <div class="flight-card">
+                  <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="plane-landing" class="w-4.5 h-4.5 text-amber-600"></i>
+                  </div>
+                  <div class="flight-route">
+                    <div>
+                      <div class="flight-code">GOI</div>
+                      <div class="flight-time">02:15 PM</div>
+                    </div>
+                    <div class="flight-line"></div>
+                    <div class="text-center">
+                      <div class="text-[0.6875rem] text-muted-foreground">2h 50m · Non-stop</div>
+                      <div class="text-[0.625rem] font-medium text-primary">IndiGo 6E-2146</div>
+                    </div>
+                    <div class="flight-line" style="transform: scaleX(-1)"></div>
+                    <div class="text-right">
+                      <div class="flight-code">DEL</div>
+                      <div class="flight-time">05:05 PM</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+                <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                <span>Baggage allowance: 15 kg check-in + 7 kg cabin per person. Web check-in opens 72 hours before departure.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hotel Details -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="bed" class="w-4 h-4 text-primary"></i> Accommodation
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="flex flex-col sm:flex-row gap-4">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=280&h=180&fit=crop" alt="Taj Fort Aguada" class="w-full sm:w-48 h-32 object-cover rounded-lg flex-shrink-0">
+                <div class="flex-1 space-y-2">
+                  <div>
+                    <h3 class="font-semibold">Taj Fort Aguada Resort & Spa</h3>
+                    <div class="flex items-center gap-2 text-sm text-muted-foreground mt-0.5">
+                      <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Sinquerim, North Goa
+                      <span class="text-amber-500 flex items-center gap-0.5"><i data-lucide="star" class="w-3 h-3 fill-current"></i> 4.8</span>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="flex items-center gap-1.5"><i data-lucide="door-open" class="w-3 h-3 text-muted-foreground"></i> Deluxe Sea-View Room</div>
+                    <div class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3 h-3 text-muted-foreground"></i> 4 Mar – 8 Mar (4 nights)</div>
+                    <div class="flex items-center gap-1.5"><i data-lucide="utensils" class="w-3 h-3 text-muted-foreground"></i> Breakfast included</div>
+                    <div class="flex items-center gap-1.5"><i data-lucide="wifi" class="w-3 h-3 text-muted-foreground"></i> Free Wi-Fi</div>
+                    <div class="flex items-center gap-1.5"><i data-lucide="waves" class="w-3 h-3 text-muted-foreground"></i> Pool & Spa access</div>
+                    <div class="flex items-center gap-1.5"><i data-lucide="car" class="w-3 h-3 text-muted-foreground"></i> Free parking</div>
+                  </div>
+                  <div class="flex gap-2 text-xs mt-1">
+                    <span class="badge badge-secondary">Check-in: 2:00 PM</span>
+                    <span class="badge badge-secondary">Check-out: 11:00 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ AI SUGGESTIONS ============ -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> AI Suggestions for Your Trip
+              </div>
+              <div class="card-description">Personalized recommendations based on your preferences & travel history</div>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Suggestion 1 -->
+                <div class="ai-sug-card">
+                  <div class="flex items-start gap-3">
+                    <div class="ai-sug-icon bg-orange-100">
+                      <i data-lucide="utensils" class="w-4 h-4 text-orange-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold mb-0.5">Try Vindaloo at Gunpowder</div>
+                      <div class="text-xs text-muted-foreground">Based on your food preferences. This Goan–Portuguese fusion restaurant in Assagao is a hidden gem. Reserve a table for your Day 2 evening.</div>
+                      <div class="flex items-center gap-1.5 mt-2">
+                        <span class="badge badge-primary text-[0.6rem]"><i data-lucide="sparkles" class="w-2.5 h-2.5 inline mr-0.5"></i>92% Match</span>
+                        <span class="text-[0.625rem] text-muted-foreground">🍽 Food & Dining</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Suggestion 2 -->
+                <div class="ai-sug-card">
+                  <div class="flex items-start gap-3">
+                    <div class="ai-sug-icon bg-blue-100">
+                      <i data-lucide="camera" class="w-4 h-4 text-blue-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold mb-0.5">Divar Island Ferry Trip</div>
+                      <div class="text-xs text-muted-foreground">An untouched island 30 min from Old Goa. Great for photography and quiet walks. Perfect fit for your heritage interest on Day 3.</div>
+                      <div class="flex items-center gap-1.5 mt-2">
+                        <span class="badge badge-primary text-[0.6rem]"><i data-lucide="sparkles" class="w-2.5 h-2.5 inline mr-0.5"></i>88% Match</span>
+                        <span class="text-[0.625rem] text-muted-foreground">📸 Sightseeing</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Suggestion 3 -->
+                <div class="ai-sug-card">
+                  <div class="flex items-start gap-3">
+                    <div class="ai-sug-icon bg-teal-100">
+                      <i data-lucide="heart-pulse" class="w-4 h-4 text-teal-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold mb-0.5">Jiva Spa — Couple's Therapy</div>
+                      <div class="text-xs text-muted-foreground">Taj's award-winning spa offers Ayurvedic treatments. Book the 90-min Couple's Ritual for your Day 4 farewell evening. ₹4,500/couple.</div>
+                      <div class="flex items-center gap-1.5 mt-2">
+                        <span class="badge badge-primary text-[0.6rem]"><i data-lucide="sparkles" class="w-2.5 h-2.5 inline mr-0.5"></i>85% Match</span>
+                        <span class="text-[0.625rem] text-muted-foreground">💆 Wellness</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Suggestion 4 -->
+                <div class="ai-sug-card">
+                  <div class="flex items-start gap-3">
+                    <div class="ai-sug-icon bg-rose-100">
+                      <i data-lucide="umbrella" class="w-4 h-4 text-rose-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold mb-0.5">Pack Rain Gear</div>
+                      <div class="text-xs text-muted-foreground">Weather forecast shows 30% rain chance on 6 Mar. Carry a light umbrella/raincoat and waterproof phone pouch for beach activities.</div>
+                      <div class="flex items-center gap-1.5 mt-2">
+                        <span class="badge badge-secondary text-[0.6rem]"><i data-lucide="cloud-rain" class="w-2.5 h-2.5 inline mr-0.5"></i>Weather Tip</span>
+                        <span class="text-[0.625rem] text-muted-foreground">🌦 Preparedness</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Suggestion 5 -->
+                <div class="ai-sug-card">
+                  <div class="flex items-start gap-3">
+                    <div class="ai-sug-icon bg-indigo-100">
+                      <i data-lucide="map" class="w-4 h-4 text-indigo-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold mb-0.5">Saturday Night Market, Arpora</div>
+                      <div class="text-xs text-muted-foreground">Happening on 7 Mar (Sat) — live music, food stalls, handicrafts. Only 10 min from your hotel. Great for kids too!</div>
+                      <div class="flex items-center gap-1.5 mt-2">
+                        <span class="badge badge-primary text-[0.6rem]"><i data-lucide="sparkles" class="w-2.5 h-2.5 inline mr-0.5"></i>90% Match</span>
+                        <span class="text-[0.625rem] text-muted-foreground">🛍 Shopping & Culture</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Suggestion 6 -->
+                <div class="ai-sug-card">
+                  <div class="flex items-start gap-3">
+                    <div class="ai-sug-icon bg-yellow-100">
+                      <i data-lucide="baby" class="w-4 h-4 text-yellow-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold mb-0.5">Kids Activity: Aqua Park</div>
+                      <div class="text-xs text-muted-foreground">Splashdown Goa water park is 20 min away — inflatable courses, slides & wave pool. Ideal for your kid on Day 2 afternoon. ₹800/child.</div>
+                      <div class="flex items-center gap-1.5 mt-2">
+                        <span class="badge badge-primary text-[0.6rem]"><i data-lucide="sparkles" class="w-2.5 h-2.5 inline mr-0.5"></i>87% Match</span>
+                        <span class="text-[0.625rem] text-muted-foreground">👶 Family</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ RIGHT SIDEBAR ============ -->
+        <div class="space-y-6">
+
+          <!-- Cost Breakdown -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="receipt" class="w-4 h-4 text-primary"></i> Cost Breakdown
+              </div>
+            </div>
+            <div class="card-content space-y-3">
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Accommodation (4 nights)</span>
+                  <span>₹44,000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Flights (3 pax, round trip)</span>
+                  <span>₹24,000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Activities & Tours</span>
+                  <span>₹8,500</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Airport Transfers</span>
+                  <span>₹3,000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Taxes & Fees</span>
+                  <span>₹6,000</span>
+                </div>
+                <div class="separator my-2"></div>
+                <div class="flex justify-between font-semibold text-base">
+                  <span>Subtotal</span>
+                  <span>₹85,500</span>
+                </div>
+              </div>
+
+              <!-- Perks Applied -->
+              <div class="bg-green-50 border border-green-200 rounded-lg p-3 space-y-2">
+                <div class="flex items-center gap-2 text-sm font-semibold text-green-700">
+                  <i data-lucide="badge-check" class="w-4 h-4"></i> Perks Applied
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-green-700 flex items-center gap-1.5">
+                    <i data-lucide="credit-card" class="w-3 h-3"></i> Travel Credit
+                  </span>
+                  <span class="text-green-700 font-semibold">−₹15,000</span>
+                </div>
+                <div class="separator" style="background-color: hsl(142 76% 36% / 0.2)"></div>
+                <div class="flex justify-between text-sm font-bold text-green-700">
+                  <span>You Pay</span>
+                  <span>₹70,500</span>
+                </div>
+              </div>
+
+              <!-- Payment status -->
+              <div class="flex items-center gap-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+                <div>
+                  <strong>Paid in full</strong> on 15 Feb 2026 via UPI
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leave Info -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="calendar-off" class="w-4 h-4 text-primary"></i> Leave Details
+              </div>
+            </div>
+            <div class="card-content space-y-3">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-muted-foreground">Thu, 5 Mar 2026</span>
+                  <span class="badge badge-warning text-[0.625rem]">Pending</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-muted-foreground">Fri, 6 Mar 2026</span>
+                  <span class="badge badge-warning text-[0.625rem]">Pending</span>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="text-xs text-muted-foreground space-y-1">
+                <div class="flex items-center gap-1.5"><i data-lucide="calendar-check" class="w-3 h-3"></i> Total leave: 2 days (Casual Leave)</div>
+                <div class="flex items-center gap-1.5"><i data-lucide="user" class="w-3 h-3"></i> Approver: Anita Desai (Manager)</div>
+                <div class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3 h-3"></i> Applied: 16 Feb 2026</div>
+              </div>
+              <div class="p-2 border border-primary/20 rounded-lg bg-primary/5 text-xs">
+                <strong>Trip Days:</strong>
+                <span class="inline-flex gap-1.5 ml-1">
+                  <span class="inline-flex items-center gap-0.5 text-rose-600"><span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>4 Mar (Holiday)</span>
+                  <span class="inline-flex items-center gap-0.5 text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>5–6 Mar (Leave)</span>
+                  <span class="inline-flex items-center gap-0.5 text-gray-600"><span class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>7–8 Mar (Weekend)</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documents -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4 text-primary"></i> Documents
+              </div>
+            </div>
+            <div class="card-content space-y-2">
+              <div class="doc-item">
+                <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-red-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">Booking Confirmation</div>
+                  <div class="text-xs text-muted-foreground">PDF · 142 KB</div>
+                </div>
+                <button class="btn-ghost btn-icon !h-7 !w-7"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+              </div>
+              <div class="doc-item">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="plane" class="w-3.5 h-3.5 text-blue-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">E-Tickets</div>
+                  <div class="text-xs text-muted-foreground">Pending · Available after issuance</div>
+                </div>
+                <button class="btn-ghost btn-icon !h-7 !w-7" disabled><i data-lucide="download" class="w-3.5 h-3.5 opacity-30"></i></button>
+              </div>
+              <div class="doc-item">
+                <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="receipt" class="w-3.5 h-3.5 text-green-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">Payment Receipt</div>
+                  <div class="text-xs text-muted-foreground">PDF · 98 KB</div>
+                </div>
+                <button class="btn-ghost btn-icon !h-7 !w-7"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+              </div>
+              <div class="doc-item">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">Travel Insurance</div>
+                  <div class="text-xs text-muted-foreground">PDF · 210 KB · Policy #TI-98234</div>
+                </div>
+                <button class="btn-ghost btn-icon !h-7 !w-7"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Contact -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2">
+                <i data-lucide="phone" class="w-4 h-4 text-primary"></i> Emergency Contacts
+              </div>
+            </div>
+            <div class="card-content space-y-2">
+              <div class="contact-card">
+                <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">Priya Sharma</div>
+                  <div class="text-xs text-muted-foreground">Spouse · +91 98765 43210</div>
+                </div>
+              </div>
+              <div class="contact-card">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="building-2" class="w-3.5 h-3.5 text-blue-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">Trvello Support</div>
+                  <div class="text-xs text-muted-foreground">24/7 · 1800-123-4567</div>
+                </div>
+              </div>
+              <div class="contact-card">
+                <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="bed" class="w-3.5 h-3.5 text-amber-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">Taj Fort Aguada</div>
+                  <div class="text-xs text-muted-foreground">Hotel · +91 832 664 5858</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ BOTTOM ACTIONS ============ -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 mt-2 mb-8 pt-6 border-t border-border">
+        <a href="dashboard.html" class="btn-outline w-full sm:w-auto">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard
+        </a>
+        <button class="btn-ghost w-full sm:w-auto" onclick="window.print()">
+          <i data-lucide="printer" class="w-4 h-4"></i> Print Trip
+        </button>
+        <button class="btn-ghost w-full sm:w-auto">
+          <i data-lucide="share-2" class="w-4 h-4"></i> Share with Family
+        </button>
+        <button class="btn-ghost w-full sm:w-auto text-destructive hover:text-destructive sm:ml-auto">
+          <i data-lucide="x-circle" class="w-4 h-4"></i> Cancel Booking
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/main.js"></script>
+  <script>lucide.createIcons();</script>
+  <script>
+    /* ─── Itinerary View Toggle ─── */
+    function switchItinView(view) {
+      const listView  = document.getElementById('itinListView');
+      const calView   = document.getElementById('itinCalView');
+      const schedView = document.getElementById('itinSchedView');
+      const btns      = document.querySelectorAll('.itin-view-btn');
+      const slider    = document.getElementById('itinViewSlider');
+
+      btns.forEach(b => b.classList.toggle('active', b.dataset.view === view));
+      listView.classList.toggle('active', view === 'list');
+      calView.classList.toggle('active', view === 'calendar');
+      schedView.classList.toggle('active', view === 'schedule');
+
+      // Animate slider
+      const activeBtn = document.querySelector('.itin-view-btn.active');
+      if (activeBtn && slider) {
+        slider.style.left  = activeBtn.offsetLeft + 'px';
+        slider.style.width = activeBtn.offsetWidth + 'px';
+      }
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      if (view === 'calendar') {
+        requestAnimationFrame(() => positionCalTabSlider());
+      }
+    }
+
+    // Init view slider
+    requestAnimationFrame(() => {
+      const btn = document.querySelector('.itin-view-btn.active');
+      const s   = document.getElementById('itinViewSlider');
+      if (btn && s) { s.style.left = btn.offsetLeft+'px'; s.style.width = btn.offsetWidth+'px'; }
+    });
+
+    /* ─── Calendar Day Tabs ─── */
+    function switchCalDay(idx) {
+      document.querySelectorAll('.cal-day-tab').forEach(t => t.classList.toggle('active', +t.dataset.calDay === idx));
+      document.querySelectorAll('.cal-day-grid').forEach(g => g.classList.toggle('active', +g.dataset.calGrid === idx));
+      positionCalTabSlider();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function positionCalTabSlider() {
+      const tab = document.querySelector('.cal-day-tab.active');
+      const s   = document.getElementById('calTabSlider');
+      if (tab && s) { s.style.left = tab.offsetLeft+'px'; s.style.width = tab.offsetWidth+'px'; }
+    }
+
+    requestAnimationFrame(() => positionCalTabSlider());
+  </script>
+</body>
+</html>
