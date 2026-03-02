@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import Employees — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <link rel="stylesheet" href="../css/admin2-theme.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .method-card { border: 2px solid transparent; transition: border-color 0.2s, box-shadow 0.2s; }
+    .method-card:hover { border-color: hsl(243 75% 59% / 0.3); }
+    .method-card.selected { border-color: hsl(243 75% 59%); box-shadow: 0 0 0 3px hsl(243 75% 59% / 0.1); }
+    .stepper { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .step { display: flex; align-items: center; gap: 0.5rem; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; background: #e5e7eb; color: #6b7280; }
+    .step.active .step-num { background: hsl(243 75% 59%); color: white; }
+    .step.done .step-num { background: #10b981; color: white; }
+    .step-label { font-size: 0.875rem; color: #6b7280; }
+    .step.active .step-label { color: hsl(243 75% 59%); font-weight: 500; }
+    .step.done .step-label { color: #10b981; }
+    .step-line { width: 40px; height: 2px; background: #e5e7eb; }
+    .step.done + .step-line { background: #10b981; }
+    .drop-zone { border: 2px dashed #d1d5db; border-radius: 12px; padding: 3rem; text-align: center; transition: all 0.2s; }
+    .drop-zone:hover, .drop-zone.dragover { border-color: hsl(243 75% 59%); background: hsl(243 75% 59% / 0.05); }
+  </style>
+</head>
+<body class="font-sans v2">
+
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon"><i data-lucide="globe"></i></div>
+      <span class="sb-logo-text">Trvello</span>
+    </div>
+    <nav class="sb-nav">
+      <a href="dashboard.html" class="sb-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <div class="sb-link open" onclick="toggleSub(this)">
+        <i data-lucide="users"></i> People
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub open">
+        <a href="employees.html" class="sb-link">Employees</a>
+        <a href="employee-import.html" class="sb-link active">Import</a>
+      </div>
+      <div class="sb-link" data-toggle="perks-sub" onclick="toggleSub(this)">
+        <i data-lucide="gift"></i> Perks
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub" id="perks-sub">
+        <a href="perks.html" class="sb-link">All Perks</a>
+        <a href="peer-recognition.html" class="sb-link">Peer Recognition</a>
+        <a href="automations.html" class="sb-link">Automations</a>
+      </div>
+      <div class="sb-link" onclick="toggleSub(this)">
+        <i data-lucide="wallet"></i> Financials
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub">
+        <a href="financial-summary.html" class="sb-link">Summary</a>
+        <a href="payment-details.html" class="sb-link">Payment Details</a>
+        <a href="payment-history.html" class="sb-link">Payment History</a>
+      </div>
+      <a href="audit-logs.html" class="sb-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+      <div class="sb-link" onclick="toggleSub(this)">
+        <i data-lucide="settings"></i> Settings
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub">
+        <a href="settings/general.html" class="sb-link">General</a>
+        <a href="settings/branding.html" class="sb-link">Branding</a>
+        <a href="settings/sign-in.html" class="sb-link">Sign-in</a>
+        <a href="settings/integrations.html" class="sb-link">Integrations</a>
+      </div>
+      <div class="sb-promo">
+        <div class="sb-promo-img"><i data-lucide="rocket"></i></div>
+        <div class="sb-promo-title">Upgrade to Enterprise</div>
+        <p class="sb-promo-desc">Unlock SSO, advanced analytics, and priority support.</p>
+        <button class="sb-promo-btn"><i data-lucide="sparkles"></i> Upgrade plan</button>
+      </div>
+    </nav>
+    <div class="sb-user">
+      <div class="sb-user-avatar">JD</div>
+      <div style="flex:1;min-width:0;">
+        <div class="sb-user-name">Jane Doe</div>
+        <div class="sb-user-role">Org Admin</div>
+      </div>
+      <button class="sb-user-more"><i data-lucide="more-horizontal"></i></button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="workspace">
+      <header class="topbar">
+        <div class="search">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search…">
+        </div>
+        <div class="tb-right">
+          <button class="tb-btn"><i data-lucide="mail"></i></button>
+          <button class="tb-btn"><i data-lucide="bell"></i><span class="dot"></span></button>
+          <div style="position:relative;">
+            <button class="tb-fab" onclick="document.getElementById('fabDrop').classList.toggle('open')">
+              <i data-lucide="plus"></i>
+            </button>
+            <div id="fabDrop" class="fab-drop">
+              <a href="employees.html?add=1" class="fab-item"><span class="fi-left"><i data-lucide="user-plus"></i> Add Employee</span><kbd>⌘ E</kbd></a>
+              <a href="employee-import.html" class="fab-item"><span class="fi-left"><i data-lucide="upload"></i> Import CSV</span><kbd>⌘ I</kbd></a>
+              <a href="perks.html?create=1" class="fab-item"><span class="fi-left"><i data-lucide="gift"></i> Create Perk</span><kbd>⌘ P</kbd></a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="page">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Import Employees</h1>
+            <p class="page-desc">Bulk add employees to your organisation</p>
+          </div>
+        </div>
+
+        <!-- Method Selection -->
+        <div id="methodSelect" class="space-y-5">
+          <h3 class="text-base font-semibold mb-3">Choose Import Method</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- CSV Import -->
+            <div class="card method-card cursor-pointer" onclick="selectMethod('csv')">
+              <div class="card-content pt-5 text-center">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-100 flex items-center justify-center mx-auto mb-4">
+                  <i data-lucide="file-spreadsheet" class="w-7 h-7 text-indigo-600"></i>
+                </div>
+                <h4 class="font-semibold mb-1">CSV Upload</h4>
+                <p class="text-sm text-muted-foreground mb-3">Import from spreadsheet</p>
+                <span class="badge badge-secondary">Most Popular</span>
+              </div>
+            </div>
+
+            <!-- API Integration -->
+            <div class="card method-card cursor-pointer" onclick="selectMethod('api')">
+              <div class="card-content pt-5 text-center">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                  <i data-lucide="code" class="w-7 h-7 text-emerald-600"></i>
+                </div>
+                <h4 class="font-semibold mb-1">REST API</h4>
+                <p class="text-sm text-muted-foreground mb-3">Programmatic integration</p>
+                <span class="badge badge-outline">Developer</span>
+              </div>
+            </div>
+
+            <!-- SCIM -->
+            <div class="card method-card cursor-pointer" onclick="selectMethod('scim')">
+              <div class="card-content pt-5 text-center">
+                <div class="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center mx-auto mb-4">
+                  <i data-lucide="shield-check" class="w-7 h-7 text-amber-600"></i>
+                </div>
+                <h4 class="font-semibold mb-1">SCIM Provisioning</h4>
+                <p class="text-sm text-muted-foreground mb-3">Okta, Azure AD, OneLogin</p>
+                <span class="badge bg-amber-100 text-amber-700">Enterprise</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CSV Import Flow -->
+        <div id="csvFlow" class="hidden">
+          <div class="stepper">
+            <div class="step active" id="step1">
+              <div class="step-num">1</div>
+              <span class="step-label">Upload</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step2">
+              <div class="step-num">2</div>
+              <span class="step-label">Map Fields</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step3">
+              <div class="step-num">3</div>
+              <span class="step-label">Review</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step4">
+              <div class="step-num">4</div>
+              <span class="step-label">Import</span>
+            </div>
+          </div>
+
+          <!-- Step 1: Upload -->
+          <div id="csvStep1" class="card">
+            <div class="card-header">
+              <h3 class="card-title">Upload CSV File</h3>
+              <p class="card-description">Drag and drop or click to browse</p>
+            </div>
+            <div class="card-content">
+              <div class="drop-zone" id="dropZone">
+                <i data-lucide="upload-cloud" class="w-12 h-12 text-muted-foreground mx-auto mb-3"></i>
+                <p class="font-medium mb-1">Drop your CSV file here</p>
+                <p class="text-sm text-muted-foreground mb-3">or click to browse</p>
+                <input type="file" accept=".csv" class="hidden" id="csvInput">
+                <button class="btn-outline" onclick="document.getElementById('csvInput').click()">
+                  <i data-lucide="folder-open" class="w-4 h-4"></i> Browse Files
+                </button>
+              </div>
+              <div class="mt-4 flex items-center justify-between">
+                <a href="#" class="text-sm text-primary hover:underline flex items-center gap-1">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i> Download sample template
+                </a>
+                <div class="flex gap-2">
+                  <button class="btn-ghost" onclick="backToMethods()">Cancel</button>
+                  <button class="btn-primary" onclick="goToStep(2)">Continue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Map Fields -->
+          <div id="csvStep2" class="card hidden">
+            <div class="card-header">
+              <h3 class="card-title">Map CSV Columns</h3>
+              <p class="card-description">Match your columns to employee fields</p>
+            </div>
+            <div class="card-content">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b">
+                    <th class="text-left py-2 font-medium">CSV Column</th>
+                    <th class="text-left py-2 font-medium">Sample Data</th>
+                    <th class="text-left py-2 font-medium">Maps To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b">
+                    <td class="py-2 font-mono text-xs">employee_email</td>
+                    <td class="py-2 text-muted-foreground">john@acme.com</td>
+                    <td class="py-2">
+                      <select class="input text-sm">
+                        <option>Email *</option>
+                        <option>Skip</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr class="border-b">
+                    <td class="py-2 font-mono text-xs">first_name</td>
+                    <td class="py-2 text-muted-foreground">John</td>
+                    <td class="py-2">
+                      <select class="input text-sm">
+                        <option>First Name *</option>
+                        <option>Skip</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr class="border-b">
+                    <td class="py-2 font-mono text-xs">last_name</td>
+                    <td class="py-2 text-muted-foreground">Smith</td>
+                    <td class="py-2">
+                      <select class="input text-sm">
+                        <option>Last Name *</option>
+                        <option>Skip</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr class="border-b">
+                    <td class="py-2 font-mono text-xs">department</td>
+                    <td class="py-2 text-muted-foreground">Engineering</td>
+                    <td class="py-2">
+                      <select class="input text-sm">
+                        <option>Department</option>
+                        <option>Skip</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 font-mono text-xs">start_date</td>
+                    <td class="py-2 text-muted-foreground">2024-01-15</td>
+                    <td class="py-2">
+                      <select class="input text-sm">
+                        <option>Start Date</option>
+                        <option>Skip</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-4 flex justify-between">
+                <button class="btn-ghost" onclick="goToStep(1)">Back</button>
+                <button class="btn-primary" onclick="goToStep(3)">Continue</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Review -->
+          <div id="csvStep3" class="card hidden">
+            <div class="card-header">
+              <h3 class="card-title">Review Import</h3>
+              <p class="card-description">Verify data before importing</p>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-3 gap-4 mb-5">
+                <div class="p-4 rounded-lg bg-emerald-50 border border-emerald-200">
+                  <p class="text-2xl font-bold text-emerald-700">142</p>
+                  <p class="text-sm text-emerald-600">Valid records</p>
+                </div>
+                <div class="p-4 rounded-lg bg-amber-50 border border-amber-200">
+                  <p class="text-2xl font-bold text-amber-700">3</p>
+                  <p class="text-sm text-amber-600">Warnings</p>
+                </div>
+                <div class="p-4 rounded-lg bg-red-50 border border-red-200">
+                  <p class="text-2xl font-bold text-red-700">2</p>
+                  <p class="text-sm text-red-600">Errors</p>
+                </div>
+              </div>
+
+              <div class="alert alert-warning mb-4">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                <div>
+                  <p class="font-medium">2 records have issues</p>
+                  <p class="text-sm">Row 45: Invalid email format • Row 89: Duplicate email</p>
+                </div>
+              </div>
+
+              <table class="dtable">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>john.smith@acme.com</td>
+                    <td>John Smith</td>
+                    <td>Engineering</td>
+                    <td><span class="badge badge-success">Valid</span></td>
+                  </tr>
+                  <tr>
+                    <td>sarah.jones@acme.com</td>
+                    <td>Sarah Jones</td>
+                    <td>Marketing</td>
+                    <td><span class="badge badge-success">Valid</span></td>
+                  </tr>
+                  <tr class="bg-red-50">
+                    <td class="text-red-600">invalid-email</td>
+                    <td>Mike Brown</td>
+                    <td>Sales</td>
+                    <td><span class="badge badge-destructive">Invalid Email</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="text-sm text-muted-foreground mt-2">Showing 3 of 145 records</p>
+
+              <div class="mt-4 flex justify-between">
+                <button class="btn-ghost" onclick="goToStep(2)">Back</button>
+                <button class="btn-primary" onclick="goToStep(4)">
+                  <i data-lucide="upload" class="w-4 h-4"></i> Import 142 Employees
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Complete -->
+          <div id="csvStep4" class="card hidden">
+            <div class="card-content py-12 text-center">
+              <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="check" class="w-8 h-8 text-emerald-600"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-2">Import Complete!</h3>
+              <p class="text-muted-foreground mb-6">142 employees have been added to your organisation</p>
+              <div class="flex justify-center gap-3">
+                <a href="employees.html" class="btn-primary">View Employees</a>
+                <button class="btn-outline" onclick="backToMethods()">Import More</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Integration -->
+        <div id="apiFlow" class="hidden">
+          <div class="card mb-5">
+            <div class="card-header flex flex-row items-center justify-between">
+              <div>
+                <h3 class="card-title">REST API Integration</h3>
+                <p class="card-description">Programmatically add employees via API</p>
+              </div>
+              <button class="btn-ghost" onclick="backToMethods()"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+            </div>
+            <div class="card-content">
+              <div class="mb-5">
+                <label class="text-sm font-medium mb-1.5 block">API Endpoint</label>
+                <div class="flex gap-2">
+                  <span class="inline-flex items-center px-3 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-l-lg border border-r-0">POST</span>
+                  <input type="text" class="input flex-1 font-mono text-sm rounded-l-none" value="https://api.trvello.com/v1/employees" readonly>
+                  <button class="btn-outline"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                </div>
+              </div>
+
+              <div class="mb-5">
+                <label class="text-sm font-medium mb-1.5 block">Sample Request</label>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+  "employees": [
+    {
+      "email": "john@acmecorp.com",
+      "first_name": "John",
+      "last_name": "Smith",
+      "department": "Engineering",
+      "start_date": "2024-01-15"
+    }
+  ]
+}</code></pre>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Authentication</label>
+                <p class="text-sm text-muted-foreground mb-2">Include your API key in the Authorization header</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm"><code>Authorization: Bearer tv_live_sk_xxxxx</code></pre>
+              </div>
+
+              <div class="mt-5 pt-5 border-t">
+                <a href="settings/integrations.html" class="btn-primary"><i data-lucide="key" class="w-4 h-4"></i> Get API Key</a>
+                <a href="#" class="btn-outline ml-2"><i data-lucide="book-open" class="w-4 h-4"></i> View Docs</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCIM Provisioning -->
+        <div id="scimFlow" class="hidden">
+          <div class="card mb-5">
+            <div class="card-header flex flex-row items-center justify-between">
+              <div>
+                <h3 class="card-title">SCIM Provisioning</h3>
+                <p class="card-description">Automatic user provisioning with your IdP</p>
+              </div>
+              <button class="btn-ghost" onclick="backToMethods()"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+            </div>
+            <div class="card-content">
+              <div class="alert alert-info mb-5">
+                <i data-lucide="info" class="w-4 h-4"></i>
+                <div>
+                  <p class="font-medium">Enterprise Feature</p>
+                  <p class="text-sm">SCIM provisioning is available on Enterprise plans. Contact sales to upgrade.</p>
+                </div>
+              </div>
+
+              <h4 class="font-medium mb-3">Supported Identity Providers</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="flex items-center gap-3 p-3 border rounded-lg">
+                  <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <span class="text-blue-600 font-bold text-sm">Ok</span>
+                  </div>
+                  <span class="font-medium">Okta</span>
+                </div>
+                <div class="flex items-center gap-3 p-3 border rounded-lg">
+                  <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <span class="text-blue-600 font-bold text-sm">Az</span>
+                  </div>
+                  <span class="font-medium">Azure AD</span>
+                </div>
+                <div class="flex items-center gap-3 p-3 border rounded-lg">
+                  <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                    <span class="text-green-600 font-bold text-sm">OL</span>
+                  </div>
+                  <span class="font-medium">OneLogin</span>
+                </div>
+                <div class="flex items-center gap-3 p-3 border rounded-lg">
+                  <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                    <span class="text-gray-600 font-bold text-sm">JS</span>
+                  </div>
+                  <span class="font-medium">JumpCloud</span>
+                </div>
+              </div>
+
+              <div class="mt-5 pt-5 border-t">
+                <button class="btn-primary"><i data-lucide="sparkles" class="w-4 h-4"></i> Upgrade to Enterprise</button>
+                <button class="btn-outline ml-2"><i data-lucide="mail" class="w-4 h-4"></i> Contact Sales</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="../js/main.js"></script>
+<script>
+  lucide.createIcons();
+  function toggleSub(el) {
+    el.classList.toggle('open');
+    const sub = el.nextElementSibling;
+    if (sub && sub.classList.contains('sb-sub')) sub.classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    const fab = document.querySelector('.tb-fab');
+    const drop = document.getElementById('fabDrop');
+    if (fab && drop && !fab.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+  });
+
+  function selectMethod(method) {
+    document.getElementById('methodSelect').classList.add('hidden');
+    document.getElementById('csvFlow').classList.add('hidden');
+    document.getElementById('apiFlow').classList.add('hidden');
+    document.getElementById('scimFlow').classList.add('hidden');
+    document.getElementById(method + 'Flow').classList.remove('hidden');
+  }
+
+  function backToMethods() {
+    document.getElementById('methodSelect').classList.remove('hidden');
+    document.getElementById('csvFlow').classList.add('hidden');
+    document.getElementById('apiFlow').classList.add('hidden');
+    document.getElementById('scimFlow').classList.add('hidden');
+    // Reset CSV stepper
+    goToStep(1);
+  }
+
+  function goToStep(step) {
+    // Hide all steps
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById('csvStep' + i).classList.add('hidden');
+      document.getElementById('step' + i).classList.remove('active', 'done');
+    }
+    // Show current step
+    document.getElementById('csvStep' + step).classList.remove('hidden');
+    document.getElementById('step' + step).classList.add('active');
+    // Mark previous steps as done
+    for (let i = 1; i < step; i++) {
+      document.getElementById('step' + i).classList.add('done');
+    }
+    lucide.createIcons();
+  }
+
+  // Drag and drop
+  const dropZone = document.getElementById('dropZone');
+  if (dropZone) {
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      // Handle file
+    });
+  }
+</script>
+</body>
+</html>

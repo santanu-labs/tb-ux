@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>General Settings — Trvello Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <link rel="stylesheet" href="../../css/admin2-theme.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans v2">
+
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon"><i data-lucide="globe"></i></div>
+      <span class="sb-logo-text">Trvello</span>
+    </div>
+    <nav class="sb-nav">
+      <a href="../dashboard.html" class="sb-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <div class="sb-link" onclick="toggleSub(this)">
+        <i data-lucide="users"></i> People
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub">
+        <a href="../employees.html" class="sb-link">Employees</a>
+        <a href="../employee-import.html" class="sb-link">Import</a>
+      </div>
+      <div class="sb-link" data-toggle="perks-sub" onclick="toggleSub(this)">
+        <i data-lucide="gift"></i> Perks
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub" id="perks-sub">
+        <a href="../perks.html" class="sb-link">All Perks</a>
+        <a href="../peer-recognition.html" class="sb-link">Peer Recognition</a>
+        <a href="../automations.html" class="sb-link">Automations</a>
+      </div>
+      <div class="sb-link" onclick="toggleSub(this)">
+        <i data-lucide="wallet"></i> Financials
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub">
+        <a href="../financial-summary.html" class="sb-link">Summary</a>
+        <a href="../payment-details.html" class="sb-link">Payment Details</a>
+        <a href="../payment-history.html" class="sb-link">Payment History</a>
+      </div>
+      <a href="../audit-logs.html" class="sb-link"><i data-lucide="scroll-text"></i> Audit Logs</a>
+      <div class="sb-link open" onclick="toggleSub(this)">
+        <i data-lucide="settings"></i> Settings
+        <i data-lucide="chevron-right" class="sb-expand"></i>
+      </div>
+      <div class="sb-sub open">
+        <a href="general.html" class="sb-link active">General</a>
+        <a href="branding.html" class="sb-link">Branding</a>
+        <a href="sign-in.html" class="sb-link">Sign-in</a>
+        <a href="integrations.html" class="sb-link">Integrations</a>
+      </div>
+      <div class="sb-promo">
+        <div class="sb-promo-img"><i data-lucide="rocket"></i></div>
+        <div class="sb-promo-title">Upgrade to Enterprise</div>
+        <p class="sb-promo-desc">Unlock SSO, advanced analytics, and priority support.</p>
+        <button class="sb-promo-btn"><i data-lucide="sparkles"></i> Upgrade plan</button>
+      </div>
+    </nav>
+    <div class="sb-user">
+      <div class="sb-user-avatar">JD</div>
+      <div style="flex:1;min-width:0;">
+        <div class="sb-user-name">Jane Doe</div>
+        <div class="sb-user-role">Org Admin</div>
+      </div>
+      <button class="sb-user-more"><i data-lucide="more-horizontal"></i></button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="workspace">
+      <header class="topbar">
+        <div class="search">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search settings…">
+        </div>
+        <div class="tb-right">
+          <button class="tb-btn"><i data-lucide="mail"></i></button>
+          <button class="tb-btn"><i data-lucide="bell"></i><span class="dot"></span></button>
+          <div style="position:relative;">
+            <button class="tb-fab" onclick="document.getElementById('fabDrop').classList.toggle('open')">
+              <i data-lucide="plus"></i>
+            </button>
+            <div id="fabDrop" class="fab-drop">
+              <a href="../employees.html?add=1" class="fab-item"><span class="fi-left"><i data-lucide="user-plus"></i> Add Employee</span><kbd>⌘ E</kbd></a>
+              <a href="../employee-import.html" class="fab-item"><span class="fi-left"><i data-lucide="upload"></i> Import CSV</span><kbd>⌘ I</kbd></a>
+              <a href="../perks.html?create=1" class="fab-item"><span class="fi-left"><i data-lucide="gift"></i> Create Perk</span><kbd>⌘ P</kbd></a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="page">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">General Settings</h1>
+            <p class="page-desc">Manage your organisation details</p>
+          </div>
+          <button class="btn-primary"><i data-lucide="save" class="w-3.5 h-3.5"></i> Save Changes</button>
+        </div>
+
+        <!-- Settings Tabs -->
+        <div class="tabs-list mb-5">
+          <a href="general.html" class="tab-trigger active">General</a>
+          <a href="branding.html" class="tab-trigger">Branding</a>
+          <a href="sign-in.html" class="tab-trigger">Sign-in</a>
+          <a href="integrations.html" class="tab-trigger">Integrations</a>
+        </div>
+
+        <!-- Organisation Details -->
+        <div class="card mb-5">
+          <div class="card-header">
+            <h3 class="card-title">Organisation Details</h3>
+            <p class="card-description">Basic information about your company</p>
+          </div>
+          <div class="card-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Organisation Name</label>
+                <input type="text" class="input w-full" value="Acme Corporation">
+              </div>
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Subdomain</label>
+                <div class="flex">
+                  <input type="text" class="input flex-1 rounded-r-none" value="acmecorp">
+                  <span class="inline-flex items-center px-3 bg-muted text-muted-foreground text-sm border border-l-0 rounded-r-lg">.trvello.com</span>
+                </div>
+              </div>
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Contact Email</label>
+                <input type="email" class="input w-full" value="hr@acmecorp.com">
+              </div>
+              <div>
+                <label class="text-sm font-medium mb-1.5 block">Contact Phone</label>
+                <input type="tel" class="input w-full" value="+91 80 4567 8901">
+              </div>
+              <div class="md:col-span-2">
+                <label class="text-sm font-medium mb-1.5 block">Business Address</label>
+                <textarea class="input w-full" rows="2">Tower B, 5th Floor, TechPark One, Whitefield Road, Bangalore, Karnataka 560066, India</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Corporate Documents -->
+        <div class="card">
+          <div class="card-header flex flex-row items-center justify-between">
+            <div>
+              <h3 class="card-title">Corporate Documents</h3>
+              <p class="card-description">Upload policies visible to employees</p>
+            </div>
+            <button class="btn-outline btn-sm"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload Document</button>
+          </div>
+          <div class="card-content">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center">
+                    <i data-lucide="file-text" class="w-4 h-4 text-red-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Travel Policy v2.1</p>
+                    <p class="text-xs text-muted-foreground">Uploaded 1 week ago · PDF · 2.4 MB</p>
+                  </div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn-ghost btn-sm"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+                  <button class="btn-ghost btn-sm text-destructive"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3 border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+                    <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Employee Handbook 2025</p>
+                    <p class="text-xs text-muted-foreground">Uploaded 2 months ago · PDF · 5.1 MB</p>
+                  </div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn-ghost btn-sm"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+                  <button class="btn-ghost btn-sm text-destructive"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3 border rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center">
+                    <i data-lucide="file-text" class="w-4 h-4 text-green-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Expense Guidelines</p>
+                    <p class="text-xs text-muted-foreground">Uploaded 3 months ago · PDF · 1.2 MB</p>
+                  </div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn-ghost btn-sm"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+                  <button class="btn-ghost btn-sm text-destructive"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+  lucide.createIcons();
+  function toggleSub(el) {
+    el.classList.toggle('open');
+    const sub = el.nextElementSibling;
+    if (sub && sub.classList.contains('sb-sub')) sub.classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    const fab = document.querySelector('.tb-fab');
+    const drop = document.getElementById('fabDrop');
+    if (fab && drop && !fab.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+  });
+</script>
+</body>
+</html>
