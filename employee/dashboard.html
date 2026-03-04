@@ -1050,130 +1050,720 @@
             </div>
 
             <!-- ========================================
-                 5-Year Trip Planner (2027+)
+                 Future Travel Canvas (Enriched)
                  ======================================== -->
             <div class="future-planner-section">
-              <div class="flex items-center justify-between mb-4">
+
+              <!-- ── Section Header ── -->
+              <div class="flex items-center justify-between mb-5">
                 <div>
                   <h2 class="text-lg font-bold flex items-center gap-2">
                     <i data-lucide="compass" class="w-5 h-5 text-primary"></i>
                     Future Travel Canvas
                   </h2>
-                  <p class="text-sm text-muted-foreground">AI-curated trips for the next 5 years based on your preferences</p>
+                  <p class="text-sm text-muted-foreground">Your long-range travel outlook — budget, goals, milestones &amp; insights</p>
+                </div>
+                <button class="btn-outline btn-sm flex items-center gap-1.5 text-xs">
+                  <i data-lucide="settings-2" class="w-3.5 h-3.5"></i> Customize Canvas
+                </button>
+              </div>
+
+              <!-- ── Sub-section Tabs ── -->
+              <div class="tabs-list mb-5" data-tabs>
+                <button class="tab-trigger active" data-tab="canvas-budget">Budget & Savings</button>
+                <button class="tab-trigger" data-tab="canvas-horizon">Decade Horizon</button>
+                <button class="tab-trigger" data-tab="canvas-milestones">Milestones</button>
+                <button class="tab-trigger" data-tab="canvas-health">Travel Health</button>
+                <button class="tab-trigger" data-tab="canvas-stats">Statistics</button>
+                <button class="tab-trigger" data-tab="canvas-planner">Trip Planner</button>
+              </div>
+
+              <!-- ════════════════════════════════════════
+                   TAB 1 — Estimated Budget & Monthly Savings
+                   ════════════════════════════════════════ -->
+              <div data-tab-panel="canvas-budget">
+                <!-- Budget Summary Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="wallet" class="w-4 h-4 text-primary"></i>
+                      </div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground leading-tight">Yearly Budget (per person)</div>
+                        <div class="text-xl font-bold leading-tight">₹2,40,000</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600"></i>
+                      </div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground leading-tight">Saved So Far (2026)</div>
+                        <div class="text-xl font-bold leading-tight text-green-600">₹68,000</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="target" class="w-4 h-4 text-amber-600"></i>
+                      </div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground leading-tight">Remaining to Goal</div>
+                        <div class="text-xl font-bold leading-tight text-amber-600">₹1,72,000</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="piggy-bank" class="w-4 h-4 text-purple-600"></i>
+                      </div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground leading-tight">Monthly SIP Needed</div>
+                        <div class="text-xl font-bold leading-tight text-purple-600">₹19,111</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Monthly Savings Plan -->
+                <div class="card">
+                  <div class="card-header flex-row items-center justify-between">
+                    <div>
+                      <div class="card-title text-base">Monthly Savings Plan</div>
+                      <div class="card-description">Track your progress toward this year's travel goal</div>
+                    </div>
+                    <span class="badge badge-success text-xs">On Track</span>
+                  </div>
+                  <div class="card-content">
+                    <!-- Progress -->
+                    <div class="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
+                      <span>₹68,000 saved</span>
+                      <span>₹2,40,000 goal</span>
+                    </div>
+                    <div class="progress-bar mb-4" style="height:0.625rem;">
+                      <div class="progress-bar-fill success" style="width:28.3%"></div>
+                    </div>
+
+                    <!-- Month-by-month bar chart -->
+                    <div class="flex items-end gap-1.5 h-28 mb-2">
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-green-500" style="height:85%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Jan</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-green-500" style="height:100%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Feb</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-green-400/60" style="height:60%"></div>
+                        <span class="text-[0.5625rem] font-semibold text-foreground">Mar</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Apr</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">May</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Jun</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Jul</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Aug</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Sep</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Oct</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Nov</span>
+                      </div>
+                      <div class="flex-1 flex flex-col items-center gap-1">
+                        <div class="w-full rounded-t bg-muted" style="height:40%"></div>
+                        <span class="text-[0.5625rem] text-muted-foreground">Dec</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3 text-[0.6875rem] text-muted-foreground">
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-green-500"></span> Saved</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-green-400/60"></span> Partial</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-muted"></span> Projected</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Year Selector -->
-              <div class="flex items-center gap-1 mb-4 overflow-x-auto pb-2">
-                <button class="year-tab active">2027</button>
-                <button class="year-tab">2028</button>
-                <button class="year-tab">2029</button>
-                <button class="year-tab">2030</button>
-                <button class="year-tab">2031</button>
+              <!-- ════════════════════════════════════════
+                   TAB 2 — Decade Horizon (Countries + Experiences)
+                   ════════════════════════════════════════ -->
+              <div data-tab-panel="canvas-horizon" style="display:none;" class="hidden">
+
+                <!-- Decade Overview Stats -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><i data-lucide="globe-2" class="w-4 h-4 text-blue-600"></i></div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground">Countries Visited</div>
+                        <div class="text-xl font-bold">4 <span class="text-xs font-normal text-muted-foreground">/ 15 goal</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center"><i data-lucide="map" class="w-4 h-4 text-violet-600"></i></div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground">Experiences Covered</div>
+                        <div class="text-xl font-bold">12 <span class="text-xs font-normal text-muted-foreground">/ 30 goal</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"><i data-lucide="heart" class="w-4 h-4 text-rose-600"></i></div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground">Continents Reached</div>
+                        <div class="text-xl font-bold">2 <span class="text-xs font-normal text-muted-foreground">/ 6</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card !p-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-cyan-100 flex items-center justify-center"><i data-lucide="calendar-range" class="w-4 h-4 text-cyan-600"></i></div>
+                      <div>
+                        <div class="text-[0.6875rem] text-muted-foreground">Total Travel Days</div>
+                        <div class="text-xl font-bold">34 <span class="text-xs font-normal text-muted-foreground">days</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Country Horizon Visual -->
+                <div class="card mb-4">
+                  <div class="card-header pb-3">
+                    <div class="card-title text-base">Country Horizon — Decade View</div>
+                    <div class="card-description">Countries visited, planned, and on your wishlist</div>
+                  </div>
+                  <div class="card-content">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-semibold border border-green-200">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> India
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-semibold border border-green-200">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Thailand
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-semibold border border-green-200">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Sri Lanka
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-semibold border border-green-200">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Indonesia
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-100 text-blue-800 text-xs font-semibold border border-blue-200">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Japan <span class="text-[0.625rem] font-normal">2027</span>
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-100 text-blue-800 text-xs font-semibold border border-blue-200">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Maldives <span class="text-[0.625rem] font-normal">2027</span>
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200">
+                        <i data-lucide="star" class="w-3.5 h-3.5"></i> Switzerland
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200">
+                        <i data-lucide="star" class="w-3.5 h-3.5"></i> Iceland
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200">
+                        <i data-lucide="star" class="w-3.5 h-3.5"></i> New Zealand
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200">
+                        <i data-lucide="star" class="w-3.5 h-3.5"></i> Italy
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-500 text-xs font-medium border border-gray-200 border-dashed">
+                        <i data-lucide="plus" class="w-3 h-3"></i> Add country
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-4 text-[0.6875rem] text-muted-foreground">
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-green-500"></span> Visited</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-blue-500"></span> Planned</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Wishlist</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Most Visited Destinations Highlight -->
+                <div class="card mb-4">
+                  <div class="card-header pb-3">
+                    <div class="card-title text-base flex items-center gap-2"><i data-lucide="flame" class="w-4 h-4 text-orange-500"></i> Most Visited Destinations</div>
+                    <div class="card-description">Your top destinations based on repeat visits and time spent</div>
+                  </div>
+                  <div class="card-content">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div class="flex items-center gap-3 p-3 rounded-lg border border-amber-200 bg-amber-50/50">
+                        <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=80&h=80&fit=crop" alt="Goa" class="w-full h-full object-cover"></div>
+                        <div>
+                          <div class="text-sm font-bold flex items-center gap-1">Goa <span class="text-amber-500 text-xs">★</span></div>
+                          <div class="text-[0.6875rem] text-muted-foreground">3 visits · 14 days total</div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-3 p-3 rounded-lg border border-border">
+                        <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=80&h=80&fit=crop" alt="Pondicherry" class="w-full h-full object-cover"></div>
+                        <div>
+                          <div class="text-sm font-bold">Pondicherry</div>
+                          <div class="text-[0.6875rem] text-muted-foreground">2 visits · 6 days total</div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-3 p-3 rounded-lg border border-border">
+                        <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=80&h=80&fit=crop" alt="Bangkok" class="w-full h-full object-cover"></div>
+                        <div>
+                          <div class="text-sm font-bold">Bangkok</div>
+                          <div class="text-[0.6875rem] text-muted-foreground">2 visits · 10 days total</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Experience Categories Covered -->
+                <div class="card">
+                  <div class="card-header pb-3">
+                    <div class="card-title text-base">Experiences Covered</div>
+                    <div class="card-description">Types of travel experiences you've unlocked so far</div>
+                  </div>
+                  <div class="card-content">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-green-50 border border-green-200">
+                        <i data-lucide="waves" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-xs font-semibold text-green-800">Beach</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-green-50 border border-green-200">
+                        <i data-lucide="mountain" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-xs font-semibold text-green-800">Mountains</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-green-50 border border-green-200">
+                        <i data-lucide="utensils" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-xs font-semibold text-green-800">Food & Culture</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-green-50 border border-green-200">
+                        <i data-lucide="sunset" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-xs font-semibold text-green-800">Wellness / Spa</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-green-50 border border-green-200">
+                        <i data-lucide="tent" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-xs font-semibold text-green-800">Adventure</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-green-50 border border-green-200">
+                        <i data-lucide="landmark" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-xs font-semibold text-green-800">Heritage</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-muted/60 border border-border border-dashed">
+                        <i data-lucide="snowflake" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-xs font-medium text-muted-foreground">Snow / Winter</span>
+                      </div>
+                      <div class="flex items-center gap-2 p-2.5 rounded-lg bg-muted/60 border border-border border-dashed">
+                        <i data-lucide="binoculars" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-xs font-medium text-muted-foreground">Safari / Wildlife</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3 text-[0.6875rem] text-muted-foreground mt-3">
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-green-500"></span> Experienced</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-muted border border-border"></span> Yet to try</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <!-- 2027 Timeline -->
-              <div class="future-trips-grid">
-                <!-- Q1 -->
-                <div class="quarter-block">
-                  <div class="quarter-label">Q1 <span class="text-muted-foreground font-normal">Jan–Mar</span></div>
-                  <div class="trip-slot suggested">
-                    <div class="trip-slot-bar bg-primary"></div>
-                    <div class="trip-slot-content">
-                      <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 88%</span>
-                      <div class="trip-slot-title">Kerala Backwaters</div>
-                      <div class="trip-slot-dates">24–26 Jan · Republic Day</div>
-                      <div class="trip-slot-details">3 days · ₹22K/pp</div>
-                    </div>
-                    <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
+              <!-- ════════════════════════════════════════
+                   TAB 3 — Important Milestones
+                   ════════════════════════════════════════ -->
+              <div data-tab-panel="canvas-milestones" style="display:none;" class="hidden">
+                <div class="card">
+                  <div class="card-header pb-3">
+                    <div class="card-title text-base flex items-center gap-2"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Travel Milestones</div>
+                    <div class="card-description">Key achievements and upcoming goals on your travel journey</div>
                   </div>
-                  <div class="trip-slot suggested">
-                    <div class="trip-slot-bar bg-amber-500"></div>
-                    <div class="trip-slot-content">
-                      <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 82%</span>
-                      <div class="trip-slot-title">Jaipur Heritage</div>
-                      <div class="trip-slot-dates">12–14 Mar · Holi</div>
-                      <div class="trip-slot-details">3 days · ₹18K/pp</div>
+                  <div class="card-content">
+                    <div class="space-y-0">
+                      <!-- Achieved -->
+                      <div class="timeline-item">
+                        <div class="timeline-dot" style="background:hsl(142 71% 45%);color:white;"><i data-lucide="check" class="w-3.5 h-3.5"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold">First International Trip</div>
+                          <div class="text-xs text-muted-foreground">Bangkok, Thailand — Dec 2024</div>
+                        </div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-dot" style="background:hsl(142 71% 45%);color:white;"><i data-lucide="check" class="w-3.5 h-3.5"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold">3 Trips in a Year</div>
+                          <div class="text-xs text-muted-foreground">Completed in 2025 — Goa, Pondicherry, Bali</div>
+                        </div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-dot" style="background:hsl(142 71% 45%);color:white;"><i data-lucide="check" class="w-3.5 h-3.5"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold">₹50,000 Saved via Perks</div>
+                          <div class="text-xs text-muted-foreground">Cumulative perk savings since joining — Feb 2026</div>
+                        </div>
+                      </div>
+                      <!-- Current -->
+                      <div class="timeline-item">
+                        <div class="timeline-dot" style="background:hsl(var(--primary));color:white;box-shadow:0 0 0 4px hsl(var(--primary)/0.2);"><i data-lucide="loader" class="w-3.5 h-3.5"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold flex items-center gap-1.5">Visit 5th Country <span class="badge badge-primary text-[0.5625rem]">In Progress</span></div>
+                          <div class="text-xs text-muted-foreground">Japan planned for Apr 2027 — 1 more to go</div>
+                          <div class="progress-bar mt-1.5" style="height:0.25rem;max-width:180px;">
+                            <div class="progress-bar-fill" style="width:80%"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Upcoming -->
+                      <div class="timeline-item">
+                        <div class="timeline-dot"><i data-lucide="circle-dot" class="w-3.5 h-3.5 text-muted-foreground"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold text-muted-foreground">First Solo Trip</div>
+                          <div class="text-xs text-muted-foreground">Not yet achieved</div>
+                        </div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-dot"><i data-lucide="circle-dot" class="w-3.5 h-3.5 text-muted-foreground"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold text-muted-foreground">Visit All 6 Continents</div>
+                          <div class="text-xs text-muted-foreground">2 / 6 reached — Asia, SE Asia</div>
+                        </div>
+                      </div>
+                      <div class="timeline-item" style="padding-bottom:0;">
+                        <div class="timeline-dot"><i data-lucide="circle-dot" class="w-3.5 h-3.5 text-muted-foreground"></i></div>
+                        <div class="timeline-content">
+                          <div class="text-sm font-semibold text-muted-foreground">15 Countries by 2035</div>
+                          <div class="text-xs text-muted-foreground">4 / 15 — 27% complete</div>
+                        </div>
+                      </div>
                     </div>
-                    <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
-                  </div>
-                </div>
-
-                <!-- Q2 -->
-                <div class="quarter-block">
-                  <div class="quarter-label">Q2 <span class="text-muted-foreground font-normal">Apr–Jun</span></div>
-                  <div class="trip-slot suggested highlight">
-                    <div class="trip-slot-bar bg-green-500"></div>
-                    <div class="trip-slot-content">
-                      <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 95%</span>
-                      <div class="trip-slot-title">Japan Cherry Blossom</div>
-                      <div class="trip-slot-dates">1–7 Apr · Long Break</div>
-                      <div class="trip-slot-details">7 days · ₹1.2L/pp · Intl</div>
-                    </div>
-                    <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
-                  </div>
-                  <div class="trip-slot empty">
-                    <div class="trip-slot-bar bg-muted"></div>
-                    <div class="trip-slot-content">
-                      <span class="text-xs text-muted-foreground">Buddha Purnima · May</span>
-                      <div class="text-xs text-muted-foreground mt-0.5">3-day window</div>
-                    </div>
-                    <button class="trip-slot-add"><i data-lucide="search" class="w-3 h-3"></i></button>
-                  </div>
-                </div>
-
-                <!-- Q3 -->
-                <div class="quarter-block">
-                  <div class="quarter-label">Q3 <span class="text-muted-foreground font-normal">Jul–Sep</span></div>
-                  <div class="trip-slot suggested">
-                    <div class="trip-slot-bar bg-primary"></div>
-                    <div class="trip-slot-content">
-                      <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 86%</span>
-                      <div class="trip-slot-title">Ladakh Road Trip</div>
-                      <div class="trip-slot-dates">14–18 Aug · Independence</div>
-                      <div class="trip-slot-details">5 days · ₹35K/pp</div>
-                    </div>
-                    <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
-                  </div>
-                </div>
-
-                <!-- Q4 -->
-                <div class="quarter-block">
-                  <div class="quarter-label">Q4 <span class="text-muted-foreground font-normal">Oct–Dec</span></div>
-                  <div class="trip-slot suggested">
-                    <div class="trip-slot-bar bg-amber-500"></div>
-                    <div class="trip-slot-content">
-                      <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 91%</span>
-                      <div class="trip-slot-title">Maldives Getaway</div>
-                      <div class="trip-slot-dates">23–27 Oct · Diwali</div>
-                      <div class="trip-slot-details">5 days · ₹65K/pp · Intl</div>
-                    </div>
-                    <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
-                  </div>
-                  <div class="trip-slot empty">
-                    <div class="trip-slot-bar bg-muted"></div>
-                    <div class="trip-slot-content">
-                      <span class="text-xs text-muted-foreground">Christmas · 25 Dec</span>
-                      <div class="text-xs text-muted-foreground mt-0.5">4-day window</div>
-                    </div>
-                    <button class="trip-slot-add"><i data-lucide="search" class="w-3 h-3"></i></button>
                   </div>
                 </div>
               </div>
 
-              <!-- Summary Stats -->
-              <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/10 text-xs text-muted-foreground">
-                <div class="flex items-center gap-4">
-                  <span><strong class="text-foreground">24</strong> leave days projected</span>
-                  <span><strong class="text-foreground">8</strong> holidays in 2027</span>
-                  <span><strong class="text-foreground">5</strong> AI suggestions</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Top Match</span>
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Suggested</span>
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-muted-foreground/40"></span> Open</span>
+              <!-- ════════════════════════════════════════
+                   TAB 4 — Travel Health Profile
+                   ════════════════════════════════════════ -->
+              <div data-tab-panel="canvas-health" style="display:none;" class="hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <!-- Health Score Card -->
+                  <div class="card">
+                    <div class="card-header pb-3">
+                      <div class="card-title text-base flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-green-600"></i> Travel Health Score</div>
+                      <div class="card-description">Readiness rating based on vaccinations, insurance, and fitness</div>
+                    </div>
+                    <div class="card-content">
+                      <div class="flex items-center gap-6 mb-4">
+                        <div class="relative w-24 h-24 flex-shrink-0">
+                          <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="hsl(var(--muted))" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="hsl(142 71% 45%)" stroke-width="8" stroke-dasharray="264" stroke-dashoffset="53" stroke-linecap="round"/>
+                          </svg>
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-green-600">80%</span>
+                          </div>
+                        </div>
+                        <div class="space-y-2 flex-1 text-xs">
+                          <div class="flex items-center justify-between"><span class="text-muted-foreground">Vaccinations</span><span class="font-semibold text-green-600">Up to date</span></div>
+                          <div class="flex items-center justify-between"><span class="text-muted-foreground">Travel Insurance</span><span class="font-semibold text-green-600">Active</span></div>
+                          <div class="flex items-center justify-between"><span class="text-muted-foreground">Emergency Contacts</span><span class="font-semibold text-green-600">Set</span></div>
+                          <div class="flex items-center justify-between"><span class="text-muted-foreground">Passport Validity</span><span class="font-semibold text-amber-600">Exp Jun 2028</span></div>
+                          <div class="flex items-center justify-between"><span class="text-muted-foreground">Fitness Check</span><span class="font-semibold text-muted-foreground">Not done</span></div>
+                        </div>
+                      </div>
+                      <button class="btn-outline btn-sm text-xs w-full">Update Health Profile</button>
+                    </div>
+                  </div>
+
+                  <!-- Documents & Readiness -->
+                  <div class="card">
+                    <div class="card-header pb-3">
+                      <div class="card-title text-base flex items-center gap-2"><i data-lucide="file-badge" class="w-4 h-4 text-blue-600"></i> Travel Documents</div>
+                      <div class="card-description">Keep your documents ready for seamless travel</div>
+                    </div>
+                    <div class="card-content">
+                      <div class="space-y-3">
+                        <div class="flex items-center justify-between p-2.5 rounded-lg border border-green-200 bg-green-50/50">
+                          <div class="flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4 text-green-600"></i><span class="text-sm font-medium">Passport</span></div>
+                          <span class="text-xs text-green-600 font-semibold">Valid till Jun 2028</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-lg border border-green-200 bg-green-50/50">
+                          <div class="flex items-center gap-2"><i data-lucide="heart-pulse" class="w-4 h-4 text-green-600"></i><span class="text-sm font-medium">Travel Insurance</span></div>
+                          <span class="text-xs text-green-600 font-semibold">HDFC Ergo · Active</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-lg border border-amber-200 bg-amber-50/50">
+                          <div class="flex items-center gap-2"><i data-lucide="syringe" class="w-4 h-4 text-amber-600"></i><span class="text-sm font-medium">Yellow Fever Vaccine</span></div>
+                          <span class="text-xs text-amber-600 font-semibold">Due for Africa trips</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-lg border border-border bg-muted/30">
+                          <div class="flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-muted-foreground"></i><span class="text-sm font-medium">Visa (Japan)</span></div>
+                          <span class="text-xs text-muted-foreground">Not applied</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              <!-- ════════════════════════════════════════
+                   TAB 5 — Statistics & Persona Comparison
+                   ════════════════════════════════════════ -->
+              <div data-tab-panel="canvas-stats" style="display:none;" class="hidden">
+
+                <!-- Where Am I Standing -->
+                <div class="card mb-4">
+                  <div class="card-header pb-3">
+                    <div class="card-title text-base flex items-center gap-2"><i data-lucide="user-check" class="w-4 h-4 text-primary"></i> Where Am I Standing?</div>
+                    <div class="card-description">How your travel activity compares to peers in your persona group</div>
+                  </div>
+                  <div class="card-content">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                      <!-- Metric 1 -->
+                      <div class="text-center p-4 rounded-lg bg-primary/5 border border-primary/15">
+                        <div class="text-2xl font-bold text-primary">Top 20%</div>
+                        <div class="text-xs text-muted-foreground mt-1">Trips Taken vs Peers</div>
+                        <div class="progress-bar mt-2" style="height:0.25rem;">
+                          <div class="progress-bar-fill" style="width:80%"></div>
+                        </div>
+                      </div>
+                      <!-- Metric 2 -->
+                      <div class="text-center p-4 rounded-lg bg-green-50 border border-green-200/60">
+                        <div class="text-2xl font-bold text-green-600">Top 35%</div>
+                        <div class="text-xs text-muted-foreground mt-1">Budget Utilization</div>
+                        <div class="progress-bar mt-2" style="height:0.25rem;">
+                          <div class="progress-bar-fill success" style="width:65%"></div>
+                        </div>
+                      </div>
+                      <!-- Metric 3 -->
+                      <div class="text-center p-4 rounded-lg bg-violet-50 border border-violet-200/60">
+                        <div class="text-2xl font-bold text-violet-600">Top 15%</div>
+                        <div class="text-xs text-muted-foreground mt-1">Countries Visited</div>
+                        <div class="progress-bar mt-2" style="height:0.25rem;">
+                          <div class="progress-bar-fill" style="width:85%;background:hsl(270 60% 55%)"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-[0.6875rem] text-muted-foreground flex items-center gap-1.5 justify-center">
+                      <i data-lucide="info" class="w-3 h-3"></i> Compared against 248 employees with similar travel persona at Acme Corp
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bar Chart — Travel by Persona -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                  <div class="card">
+                    <div class="card-header pb-3">
+                      <div class="card-title text-sm flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-4 h-4 text-primary"></i> Trips by Persona Type</div>
+                    </div>
+                    <div class="card-content">
+                      <div class="space-y-3">
+                        <div>
+                          <div class="flex items-center justify-between text-xs mb-1"><span>Beach Lovers</span><span class="font-semibold">142 trips</span></div>
+                          <div class="progress-bar" style="height:0.5rem;"><div class="progress-bar-fill" style="width:85%;background:hsl(200 80% 55%)"></div></div>
+                        </div>
+                        <div>
+                          <div class="flex items-center justify-between text-xs mb-1"><span>Adventure Seekers</span><span class="font-semibold">98 trips</span></div>
+                          <div class="progress-bar" style="height:0.5rem;"><div class="progress-bar-fill" style="width:60%;background:hsl(142 71% 45%)"></div></div>
+                        </div>
+                        <div>
+                          <div class="flex items-center justify-between text-xs mb-1"><span>Culture Explorers</span><span class="font-semibold">76 trips</span></div>
+                          <div class="progress-bar" style="height:0.5rem;"><div class="progress-bar-fill" style="width:46%;background:hsl(270 60% 55%)"></div></div>
+                        </div>
+                        <div>
+                          <div class="flex items-center justify-between text-xs mb-1"><span>Luxury Travelers</span><span class="font-semibold">54 trips</span></div>
+                          <div class="progress-bar" style="height:0.5rem;"><div class="progress-bar-fill" style="width:33%;background:hsl(38 92% 50%)"></div></div>
+                        </div>
+                        <div>
+                          <div class="flex items-center justify-between text-xs mb-1"><span>Budget Nomads</span><span class="font-semibold">89 trips</span></div>
+                          <div class="progress-bar" style="height:0.5rem;"><div class="progress-bar-fill" style="width:54%;background:hsl(350 80% 55%)"></div></div>
+                        </div>
+                      </div>
+                      <div class="text-[0.625rem] text-muted-foreground mt-3 flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> Across all Acme Corp employees in 2025-26</div>
+                    </div>
+                  </div>
+
+                  <!-- Pie Chart — Destination Type Breakdown -->
+                  <div class="card">
+                    <div class="card-header pb-3">
+                      <div class="card-title text-sm flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-primary"></i> Destination Type Breakdown</div>
+                    </div>
+                    <div class="card-content">
+                      <!-- SVG Donut Chart -->
+                      <div class="flex items-center gap-6">
+                        <div class="w-32 h-32 flex-shrink-0">
+                          <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(200 80% 55%)" stroke-width="12" stroke-dasharray="88 164"/>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(142 71% 45%)" stroke-width="12" stroke-dasharray="50 200" stroke-dashoffset="-88"/>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(270 60% 55%)" stroke-width="12" stroke-dasharray="38 214" stroke-dashoffset="-138"/>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(38 92% 50%)" stroke-width="12" stroke-dasharray="25 227" stroke-dashoffset="-176"/>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--muted))" stroke-width="12" stroke-dasharray="50 200" stroke-dashoffset="-201"/>
+                          </svg>
+                        </div>
+                        <div class="space-y-2 text-xs flex-1">
+                          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded" style="background:hsl(200 80% 55%)"></span> Beach</span><span class="font-semibold">35%</span></div>
+                          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded" style="background:hsl(142 71% 45%)"></span> Mountain</span><span class="font-semibold">20%</span></div>
+                          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded" style="background:hsl(270 60% 55%)"></span> Heritage</span><span class="font-semibold">15%</span></div>
+                          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded" style="background:hsl(38 92% 50%)"></span> Adventure</span><span class="font-semibold">10%</span></div>
+                          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-muted"></span> Other</span><span class="font-semibold">20%</span></div>
+                        </div>
+                      </div>
+                      <div class="text-[0.625rem] text-muted-foreground mt-3 flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 459 total trips across Acme Corp</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Your Travel Persona Card -->
+                <div class="card">
+                  <div class="card-header pb-3">
+                    <div class="card-title text-base flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> Your Travel Persona</div>
+                  </div>
+                  <div class="card-content">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-lg bg-gradient-to-r from-primary/5 to-violet-500/5 border border-primary/15">
+                      <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="palmtree" class="w-7 h-7 text-primary"></i>
+                      </div>
+                      <div class="flex-1">
+                        <div class="text-lg font-bold">"The Relaxed Explorer"</div>
+                        <div class="text-sm text-muted-foreground mt-0.5">You prefer beach destinations with a cultural twist, travel 2-3 times a year, favour mid-range stays, and love food-centric experiences. You plan ahead and use perks efficiently.</div>
+                      </div>
+                      <div class="flex flex-wrap gap-1.5">
+                        <span class="badge badge-secondary text-[0.625rem]">Beach</span>
+                        <span class="badge badge-secondary text-[0.625rem]">Culture</span>
+                        <span class="badge badge-secondary text-[0.625rem]">Foodie</span>
+                        <span class="badge badge-secondary text-[0.625rem]">Planner</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ════════════════════════════════════════
+                   TAB 6 — Trip Planner Grid (Original, preserved)
+                   ════════════════════════════════════════ -->
+              <div data-tab-panel="canvas-planner" style="display:none;" class="hidden">
+
+                <!-- Year Selector -->
+                <div class="flex items-center gap-1 mb-4 overflow-x-auto pb-2">
+                  <button class="year-tab active">2027</button>
+                  <button class="year-tab">2028</button>
+                  <button class="year-tab">2029</button>
+                  <button class="year-tab">2030</button>
+                  <button class="year-tab">2031</button>
+                </div>
+
+                <!-- 2027 Timeline -->
+                <div class="future-trips-grid">
+                  <div class="quarter-block">
+                    <div class="quarter-label">Q1 <span class="text-muted-foreground font-normal">Jan–Mar</span></div>
+                    <div class="trip-slot suggested">
+                      <div class="trip-slot-bar bg-primary"></div>
+                      <div class="trip-slot-content">
+                        <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 88%</span>
+                        <div class="trip-slot-title">Kerala Backwaters</div>
+                        <div class="trip-slot-dates">24–26 Jan · Republic Day</div>
+                        <div class="trip-slot-details">3 days · ₹22K/pp</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                    </div>
+                    <div class="trip-slot suggested">
+                      <div class="trip-slot-bar bg-amber-500"></div>
+                      <div class="trip-slot-content">
+                        <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 82%</span>
+                        <div class="trip-slot-title">Jaipur Heritage</div>
+                        <div class="trip-slot-dates">12–14 Mar · Holi</div>
+                        <div class="trip-slot-details">3 days · ₹18K/pp</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                    </div>
+                  </div>
+                  <div class="quarter-block">
+                    <div class="quarter-label">Q2 <span class="text-muted-foreground font-normal">Apr–Jun</span></div>
+                    <div class="trip-slot suggested highlight">
+                      <div class="trip-slot-bar bg-green-500"></div>
+                      <div class="trip-slot-content">
+                        <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 95%</span>
+                        <div class="trip-slot-title">Japan Cherry Blossom</div>
+                        <div class="trip-slot-dates">1–7 Apr · Long Break</div>
+                        <div class="trip-slot-details">7 days · ₹1.2L/pp · Intl</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                    </div>
+                    <div class="trip-slot empty">
+                      <div class="trip-slot-bar bg-muted"></div>
+                      <div class="trip-slot-content">
+                        <span class="text-xs text-muted-foreground">Buddha Purnima · May</span>
+                        <div class="text-xs text-muted-foreground mt-0.5">3-day window</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="search" class="w-3 h-3"></i></button>
+                    </div>
+                  </div>
+                  <div class="quarter-block">
+                    <div class="quarter-label">Q3 <span class="text-muted-foreground font-normal">Jul–Sep</span></div>
+                    <div class="trip-slot suggested">
+                      <div class="trip-slot-bar bg-primary"></div>
+                      <div class="trip-slot-content">
+                        <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 86%</span>
+                        <div class="trip-slot-title">Ladakh Road Trip</div>
+                        <div class="trip-slot-dates">14–18 Aug · Independence</div>
+                        <div class="trip-slot-details">5 days · ₹35K/pp</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                    </div>
+                  </div>
+                  <div class="quarter-block">
+                    <div class="quarter-label">Q4 <span class="text-muted-foreground font-normal">Oct–Dec</span></div>
+                    <div class="trip-slot suggested">
+                      <div class="trip-slot-bar bg-amber-500"></div>
+                      <div class="trip-slot-content">
+                        <span class="trip-slot-badge ai"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> 91%</span>
+                        <div class="trip-slot-title">Maldives Getaway</div>
+                        <div class="trip-slot-dates">23–27 Oct · Diwali</div>
+                        <div class="trip-slot-details">5 days · ₹65K/pp · Intl</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                    </div>
+                    <div class="trip-slot empty">
+                      <div class="trip-slot-bar bg-muted"></div>
+                      <div class="trip-slot-content">
+                        <span class="text-xs text-muted-foreground">Christmas · 25 Dec</span>
+                        <div class="text-xs text-muted-foreground mt-0.5">4-day window</div>
+                      </div>
+                      <button class="trip-slot-add"><i data-lucide="search" class="w-3 h-3"></i></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/10 text-xs text-muted-foreground">
+                  <div class="flex items-center gap-4">
+                    <span><strong class="text-foreground">24</strong> leave days projected</span>
+                    <span><strong class="text-foreground">8</strong> holidays in 2027</span>
+                    <span><strong class="text-foreground">5</strong> AI suggestions</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Top Match</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Suggested</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-muted-foreground/40"></span> Open</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
         </main>
