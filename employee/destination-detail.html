@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Goa — Trvello</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../css/shadcn-tokens.css">
   <script>
@@ -31,6 +31,164 @@
       }
     }
   </script>
+  <style>
+    .dest-hero {
+      position: relative;
+      height: 340px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .dest-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .dest-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 45%, rgba(0,0,0,0.05) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.75rem;
+    }
+    .dest-hero-actions {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .dest-hero-actions button {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      color: white; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .dest-hero-actions button:hover {
+      background: rgba(255,255,255,0.35);
+    }
+    .reel-card {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 9/16;
+      background: hsl(var(--muted));
+    }
+    .reel-card img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .reel-card:hover img { transform: scale(1.05); }
+    .reel-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      padding: 0.625rem;
+    }
+    .reel-play {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex; align-items: center; justify-content: center;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.15s;
+    }
+    .reel-card:hover .reel-play { transform: scale(1.1); }
+    .reel-meta {
+      color: white; font-size: 0.6875rem; font-weight: 600;
+    }
+    .reel-views {
+      display: flex; align-items: center; gap: 0.25rem;
+      font-size: 0.5625rem; color: rgba(255,255,255,0.8);
+    }
+    .reel-duration {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      background: rgba(0,0,0,0.6); color: white;
+      font-size: 0.5625rem; font-weight: 700;
+      padding: 0.125rem 0.375rem; border-radius: 4px;
+    }
+    .vlog-card {
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .vlog-card:hover {
+      border-color: hsl(var(--primary) / 0.4);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .vlog-thumb {
+      position: relative; aspect-ratio: 16/9;
+      background: hsl(var(--muted)); overflow: hidden;
+    }
+    .vlog-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .vlog-card:hover .vlog-thumb img { transform: scale(1.05); }
+    .vlog-play-btn {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .vlog-play-btn span {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      transition: transform 0.15s;
+    }
+    .vlog-card:hover .vlog-play-btn span { transform: scale(1.1); }
+    .vlog-dur {
+      position: absolute; bottom: 0.5rem; right: 0.5rem;
+      background: rgba(0,0,0,0.75); color: white;
+      font-size: 0.625rem; font-weight: 700;
+      padding: 0.125rem 0.5rem; border-radius: 4px;
+    }
+    .weather-bar {
+      display: flex; align-items: flex-end; gap: 3px; height: 3.5rem;
+    }
+    .weather-bar-col {
+      flex: 1; border-radius: 3px 3px 0 0;
+      position: relative; min-width: 0;
+      transition: opacity 0.15s;
+    }
+    .weather-bar-col:hover { opacity: 0.8; }
+    .weather-bar-label {
+      font-size: 0.5rem; font-weight: 600;
+      text-align: center; margin-top: 0.2rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .review-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 180px 180px;
+      gap: 4px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .gallery-grid .g-item {
+      overflow: hidden; position: relative; cursor: pointer;
+    }
+    .gallery-grid .g-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .gallery-grid .g-item:hover img { transform: scale(1.05); }
+    .gallery-grid .g-item:first-child { grid-row: 1 / 3; }
+  </style>
 </head>
 <body class="font-sans bg-background text-foreground">
 
@@ -46,10 +204,50 @@
         <nav class="emp-nav-links">
           <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
           <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
-          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+          <a href="peer-recognition.html" class="emp-nav-link"><i data-lucide="heart-handshake"></i> Recognition</a>
         </nav>
       </div>
       <div class="emp-nav-right">
+        <div class="perk-pill-group flex-1 justify-center">
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-green-100"><i data-lucide="credit-card" class="text-green-600"></i></span>
+            <span class="text-green-700">₹9,000</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-green-600"></i></div>
+                <div><div class="text-sm font-semibold">Travel Credit</div><div class="text-[0.6875rem] text-muted-foreground">Annual benefit</div></div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5"><span class="text-base font-bold text-green-600">₹9,000</span><span class="text-[0.6875rem] text-muted-foreground">of ₹15,000</span></div>
+              <div class="progress-bar"><div class="progress-bar-fill success" style="width: 60%"></div></div>
+              <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Dec 2026</div>
+            </div>
+          </a>
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-purple-100"><i data-lucide="sparkles" class="text-purple-600"></i></span>
+            <span class="text-purple-700">₹10,000</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-600"></i></div>
+                <div><div class="text-sm font-semibold">Anniversary Bonus</div><div class="text-[0.6875rem] text-muted-foreground">3-year milestone</div></div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5"><span class="text-base font-bold text-purple-600">₹10,000</span><span class="text-[0.6875rem] text-muted-foreground">unused</span></div>
+              <div class="progress-bar"><div class="progress-bar-fill" style="width:100%;background-color:hsl(270 60% 55%)"></div></div>
+              <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Jun 2026</div>
+            </div>
+          </a>
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-amber-100"><i data-lucide="percent" class="text-amber-600"></i></span>
+            <span class="text-amber-700">15% off</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center"><i data-lucide="percent" class="w-3.5 h-3.5 text-amber-600"></i></div>
+                <div><div class="text-sm font-semibold">Hotel Discount</div><div class="text-[0.6875rem] text-muted-foreground">Partner offer</div></div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5"><span class="text-base font-bold text-amber-600">15% off</span><span class="badge badge-success" style="font-size:0.625rem;padding:0.125rem 0.375rem;">Active</span></div>
+              <div class="text-[0.6875rem] text-muted-foreground">Unlimited uses · Expires Sep 2026</div>
+            </div>
+          </a>
+        </div>
         <button class="btn-ghost btn-icon relative" title="Notifications">
           <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
           <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
@@ -74,119 +272,194 @@
 
     <!-- Main Content -->
     <main class="emp-content">
+
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
-        <a href="preferences.html" class="hover:text-foreground">Plan a Trip</a>
+        <a href="dashboard.html" class="hover:text-foreground">Dashboard</a>
         <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
         <a href="destinations.html" class="hover:text-foreground">Destinations</a>
         <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
         <span class="text-foreground font-medium">Goa, India</span>
       </nav>
 
-      <!-- Photo Gallery Grid -->
-      <div class="grid grid-cols-4 grid-rows-2 gap-2 mb-6 rounded-xl overflow-hidden" style="height: 360px">
-        <div class="col-span-2 row-span-2 dest-img !rounded-none !aspect-auto h-full">
-          <i data-lucide="image" class="w-8 h-8"></i>
+      <!-- ═══════ HERO BANNER ═══════ -->
+      <div class="dest-hero">
+        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1400&h=500&fit=crop" alt="Goa Beach Aerial">
+        <div class="dest-hero-overlay">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="match-badge text-sm"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 95% Match</span>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur text-white text-xs font-semibold">
+              <i data-lucide="star" class="w-3 h-3 fill-current text-amber-400"></i> 4.7
+            </span>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur text-white text-xs font-semibold">
+              <i data-lucide="users" class="w-3 h-3"></i> 2,340 reviews
+            </span>
+          </div>
+          <h1 class="text-3xl font-extrabold text-white mb-1">Goa, India</h1>
+          <p class="text-white/70 text-sm">Tropical paradise · Beaches · Portuguese heritage · Nightlife · Seafood</p>
         </div>
-        <div class="dest-img !rounded-none !aspect-auto h-full"><i data-lucide="image" class="w-5 h-5"></i></div>
-        <div class="dest-img !rounded-none !aspect-auto h-full"><i data-lucide="image" class="w-5 h-5"></i></div>
-        <div class="dest-img !rounded-none !aspect-auto h-full"><i data-lucide="image" class="w-5 h-5"></i></div>
-        <div class="dest-img !rounded-none !aspect-auto h-full relative">
-          <i data-lucide="image" class="w-5 h-5"></i>
-          <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <span class="text-white font-semibold text-sm">+12 Photos</span>
+        <div class="dest-hero-actions">
+          <button title="Share"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+          <button title="Save to Wishlist"><i data-lucide="heart" class="w-4 h-4"></i></button>
+          <button title="Compare"><i data-lucide="git-compare-arrows" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+
+      <!-- ═══════ QUICK STATS ROW ═══════ -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="stat-card !p-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0"><i data-lucide="thermometer-sun" class="w-4 h-4 text-blue-600"></i></div>
+            <div><div class="text-[0.6875rem] text-muted-foreground">Climate</div><div class="text-sm font-bold">25–33°C</div></div>
+          </div>
+        </div>
+        <div class="stat-card !p-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0"><i data-lucide="calendar-check" class="w-4 h-4 text-green-600"></i></div>
+            <div><div class="text-[0.6875rem] text-muted-foreground">Best Season</div><div class="text-sm font-bold">Oct – Mar</div></div>
+          </div>
+        </div>
+        <div class="stat-card !p-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0"><i data-lucide="indian-rupee" class="w-4 h-4 text-amber-600"></i></div>
+            <div><div class="text-[0.6875rem] text-muted-foreground">Avg. Budget</div><div class="text-sm font-bold">₹18K–55K</div></div>
+          </div>
+        </div>
+        <div class="stat-card !p-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0"><i data-lucide="plane" class="w-4 h-4 text-purple-600"></i></div>
+            <div><div class="text-[0.6875rem] text-muted-foreground">From Delhi</div><div class="text-sm font-bold">2h 20m</div></div>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Left: Details -->
+        <!-- ═══════ LEFT COLUMN ═══════ -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- Title & Meta -->
-          <div>
-            <div class="flex items-center gap-3 mb-2">
-              <h1 class="text-2xl font-bold">Goa, India</h1>
-              <span class="match-badge text-sm"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 95% Match</span>
-            </div>
-            <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> South India</span>
-              <span class="flex items-center gap-1 text-amber-500"><i data-lucide="star" class="w-4 h-4 fill-current"></i> 4.7 (2,340 reviews)</span>
-              <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> Best: Oct–Mar</span>
+
+          <!-- Photo Gallery -->
+          <div class="gallery-grid">
+            <div class="g-item"><img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&h=600&fit=crop" alt="Goa Beach"></div>
+            <div class="g-item"><img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=400&h=300&fit=crop" alt="Goa Church"></div>
+            <div class="g-item"><img src="https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=400&h=300&fit=crop" alt="Goa Sunset"></div>
+            <div class="g-item"><img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&h=300&fit=crop" alt="Goa Market"></div>
+            <div class="g-item relative">
+              <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" alt="Goa Fort">
+              <div class="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer hover:bg-black/40 transition-colors">
+                <span class="text-white font-bold text-sm">+18 Photos</span>
+              </div>
             </div>
           </div>
 
-          <!-- Description -->
+          <!-- About -->
           <div class="card">
             <div class="card-header">
-              <div class="card-title text-base">About Goa</div>
+              <div class="card-title text-base flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-primary"></i> About Goa</div>
             </div>
             <div class="card-content space-y-3 text-sm text-muted-foreground leading-relaxed">
               <p>Goa, India's smallest state, is a tropical paradise on the western coast known for its stunning beaches, vibrant nightlife, and rich Portuguese heritage. From the lively shores of Baga and Calangute to the serene beauty of Palolem, every beach has its own character.</p>
               <p>Beyond the beaches, explore centuries-old churches in Old Goa (a UNESCO World Heritage Site), spice plantations in the hinterland, and bustling local markets. The fusion of Indian and Portuguese cultures creates a unique culinary and architectural landscape.</p>
-              <p>Whether you're seeking adventure with water sports, relaxation at a beachside spa, or cultural immersion through local festivals, Goa offers an unmatched blend of experiences for every traveller.</p>
             </div>
           </div>
 
-          <!-- Highlights -->
+          <!-- Destination Highlights — Graphical Cards -->
           <div class="card">
             <div class="card-header">
-              <div class="card-title text-base">Destination Highlights</div>
+              <div class="card-title text-base flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-primary"></i> Destination Highlights</div>
             </div>
             <div class="card-content">
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <i data-lucide="thermometer-sun" class="w-4 h-4 text-blue-600"></i>
-                  </div>
-                  <div>
-                    <div class="text-sm font-medium">Climate</div>
-                    <div class="text-xs text-muted-foreground">Tropical, 25–33°C</div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-blue-50 border border-blue-100">
+                  <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center"><i data-lucide="thermometer-sun" class="w-5 h-5 text-blue-600"></i></div>
+                  <div><div class="text-sm font-semibold">Tropical</div><div class="text-xs text-muted-foreground">25–33°C year-round</div></div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-100">
+                  <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center"><i data-lucide="calendar-check" class="w-5 h-5 text-green-600"></i></div>
+                  <div><div class="text-sm font-semibold">Oct – Mar</div><div class="text-xs text-muted-foreground">Peak Season</div></div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-purple-50 border border-purple-100">
+                  <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center"><i data-lucide="languages" class="w-5 h-5 text-purple-600"></i></div>
+                  <div><div class="text-sm font-semibold">Konkani</div><div class="text-xs text-muted-foreground">English widely spoken</div></div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-amber-50 border border-amber-100">
+                  <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center"><i data-lucide="indian-rupee" class="w-5 h-5 text-amber-600"></i></div>
+                  <div><div class="text-sm font-semibold">INR ₹</div><div class="text-xs text-muted-foreground">UPI widely accepted</div></div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-rose-50 border border-rose-100">
+                  <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center"><i data-lucide="clock" class="w-5 h-5 text-rose-600"></i></div>
+                  <div><div class="text-sm font-semibold">IST</div><div class="text-xs text-muted-foreground">UTC+5:30</div></div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-indigo-50 border border-indigo-100">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center"><i data-lucide="plane" class="w-5 h-5 text-indigo-600"></i></div>
+                  <div><div class="text-sm font-semibold">GOI</div><div class="text-xs text-muted-foreground">Manohar Intl Airport</div></div>
+                </div>
+              </div>
+
+              <!-- Monthly Weather — Real Goa Data (IMD avg highs & rainfall) -->
+              <div class="mt-5 pt-4 border-t border-border">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-sm font-semibold flex items-center gap-1.5"><i data-lucide="cloud-sun" class="w-4 h-4 text-amber-500"></i> Monthly Weather</span>
+                  <div class="tabs-list !p-0.5 !gap-0.5" data-tabs>
+                    <button class="tab-trigger active !text-[0.6rem] !px-2 !py-0.5" data-tab="wx-temp">Temperature</button>
+                    <button class="tab-trigger !text-[0.6rem] !px-2 !py-0.5" data-tab="wx-rain">Rainfall</button>
                   </div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
-                    <i data-lucide="calendar-check" class="w-4 h-4 text-green-600"></i>
+
+                <!-- Temperature Tab (avg high °C — real Goa data from IMD) -->
+                <div data-tab-panel="wx-temp">
+                  <div class="weather-bar" style="height:5rem;">
+                    <!-- Jan 32°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">32°</span><div class="w-full rounded-t" style="height:84%;background:hsl(38 92% 55%)" title="January: 32°C avg high, 0mm rain"></div><span class="weather-bar-label">Jan</span></div>
+                    <!-- Feb 32°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">32°</span><div class="w-full rounded-t" style="height:84%;background:hsl(38 92% 55%)" title="February: 32°C avg high, 1mm rain"></div><span class="weather-bar-label">Feb</span></div>
+                    <!-- Mar 33°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">33°</span><div class="w-full rounded-t" style="height:87%;background:hsl(25 90% 50%)" title="March: 33°C avg high, 4mm rain"></div><span class="weather-bar-label">Mar</span></div>
+                    <!-- Apr 34°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">34°</span><div class="w-full rounded-t" style="height:89%;background:hsl(15 90% 50%)" title="April: 34°C avg high, 12mm rain"></div><span class="weather-bar-label">Apr</span></div>
+                    <!-- May 34°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">34°</span><div class="w-full rounded-t" style="height:89%;background:hsl(15 90% 50%)" title="May: 34°C avg high, 100mm rain"></div><span class="weather-bar-label">May</span></div>
+                    <!-- Jun 31°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">31°</span><div class="w-full rounded-t" style="height:82%;background:hsl(200 60% 50%)" title="June: 31°C avg high, 868mm rain"></div><span class="weather-bar-label">Jun</span></div>
+                    <!-- Jul 30°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">30°</span><div class="w-full rounded-t" style="height:79%;background:hsl(200 60% 50%)" title="July: 30°C avg high, 994mm rain"></div><span class="weather-bar-label">Jul</span></div>
+                    <!-- Aug 29°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">29°</span><div class="w-full rounded-t" style="height:76%;background:hsl(200 60% 50%)" title="August: 29°C avg high, 512mm rain"></div><span class="weather-bar-label">Aug</span></div>
+                    <!-- Sep 30°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">30°</span><div class="w-full rounded-t" style="height:79%;background:hsl(200 60% 50%)" title="September: 30°C avg high, 277mm rain"></div><span class="weather-bar-label">Sep</span></div>
+                    <!-- Oct 33°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">33°</span><div class="w-full rounded-t" style="height:87%;background:hsl(38 92% 55%)" title="October: 33°C avg high, 122mm rain"></div><span class="weather-bar-label">Oct</span></div>
+                    <!-- Nov 34°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">34°</span><div class="w-full rounded-t" style="height:89%;background:hsl(38 92% 55%)" title="November: 34°C avg high, 37mm rain"></div><span class="weather-bar-label">Nov</span></div>
+                    <!-- Dec 33°C --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">33°</span><div class="w-full rounded-t" style="height:87%;background:hsl(38 92% 55%)" title="December: 33°C avg high, 6mm rain"></div><span class="weather-bar-label">Dec</span></div>
                   </div>
-                  <div>
-                    <div class="text-sm font-medium">Best Season</div>
-                    <div class="text-xs text-muted-foreground">October – March</div>
-                  </div>
-                </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <i data-lucide="languages" class="w-4 h-4 text-purple-600"></i>
-                  </div>
-                  <div>
-                    <div class="text-sm font-medium">Language</div>
-                    <div class="text-xs text-muted-foreground">Konkani, English</div>
-                  </div>
-                </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <i data-lucide="indian-rupee" class="w-4 h-4 text-amber-600"></i>
-                  </div>
-                  <div>
-                    <div class="text-sm font-medium">Currency</div>
-                    <div class="text-xs text-muted-foreground">Indian Rupee (₹)</div>
+                  <div class="flex items-center gap-3 text-[0.625rem] text-muted-foreground mt-2">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(38 92% 55%)"></span> Dry Season (≤ 37mm)</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(25 90% 50%)"></span> Pre-Monsoon</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(15 90% 50%)"></span> Hot & Humid</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(200 60% 50%)"></span> Monsoon</span>
                   </div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-rose-100 flex items-center justify-center">
-                    <i data-lucide="clock" class="w-4 h-4 text-rose-600"></i>
+
+                <!-- Rainfall Tab (mm — real Goa data from IMD annual averages) -->
+                <div data-tab-panel="wx-rain" style="display:none;" class="hidden">
+                  <div class="weather-bar" style="height:5rem;">
+                    <!-- Jan 2mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">2</span><div class="w-full rounded-t" style="height:3%;min-height:3px;background:hsl(200 70% 65%)" title="January: 2mm rainfall"></div><span class="weather-bar-label">Jan</span></div>
+                    <!-- Feb 1mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">1</span><div class="w-full rounded-t" style="height:2%;min-height:3px;background:hsl(200 70% 65%)" title="February: 1mm rainfall"></div><span class="weather-bar-label">Feb</span></div>
+                    <!-- Mar 4mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">4</span><div class="w-full rounded-t" style="height:3%;min-height:3px;background:hsl(200 70% 65%)" title="March: 4mm rainfall"></div><span class="weather-bar-label">Mar</span></div>
+                    <!-- Apr 12mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">12</span><div class="w-full rounded-t" style="height:5%;min-height:4px;background:hsl(200 70% 60%)" title="April: 12mm rainfall"></div><span class="weather-bar-label">Apr</span></div>
+                    <!-- May 100mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">100</span><div class="w-full rounded-t" style="height:15%;background:hsl(200 65% 55%)" title="May: 100mm rainfall"></div><span class="weather-bar-label">May</span></div>
+                    <!-- Jun 868mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">868</span><div class="w-full rounded-t" style="height:88%;background:hsl(210 70% 45%)" title="June: 868mm rainfall"></div><span class="weather-bar-label">Jun</span></div>
+                    <!-- Jul 994mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">994</span><div class="w-full rounded-t" style="height:100%;background:hsl(215 75% 40%)" title="July: 994mm rainfall — peak monsoon"></div><span class="weather-bar-label">Jul</span></div>
+                    <!-- Aug 512mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">512</span><div class="w-full rounded-t" style="height:55%;background:hsl(210 70% 45%)" title="August: 512mm rainfall"></div><span class="weather-bar-label">Aug</span></div>
+                    <!-- Sep 277mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">277</span><div class="w-full rounded-t" style="height:32%;background:hsl(205 65% 50%)" title="September: 277mm rainfall"></div><span class="weather-bar-label">Sep</span></div>
+                    <!-- Oct 122mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">122</span><div class="w-full rounded-t" style="height:18%;background:hsl(200 65% 55%)" title="October: 122mm rainfall"></div><span class="weather-bar-label">Oct</span></div>
+                    <!-- Nov 37mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">37</span><div class="w-full rounded-t" style="height:8%;background:hsl(200 70% 60%)" title="November: 37mm rainfall"></div><span class="weather-bar-label">Nov</span></div>
+                    <!-- Dec 6mm --><div class="flex-1 flex flex-col items-center gap-0"><span class="text-[0.5rem] font-bold text-foreground mb-0.5">6</span><div class="w-full rounded-t" style="height:3%;min-height:3px;background:hsl(200 70% 65%)" title="December: 6mm rainfall"></div><span class="weather-bar-label">Dec</span></div>
                   </div>
-                  <div>
-                    <div class="text-sm font-medium">Time Zone</div>
-                    <div class="text-xs text-muted-foreground">IST (UTC+5:30)</div>
+                  <div class="flex items-center justify-between text-[0.625rem] text-muted-foreground mt-2">
+                    <div class="flex items-center gap-3">
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(200 70% 65%)"></span> Light (< 50mm)</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(205 65% 50%)"></span> Moderate</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(210 70% 45%)"></span> Heavy</span>
+                      <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded" style="background:hsl(215 75% 40%)"></span> Peak (> 900mm)</span>
+                    </div>
+                    <span>mm/month</span>
                   </div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center">
-                    <i data-lucide="plane" class="w-4 h-4 text-indigo-600"></i>
-                  </div>
-                  <div>
-                    <div class="text-sm font-medium">Nearest Airport</div>
-                    <div class="text-xs text-muted-foreground">GOI – Dabolim</div>
-                  </div>
+
+                <!-- Travel Tip -->
+                <div class="flex items-start gap-2.5 mt-3 p-2.5 rounded-lg bg-green-50 border border-green-200 text-xs text-green-800">
+                  <i data-lucide="lightbulb" class="w-4 h-4 flex-shrink-0 mt-0.5 text-green-500"></i>
+                  <div><strong>Best time to visit:</strong> November to February — clear skies, 28–33°C, negligible rain, and all beach shacks & clubs open. Avoid June–August unless you love dramatic monsoon scenery (994mm rain in July alone).</div>
                 </div>
               </div>
             </div>
@@ -195,32 +468,307 @@
           <!-- Activities -->
           <div class="card">
             <div class="card-header">
-              <div class="card-title text-base">Activities Available</div>
+              <div class="card-title text-base flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> Things to Do</div>
+              <div class="card-description">Popular activities and experiences</div>
             </div>
             <div class="card-content">
-              <div class="flex flex-wrap gap-2">
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="waves" class="w-3 h-3 mr-1 inline"></i> Water Sports</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="umbrella" class="w-3 h-3 mr-1 inline"></i> Beach Lounging</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="utensils" class="w-3 h-3 mr-1 inline"></i> Food Tours</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="landmark" class="w-3 h-3 mr-1 inline"></i> Heritage Walks</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="music" class="w-3 h-3 mr-1 inline"></i> Nightlife</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="heart-pulse" class="w-3 h-3 mr-1 inline"></i> Spa & Wellness</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="bike" class="w-3 h-3 mr-1 inline"></i> Cycling Tours</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="camera" class="w-3 h-3 mr-1 inline"></i> Photography</span>
-                <span class="badge badge-secondary py-1.5 px-3"><i data-lucide="ship" class="w-3 h-3 mr-1 inline"></i> Dolphin Cruise</span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-blue-50/70 border border-blue-100 cursor-pointer hover:border-blue-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><i data-lucide="waves" class="w-4 h-4 text-blue-600"></i></div>
+                  <span class="text-xs font-semibold">Water Sports</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-amber-50/70 border border-amber-100 cursor-pointer hover:border-amber-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><i data-lucide="umbrella" class="w-4 h-4 text-amber-600"></i></div>
+                  <span class="text-xs font-semibold">Beach Lounging</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-rose-50/70 border border-rose-100 cursor-pointer hover:border-rose-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"><i data-lucide="utensils" class="w-4 h-4 text-rose-600"></i></div>
+                  <span class="text-xs font-semibold">Food Tours</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-violet-50/70 border border-violet-100 cursor-pointer hover:border-violet-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center"><i data-lucide="landmark" class="w-4 h-4 text-violet-600"></i></div>
+                  <span class="text-xs font-semibold">Heritage Walks</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-pink-50/70 border border-pink-100 cursor-pointer hover:border-pink-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center"><i data-lucide="music" class="w-4 h-4 text-pink-600"></i></div>
+                  <span class="text-xs font-semibold">Nightlife</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-green-50/70 border border-green-100 cursor-pointer hover:border-green-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="heart-pulse" class="w-4 h-4 text-green-600"></i></div>
+                  <span class="text-xs font-semibold">Spa & Wellness</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-teal-50/70 border border-teal-100 cursor-pointer hover:border-teal-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center"><i data-lucide="ship" class="w-4 h-4 text-teal-600"></i></div>
+                  <span class="text-xs font-semibold">Dolphin Cruise</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-cyan-50/70 border border-cyan-100 cursor-pointer hover:border-cyan-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-cyan-100 flex items-center justify-center"><i data-lucide="camera" class="w-4 h-4 text-cyan-600"></i></div>
+                  <span class="text-xs font-semibold">Photography</span>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-orange-50/70 border border-orange-100 cursor-pointer hover:border-orange-300 transition-colors">
+                  <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center"><i data-lucide="bike" class="w-4 h-4 text-orange-600"></i></div>
+                  <span class="text-xs font-semibold">Cycling Tours</span>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <!-- ═══════ REELS / SHORT VIDEOS ═══════ -->
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div class="card-title text-base flex items-center gap-2"><i data-lucide="clapperboard" class="w-4 h-4 text-rose-500"></i> Reels & Shorts</div>
+                <div class="card-description">Quick glimpses of Goa from travellers</div>
+              </div>
+              <button class="btn-ghost btn-sm text-xs flex items-center gap-1"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i> View All</button>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                <!-- Reel 1 -->
+                <div class="reel-card">
+                  <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300&h=530&fit=crop" alt="Goa Beach Reel">
+                  <div class="reel-overlay">
+                    <div class="reel-duration">0:28</div>
+                    <div class="reel-play"><i data-lucide="play" class="w-4 h-4 text-primary" style="margin-left:2px"></i></div>
+                    <div>
+                      <div class="reel-meta">Sunset at Palolem</div>
+                      <div class="reel-views"><i data-lucide="eye" class="w-2.5 h-2.5"></i> 12.4K views</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Reel 2 -->
+                <div class="reel-card">
+                  <img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=300&h=530&fit=crop" alt="Old Goa Church">
+                  <div class="reel-overlay">
+                    <div class="reel-duration">0:42</div>
+                    <div class="reel-play"><i data-lucide="play" class="w-4 h-4 text-primary" style="margin-left:2px"></i></div>
+                    <div>
+                      <div class="reel-meta">Old Goa Heritage</div>
+                      <div class="reel-views"><i data-lucide="eye" class="w-2.5 h-2.5"></i> 8.7K views</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Reel 3 -->
+                <div class="reel-card">
+                  <img src="https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=300&h=530&fit=crop" alt="Water Sports Goa">
+                  <div class="reel-overlay">
+                    <div class="reel-duration">0:35</div>
+                    <div class="reel-play"><i data-lucide="play" class="w-4 h-4 text-primary" style="margin-left:2px"></i></div>
+                    <div>
+                      <div class="reel-meta">Parasailing Baga</div>
+                      <div class="reel-views"><i data-lucide="eye" class="w-2.5 h-2.5"></i> 22K views</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Reel 4 -->
+                <div class="reel-card">
+                  <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=300&h=530&fit=crop" alt="Night Market">
+                  <div class="reel-overlay">
+                    <div class="reel-duration">0:56</div>
+                    <div class="reel-play"><i data-lucide="play" class="w-4 h-4 text-primary" style="margin-left:2px"></i></div>
+                    <div>
+                      <div class="reel-meta">Arpora Night Market</div>
+                      <div class="reel-views"><i data-lucide="eye" class="w-2.5 h-2.5"></i> 5.3K views</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Reel 5 -->
+                <div class="reel-card">
+                  <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300&h=530&fit=crop" alt="Goa Food">
+                  <div class="reel-overlay">
+                    <div class="reel-duration">1:12</div>
+                    <div class="reel-play"><i data-lucide="play" class="w-4 h-4 text-primary" style="margin-left:2px"></i></div>
+                    <div>
+                      <div class="reel-meta">Goan Fish Thali</div>
+                      <div class="reel-views"><i data-lucide="eye" class="w-2.5 h-2.5"></i> 18K views</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══════ VIDEO BLOGS / VLOGS ═══════ -->
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div class="card-title text-base flex items-center gap-2"><i data-lucide="video" class="w-4 h-4 text-red-500"></i> Travel Vlogs</div>
+                <div class="card-description">In-depth video guides from real travellers</div>
+              </div>
+              <button class="btn-ghost btn-sm text-xs flex items-center gap-1"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i> Browse All</button>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Vlog 1 -->
+                <div class="vlog-card">
+                  <div class="vlog-thumb">
+                    <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&h=340&fit=crop" alt="Goa Travel Guide">
+                    <div class="vlog-play-btn"><span><i data-lucide="play" class="w-5 h-5 text-primary" style="margin-left:2px"></i></span></div>
+                    <div class="vlog-dur">12:34</div>
+                  </div>
+                  <div class="p-3">
+                    <div class="text-sm font-semibold mb-1 line-clamp-2">Ultimate Goa Travel Guide 2026 — Best Beaches, Food & Hidden Gems</div>
+                    <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                      <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=50&h=50&fit=crop&crop=face" alt="" class="review-avatar w-5 h-5">
+                      <span class="font-medium text-foreground">Travel With Ankit</span>
+                      <span>·</span>
+                      <span>245K views</span>
+                      <span>·</span>
+                      <span>2 weeks ago</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Vlog 2 -->
+                <div class="vlog-card">
+                  <div class="vlog-thumb">
+                    <img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=600&h=340&fit=crop" alt="Goa Heritage">
+                    <div class="vlog-play-btn"><span><i data-lucide="play" class="w-5 h-5 text-primary" style="margin-left:2px"></i></span></div>
+                    <div class="vlog-dur">18:07</div>
+                  </div>
+                  <div class="p-3">
+                    <div class="text-sm font-semibold mb-1 line-clamp-2">Heritage Churches of Old Goa — A Walking Tour You Must Do</div>
+                    <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                      <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=50&h=50&fit=crop&crop=face" alt="" class="review-avatar w-5 h-5">
+                      <span class="font-medium text-foreground">Culture Quest</span>
+                      <span>·</span>
+                      <span>89K views</span>
+                      <span>·</span>
+                      <span>1 month ago</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Vlog 3 -->
+                <div class="vlog-card">
+                  <div class="vlog-thumb">
+                    <img src="https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=600&h=340&fit=crop" alt="Goa Nightlife">
+                    <div class="vlog-play-btn"><span><i data-lucide="play" class="w-5 h-5 text-primary" style="margin-left:2px"></i></span></div>
+                    <div class="vlog-dur">8:45</div>
+                  </div>
+                  <div class="p-3">
+                    <div class="text-sm font-semibold mb-1 line-clamp-2">Goa Nightlife — Top 7 Clubs & Beach Parties You Can't Miss</div>
+                    <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                      <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="" class="review-avatar w-5 h-5">
+                      <span class="font-medium text-foreground">Priya Travels</span>
+                      <span>·</span>
+                      <span>156K views</span>
+                      <span>·</span>
+                      <span>3 weeks ago</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Vlog 4 -->
+                <div class="vlog-card">
+                  <div class="vlog-thumb">
+                    <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=600&h=340&fit=crop" alt="Goa Food">
+                    <div class="vlog-play-btn"><span><i data-lucide="play" class="w-5 h-5 text-primary" style="margin-left:2px"></i></span></div>
+                    <div class="vlog-dur">14:22</div>
+                  </div>
+                  <div class="p-3">
+                    <div class="text-sm font-semibold mb-1 line-clamp-2">Goan Food Trail — ₹500 Unlimited Seafood Challenge</div>
+                    <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop&crop=face" alt="" class="review-avatar w-5 h-5">
+                      <span class="font-medium text-foreground">Foodie Ravi</span>
+                      <span>·</span>
+                      <span>312K views</span>
+                      <span>·</span>
+                      <span>5 days ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══════ TRAVELLER STATS & REVIEWS ═══════ -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title text-base flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-4 h-4 text-primary"></i> Traveller Insights</div>
+              <div class="card-description">What Acme Corp employees say about Goa</div>
+            </div>
+            <div class="card-content">
+              <!-- Mini Stats -->
+              <div class="grid grid-cols-3 gap-3 mb-5">
+                <div class="text-center p-3 rounded-lg bg-primary/5 border border-primary/10">
+                  <div class="text-2xl font-bold text-primary">47</div>
+                  <div class="text-[0.6875rem] text-muted-foreground mt-0.5">Colleagues visited</div>
+                </div>
+                <div class="text-center p-3 rounded-lg bg-green-50 border border-green-200/60">
+                  <div class="text-2xl font-bold text-green-600">4.7</div>
+                  <div class="text-[0.6875rem] text-muted-foreground mt-0.5">Avg. Rating</div>
+                </div>
+                <div class="text-center p-3 rounded-lg bg-amber-50 border border-amber-200/60">
+                  <div class="text-2xl font-bold text-amber-600">92%</div>
+                  <div class="text-[0.6875rem] text-muted-foreground mt-0.5">Would recommend</div>
+                </div>
+              </div>
+
+              <!-- Rating Breakdown Bar -->
+              <div class="space-y-1.5 mb-5">
+                <div class="flex items-center gap-2 text-xs">
+                  <span class="w-4 text-right font-semibold">5</span>
+                  <div class="flex-1"><div class="progress-bar" style="height:6px;"><div class="progress-bar-fill" style="width:62%;background:hsl(38 92% 50%)"></div></div></div>
+                  <span class="w-8 text-muted-foreground">62%</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                  <span class="w-4 text-right font-semibold">4</span>
+                  <div class="flex-1"><div class="progress-bar" style="height:6px;"><div class="progress-bar-fill" style="width:25%;background:hsl(38 92% 50%)"></div></div></div>
+                  <span class="w-8 text-muted-foreground">25%</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                  <span class="w-4 text-right font-semibold">3</span>
+                  <div class="flex-1"><div class="progress-bar" style="height:6px;"><div class="progress-bar-fill" style="width:8%;background:hsl(38 92% 50%)"></div></div></div>
+                  <span class="w-8 text-muted-foreground">8%</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                  <span class="w-4 text-right font-semibold">2</span>
+                  <div class="flex-1"><div class="progress-bar" style="height:6px;"><div class="progress-bar-fill" style="width:3%;background:hsl(38 92% 50%)"></div></div></div>
+                  <span class="w-8 text-muted-foreground">3%</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                  <span class="w-4 text-right font-semibold">1</span>
+                  <div class="flex-1"><div class="progress-bar" style="height:6px;"><div class="progress-bar-fill" style="width:2%;background:hsl(38 92% 50%)"></div></div></div>
+                  <span class="w-8 text-muted-foreground">2%</span>
+                </div>
+              </div>
+
+              <!-- Sample Reviews -->
+              <div class="space-y-3">
+                <div class="flex gap-3 p-3 rounded-lg border border-border">
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop&crop=face" alt="" class="review-avatar">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="text-sm font-semibold">Meera Kapoor</span>
+                      <span class="text-xs text-muted-foreground">Engineering · Dec 2025</span>
+                    </div>
+                    <div class="flex items-center gap-0.5 mb-1"><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i></div>
+                    <p class="text-xs text-muted-foreground leading-relaxed">"Absolutely loved it! Palolem beach was serene and perfect for the family. The hotel booked through Trvello was top-notch. Already planning our next visit."</p>
+                  </div>
+                </div>
+                <div class="flex gap-3 p-3 rounded-lg border border-border">
+                  <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=60&h=60&fit=crop&crop=face" alt="" class="review-avatar">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="text-sm font-semibold">Arjun Nair</span>
+                      <span class="text-xs text-muted-foreground">Product · Jan 2026</span>
+                    </div>
+                    <div class="flex items-center gap-0.5 mb-1"><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-muted"></i></div>
+                    <p class="text-xs text-muted-foreground leading-relaxed">"Great for a long weekend getaway. Water sports at Baga were fantastic. Only downside — it was a bit crowded in Jan. Pro tip: go mid-week!"</p>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-ghost btn-sm text-xs w-full mt-3 flex items-center justify-center gap-1"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Read all 47 reviews</button>
             </div>
           </div>
 
           <!-- Accommodation Options -->
           <div class="card">
             <div class="card-header">
-              <div class="card-title text-base">Accommodation Options</div>
+              <div class="card-title text-base flex items-center gap-2"><i data-lucide="bed" class="w-4 h-4 text-primary"></i> Accommodation Options</div>
               <div class="card-description">Indicative pricing per night</div>
             </div>
             <div class="card-content">
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="border border-border rounded-lg p-4 space-y-2">
+                <div class="border border-border rounded-lg p-4 space-y-2 hover:border-primary/30 transition-colors">
                   <div class="flex items-center justify-between">
                     <span class="badge badge-secondary">Budget</span>
                     <span class="text-xs text-muted-foreground">⭐⭐⭐</span>
@@ -248,7 +796,7 @@
                     <li class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> Spa access</li>
                   </ul>
                 </div>
-                <div class="border border-border rounded-lg p-4 space-y-2">
+                <div class="border border-border rounded-lg p-4 space-y-2 hover:border-primary/30 transition-colors">
                   <div class="flex items-center justify-between">
                     <span class="badge badge-warning">Luxury</span>
                     <span class="text-xs text-muted-foreground">⭐⭐⭐⭐⭐</span>
@@ -265,65 +813,92 @@
               </div>
             </div>
           </div>
+
         </div>
 
-        <!-- Right Sidebar: Sticky Booking Card -->
+        <!-- ═══════ RIGHT SIDEBAR (Sticky) ═══════ -->
         <div class="space-y-4">
-          <div class="card sticky top-20">
+          <div class="card">
             <div class="card-header">
               <div class="card-title text-base">Estimated Cost</div>
               <div class="card-description">For 1 person, 7 nights (Mid-Range)</div>
             </div>
             <div class="card-content space-y-3">
               <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-muted-foreground">Accommodation</span>
-                  <span>₹38,500</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-muted-foreground">Est. Flights</span>
-                  <span>₹8,000</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-muted-foreground">Activities</span>
-                  <span>₹5,000</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-muted-foreground">Taxes & Fees</span>
-                  <span>₹3,500</span>
-                </div>
+                <div class="flex justify-between"><span class="text-muted-foreground">Accommodation</span><span>₹38,500</span></div>
+                <div class="flex justify-between"><span class="text-muted-foreground">Est. Flights</span><span>₹8,000</span></div>
+                <div class="flex justify-between"><span class="text-muted-foreground">Activities</span><span>₹5,000</span></div>
+                <div class="flex justify-between"><span class="text-muted-foreground">Taxes & Fees</span><span>₹3,500</span></div>
                 <div class="separator my-2"></div>
                 <div class="flex justify-between font-semibold text-base">
-                  <span>Total Estimated</span>
-                  <span>₹55,000</span>
+                  <span>Total Estimated</span><span>₹55,000</span>
                 </div>
               </div>
 
-              <!-- Perk Applicability -->
               <div class="bg-green-50 border border-green-200 rounded-lg p-3 space-y-1">
                 <div class="flex items-center gap-2 text-sm font-semibold text-green-700">
                   <i data-lucide="badge-check" class="w-4 h-4"></i> Perks Applicable
                 </div>
-                <div class="text-xs text-green-600">
-                  You can apply up to <strong>₹19,000</strong> from your travel credits and anniversary bonus.
-                </div>
+                <div class="text-xs text-green-600">Apply up to <strong>₹19,000</strong> from your travel credits and anniversary bonus.</div>
                 <div class="separator my-1.5" style="background-color: hsl(142 76% 36% / 0.2)"></div>
                 <div class="flex justify-between text-sm font-semibold text-green-700">
-                  <span>After Perks</span>
-                  <span>₹36,000</span>
+                  <span>After Perks</span><span>₹36,000</span>
                 </div>
               </div>
 
-              <a href="plan-dates.html" class="btn-primary w-full mt-2">
-                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Start Planning
+              <a href="plan-dates.html" class="btn-primary w-full mt-2"><i data-lucide="calendar-plus" class="w-4 h-4"></i> Start Planning</a>
+              <button class="btn-outline w-full"><i data-lucide="heart" class="w-4 h-4"></i> Save to Wishlist</button>
+            </div>
+          </div>
+
+          <!-- AI Recommendation Card -->
+          <div class="card border-primary/20 bg-primary/[0.02]">
+            <div class="card-header pb-2">
+              <div class="card-title text-sm flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> Why Goa Matches You</div>
+            </div>
+            <div class="card-content">
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-xs"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i><span>Beach preference — strong match</span></div>
+                <div class="flex items-center gap-2 text-xs"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i><span>Food & culture interest — perfect fit</span></div>
+                <div class="flex items-center gap-2 text-xs"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i><span>Budget range — within your comfort</span></div>
+                <div class="flex items-center gap-2 text-xs"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i><span>Duration — fits 5-day leave window</span></div>
+                <div class="flex items-center gap-2 text-xs"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i><span>Family-friendly — kid activities available</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Similar Destinations -->
+          <div class="card">
+            <div class="card-header pb-2">
+              <div class="card-title text-sm">You Might Also Like</div>
+            </div>
+            <div class="card-content space-y-2.5">
+              <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Pondicherry"></div>
+                <div>
+                  <div class="text-sm font-semibold">Pondicherry</div>
+                  <div class="text-[0.625rem] text-muted-foreground">91% Match · From ₹16K</div>
+                </div>
               </a>
-              <button class="btn-outline w-full">
-                <i data-lucide="heart" class="w-4 h-4"></i> Save to Wishlist
-              </button>
+              <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Bali"></div>
+                <div>
+                  <div class="text-sm font-semibold">Bali, Indonesia</div>
+                  <div class="text-[0.625rem] text-muted-foreground">93% Match · From ₹42K</div>
+                </div>
+              </a>
+              <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Thailand"></div>
+                <div>
+                  <div class="text-sm font-semibold">Phuket, Thailand</div>
+                  <div class="text-[0.625rem] text-muted-foreground">87% Match · From ₹38K</div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
       </div>
+
     </main>
   </div>
 
