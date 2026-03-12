@@ -16,8 +16,8 @@
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
 
-  /* Primary — Trvello indigo-blue */
-  --primary: 243 75% 59%;
+  /* Primary — Trvello brand teal #114459 */
+  --primary: 197.5 67.9% 20.8%;
   --primary-foreground: 210 40% 98%;
 
   /* Secondary */
@@ -47,12 +47,12 @@
   /* Border, Input, Ring */
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 243 75% 59%;
+  --ring: 197.5 67.9% 20.8%;
 
   /* Sidebar (Dark — default) */
   --sidebar-bg: 240 20% 3.9%;
   --sidebar-fg: 240 5% 64.9%;
-  --sidebar-active: 243 75% 59%;
+  --sidebar-active: 197.5 67.9% 20.8%;
   --sidebar-active-fg: 0 0% 100%;
   --sidebar-hover: 240 3.7% 15.9%;
   --sidebar-border: 240 3.7% 15.9%;
@@ -83,8 +83,8 @@
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  --primary: 197.5 67.9% 28%;
+  --primary-foreground: 210 40% 98%;
   --secondary: 217.2 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
   --muted: 217.2 32.6% 17.5%;
@@ -95,7 +95,7 @@
   --destructive-foreground: 210 40% 98%;
   --border: 217.2 32.6% 17.5%;
   --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
+  --ring: 197.5 67.9% 28%;
 }
 
 /* ---- Global Reset & Base ---- */
@@ -726,7 +726,7 @@ body {
 .sidebar-light {
   --sidebar-bg: 0 0% 98%;
   --sidebar-fg: 215 16% 47%;
-  --sidebar-active: 243 75% 59%;
+  --sidebar-active: 197.5 67.9% 20.8%;
   --sidebar-active-fg: 0 0% 100%;
   --sidebar-hover: 210 40% 96%;
   --sidebar-border: 214 32% 91%;
@@ -2296,3 +2296,13 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ========================================
+   Brand Teal Utilities (#114459)
+   ======================================== */
+.bg-brand-light { background: #11445915 !important; }
+.bg-brand-mid   { background: #1144590d !important; }
+.text-brand      { color: #114459 !important; }
+.bg-brand        { background: #114459 !important; }
+.border-brand    { border-color: #11445930 !important; }
+.border-brand-md { border-color: #11445950 !important; }

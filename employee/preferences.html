@@ -14,11 +14,8 @@
         extend: {
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
-            border: 'hsl(var(--border))',
-            input: 'hsl(var(--input))',
-            ring: 'hsl(var(--ring))',
-            background: 'hsl(var(--background))',
-            foreground: 'hsl(var(--foreground))',
+            border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
             primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
             secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
             muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
@@ -32,1506 +29,669 @@
     }
   </script>
   <style>
-    /* ---- Wizard Progress ---- */
-    .wiz-progress { height: 4px; background: hsl(var(--muted)); border-radius: 2px; overflow: hidden; }
-    .wiz-progress-fill { height: 100%; border-radius: 2px; background: hsl(var(--primary)); transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+    /* ---- Modal Shell ---- */
+    .pref-modal {
+      position: fixed; inset: 0; z-index: 200;
+      background: hsl(var(--background)); overflow-y: auto;
+      animation: prefSlideUp 0.35s ease;
+    }
+    @keyframes prefSlideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .pref-modal-header {
+      position: sticky; top: 0; z-index: 10;
+      background: hsl(var(--background)/0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid hsl(var(--border));
+      padding: 0.75rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pref-modal-body {
+      max-width: 56rem; margin: 0 auto; padding: 1.5rem;
+    }
 
-    /* ---- Stepper ---- */
-    .wiz-steps {
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 2rem; gap: 0; overflow-x: auto;
-      scrollbar-width: none; -ms-overflow-style: none;
-    }
-    .wiz-steps::-webkit-scrollbar { display: none; }
-    .wiz-step {
-      display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
-      cursor: pointer; padding: 0.25rem 0.125rem; flex-shrink: 0; min-width: 56px;
-    }
-    .wiz-step-dot {
+    /* ---- Phase Progress ---- */
+    .phase-bar { display: flex; align-items: center; gap: 0.5rem; }
+    .phase-dot {
       width: 32px; height: 32px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      border: 2px solid hsl(var(--border));
-      background: hsl(var(--background));
-      color: hsl(var(--muted-foreground));
-      transition: all 0.3s;
+      font-size: 0.75rem; font-weight: 700; border: 2px solid hsl(var(--border));
+      color: hsl(var(--muted-foreground)); transition: all 0.3s;
     }
-    .wiz-step-dot i { width: 16px; height: 16px; }
-    .wiz-step.active .wiz-step-dot { border-color: hsl(var(--primary)); background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
-    .wiz-step.done .wiz-step-dot { border-color: hsl(142 71% 45%); background: hsl(142 71% 45%); color: #fff; }
-    .wiz-step-label { font-size: 0.625rem; font-weight: 600; color: hsl(var(--muted-foreground)); text-align: center; line-height: 1.2; white-space: nowrap; }
-    .wiz-step.active .wiz-step-label { color: hsl(var(--primary)); }
-    .wiz-step.done .wiz-step-label { color: hsl(142 71% 45%); }
-    .wiz-step-line {
-      width: 24px; height: 2px; background: hsl(var(--border));
-      flex-shrink: 0; align-self: flex-start; margin-top: 15px;
-      transition: background 0.3s;
-    }
-    .wiz-step-line.done { background: hsl(142 71% 45%); }
-    @media(min-width:640px) { .wiz-step { min-width: 72px; } .wiz-step-line { width: 32px; } }
+    .phase-dot.active { border-color: hsl(var(--primary)); color: hsl(var(--primary)); background: hsl(var(--primary)/0.08); }
+    .phase-dot.done { border-color: hsl(142 71% 45%); background: hsl(142 71% 45%); color: white; }
+    .phase-line { width: 40px; height: 2px; background: hsl(var(--border)); transition: background 0.3s; }
+    .phase-line.done { background: hsl(142 71% 45%); }
+    .phase-label { font-size: 0.625rem; font-weight: 600; color: hsl(var(--muted-foreground)); margin-top: 0.25rem; }
+    .phase-label.active { color: hsl(var(--primary)); }
 
-    .wiz-panel { display: none; animation: wizFadeIn 0.35s ease; }
-    .wiz-panel.active { display: block; }
-    @keyframes wizFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    /* ---- Shared Input Styles ---- */
+    .sec-label { font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem; }
+    .sec-hint { font-size: 0.75rem; color: hsl(var(--muted-foreground)); margin-bottom: 0.5rem; margin-top: -0.25rem; }
 
-    /* ---- Photo Tile Cards ---- */
-    .ptile {
-      position: relative; border-radius: var(--radius); overflow: hidden; cursor: pointer;
-      border: 3px solid transparent; transition: all 0.25s; aspect-ratio: 4/3;
-    }
-    .ptile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-    .ptile:hover img { transform: scale(1.06); }
-    .ptile-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%);
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 0.75rem;
-    }
-    .ptile-name { color: #fff; font-weight: 600; font-size: 0.8125rem; }
-    .ptile-sub { color: rgba(255,255,255,0.75); font-size: 0.675rem; }
-    .ptile-check {
-      position: absolute; top: 8px; right: 8px;
-      width: 24px; height: 24px; border-radius: 50%;
-      background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; border: 2px solid rgba(255,255,255,0.4);
-    }
-    .ptile.selected { border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary)/0.2); }
-    .ptile.selected .ptile-check { background: hsl(var(--primary)); border-color: hsl(var(--primary)); }
-
-    /* ---- Visual Scale ---- */
-    .vscale { display: flex; gap: 0; }
-    .vscale-opt {
-      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.375rem;
-      padding: 0.625rem 0.25rem; cursor: pointer; border-radius: calc(var(--radius) - 2px);
-      transition: all 0.2s; border: 2px solid transparent;
-    }
-    .vscale-opt:hover { background: hsl(var(--muted)/0.5); }
-    .vscale-opt.selected { border-color: hsl(var(--primary)); background: hsl(var(--primary)/0.06); }
-    .vscale-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .vscale-icon i { width: 18px; height: 18px; }
-    .vscale-label { font-size: 0.625rem; font-weight: 600; color: hsl(var(--muted-foreground)); text-align: center; }
-    .vscale-opt.selected .vscale-label { color: hsl(var(--primary)); }
-
-    /* ---- Icon Card ---- */
     .icard {
       display: flex; flex-direction: column; align-items: center; gap: 0.375rem;
-      padding: 1rem 0.5rem; border: 2px solid hsl(var(--border));
-      border-radius: var(--radius); cursor: pointer; transition: all 0.2s;
+      padding: 0.875rem 0.5rem; border: 2px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px); cursor: pointer; transition: all 0.2s;
       text-align: center; background: hsl(var(--card));
     }
-    .icard:hover { border-color: hsl(var(--primary)/0.4); background: hsl(var(--primary)/0.03); }
-    .icard.selected { border-color: hsl(var(--primary)); background: hsl(var(--primary)/0.06); }
-    .icard-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .icard:hover { border-color: hsl(var(--primary)/0.4); }
+    .icard.selected { border-color: hsl(var(--primary)); background: hsl(var(--primary)/0.06); box-shadow: 0 0 0 3px hsl(var(--primary)/0.1); }
+    .icard-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
     .icard-icon i { width: 20px; height: 20px; }
-    .icard-label { font-size: 0.75rem; font-weight: 600; color: hsl(var(--foreground)); }
-    .icard-sub { font-size: 0.625rem; color: hsl(var(--muted-foreground)); line-height: 1.3; }
+    .icard-label { font-size: 0.75rem; font-weight: 600; line-height: 1.2; }
+    .icard-sub { font-size: 0.625rem; color: hsl(var(--muted-foreground)); line-height: 1.2; }
 
-    /* ---- Slider ---- */
-    .range-wrap { position: relative; padding: 0.5rem 0; }
-    .range-wrap input[type=range] {
-      -webkit-appearance: none; width: 100%; height: 6px;
-      border-radius: 3px; background: hsl(var(--muted)); outline: none;
+    .ptile {
+      position: relative; border-radius: calc(var(--radius) - 2px); overflow: hidden;
+      cursor: pointer; border: 2px solid transparent; transition: all 0.2s; aspect-ratio: 4/3;
     }
-    .range-wrap input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
-      background: hsl(var(--primary)); cursor: pointer; border: 3px solid #fff;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-    .range-labels { display: flex; justify-content: space-between; font-size: 0.625rem; color: hsl(var(--muted-foreground)); margin-top: 0.25rem; }
+    .ptile img { width: 100%; height: 100%; object-fit: cover; }
+    .ptile-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.5rem; background: linear-gradient(transparent, rgba(0,0,0,0.7)); }
+    .ptile-name { color: white; font-size: 0.75rem; font-weight: 700; }
+    .ptile-sub { color: rgba(255,255,255,0.8); font-size: 0.6rem; }
+    .ptile-check { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border-radius: 50%; background: hsl(var(--primary)); display: none; align-items: center; justify-content: center; }
+    .ptile.selected { border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary)/0.15); }
+    .ptile.selected .ptile-check { display: flex; }
 
-    /* ---- Tag Input ---- */
-    .tag-input-wrap {
-      display: flex; flex-wrap: wrap; gap: 0.375rem; padding: 0.5rem;
-      border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px);
-      min-height: 42px; background: hsl(var(--card)); align-items: center;
-    }
-    .tag-pill {
-      display: inline-flex; align-items: center; gap: 0.25rem;
-      padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 500;
-      background: hsl(var(--primary)/0.1); color: hsl(var(--primary));
-    }
+    .vscale { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .vscale-opt { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem; border: 2px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px); cursor: pointer; transition: all 0.2s; min-width: 64px; flex: 1; }
+    .vscale-opt:hover { border-color: hsl(var(--primary)/0.4); }
+    .vscale-opt.selected { border-color: hsl(var(--primary)); background: hsl(var(--primary)/0.06); }
+    .vscale-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .vscale-icon i { width: 16px; height: 16px; }
+    .vscale-label { font-size: 0.625rem; font-weight: 600; text-align: center; }
+
+    .tag-input-wrap { display: flex; flex-wrap: wrap; gap: 0.375rem; padding: 0.5rem; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px); background: hsl(var(--card)); min-height: 40px; align-items: center; }
+    .tag-pill { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 500; background: hsl(var(--primary)/0.1); color: hsl(var(--primary)); }
     .tag-pill button { background: none; border: none; cursor: pointer; padding: 0; line-height: 1; color: hsl(var(--primary)); }
-    .tag-input-wrap input {
-      border: none; outline: none; background: transparent; font-size: 0.8125rem;
-      flex: 1; min-width: 80px; color: hsl(var(--foreground));
-    }
+    .tag-input-wrap input { border: none; outline: none; background: transparent; font-size: 0.8125rem; flex: 1; min-width: 80px; color: hsl(var(--foreground)); }
 
-    /* ---- Star Selector ---- */
     .star-sel { display: inline-flex; gap: 0.25rem; }
-    .star-sel-star {
-      width: 32px; height: 32px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 6px; border: 2px solid hsl(var(--border));
-      transition: all 0.15s; color: hsl(var(--muted-foreground));
-    }
+    .star-sel-star { width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 2px solid hsl(var(--border)); transition: all 0.15s; color: hsl(var(--muted-foreground)); }
     .star-sel-star.active { border-color: hsl(38 92% 50%); background: hsl(38 92% 50%/0.1); color: hsl(38 92% 50%); }
 
-    /* ---- Cuisine Flag Tile ---- */
-    .cuisine-tile {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.5rem 0.75rem; border: 2px solid hsl(var(--border));
-      border-radius: calc(var(--radius) - 2px); cursor: pointer; transition: all 0.2s;
-      font-size: 0.75rem; font-weight: 500;
-    }
+    .cuisine-tile { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border: 2px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px); cursor: pointer; transition: all 0.2s; font-size: 0.75rem; font-weight: 500; }
     .cuisine-tile:hover { border-color: hsl(var(--primary)/0.4); }
     .cuisine-tile.selected { border-color: hsl(var(--primary)); background: hsl(var(--primary)/0.06); }
     .cuisine-flag { font-size: 1.1rem; }
 
-    /* ---- Toggle Card ---- */
-    .tcard {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.75rem 1rem; border: 1px solid hsl(var(--border));
-      border-radius: calc(var(--radius) - 2px); transition: all 0.2s;
-      background: hsl(var(--card));
-    }
+    .tcard { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px); transition: all 0.2s; background: hsl(var(--card)); }
     .tcard.on { border-color: hsl(var(--primary)); background: hsl(var(--primary)/0.04); }
+
+    .range-wrap { position: relative; }
+    .range-wrap input[type=range] { width: 100%; accent-color: hsl(var(--primary)); }
+    .range-labels { display: flex; justify-content: space-between; font-size: 0.625rem; color: hsl(var(--muted-foreground)); }
+
+    /* ---- Phase Chooser Cards ---- */
+    .chooser-card {
+      border: 2px solid hsl(var(--border)); border-radius: var(--radius);
+      padding: 2rem; text-align: center; cursor: pointer; transition: all 0.25s;
+      background: hsl(var(--card)); position: relative;
+    }
+    .chooser-card:hover { border-color: hsl(var(--primary)/0.5); transform: translateY(-2px); box-shadow: 0 4px 20px hsl(var(--primary)/0.08); }
+    .chooser-icon { width: 64px; height: 64px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .chooser-icon i { width: 32px; height: 32px; }
+
+    /* ---- Full-Page AI Voice ---- */
+    .ai-voice-page {
+      display: none; position: fixed; inset: 0; z-index: 210;
+      background: hsl(var(--background));
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    .ai-voice-page.open { display: flex; }
+    .ai-voice-header {
+      position: absolute; top: 0; left: 0; right: 0; padding: 1rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ai-voice-center { text-align: center; max-width: 32rem; padding: 0 1.5rem; }
+    .ai-mic-ring {
+      width: 140px; height: 140px; border-radius: 50%;
+      background: hsl(var(--primary)/0.08); display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 2rem; cursor: pointer; transition: all 0.3s; position: relative;
+    }
+    .ai-mic-ring::before {
+      content: ''; position: absolute; inset: -8px; border-radius: 50%;
+      border: 2px solid hsl(var(--primary)/0.15); transition: all 0.3s;
+    }
+    .ai-mic-ring:hover { background: hsl(var(--primary)/0.12); transform: scale(1.03); }
+    .ai-mic-ring.listening {
+      background: hsl(0 72% 51%/0.1); animation: aiMicPulse 1.5s ease-in-out infinite;
+    }
+    .ai-mic-ring.listening::before { border-color: hsl(0 72% 51%/0.2); }
+    @keyframes aiMicPulse {
+      0%, 100% { box-shadow: 0 0 0 0 hsl(0 72% 51%/0.15); }
+      50% { box-shadow: 0 0 0 20px hsl(0 72% 51%/0); }
+    }
+    .ai-mic-inner {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+      display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+    }
+    .ai-mic-ring.listening .ai-mic-inner { background: hsl(0 72% 51%); }
+    .ai-mic-inner i { width: 32px; height: 32px; }
+    .ai-wave-bars {
+      display: flex; align-items: center; justify-content: center; gap: 3px;
+      height: 32px; margin-bottom: 1.5rem;
+    }
+    .ai-wave-bar {
+      width: 4px; border-radius: 2px; background: hsl(var(--primary)/0.3);
+      transition: height 0.15s; height: 8px;
+    }
+    .ai-wave-bars.active .ai-wave-bar { animation: waveAnim 0.8s ease-in-out infinite; background: hsl(var(--primary)); }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(1) { animation-delay: 0s; }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(2) { animation-delay: 0.1s; }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(4) { animation-delay: 0.3s; }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(5) { animation-delay: 0.15s; }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(6) { animation-delay: 0.25s; }
+    .ai-wave-bars.active .ai-wave-bar:nth-child(7) { animation-delay: 0.05s; }
+    @keyframes waveAnim {
+      0%, 100% { height: 8px; }
+      50% { height: 28px; }
+    }
+    .ai-question {
+      font-size: 1.125rem; font-weight: 500; line-height: 1.6;
+      color: hsl(var(--foreground)); margin-bottom: 0.5rem;
+      min-height: 3.5rem;
+    }
+    .ai-field-label {
+      font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: hsl(var(--primary)); margin-bottom: 0.75rem;
+    }
+    .ai-transcript {
+      font-size: 0.875rem; color: hsl(var(--muted-foreground)); font-style: italic;
+      min-height: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .ai-voice-footer {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    }
+    .ai-voice-progress {
+      position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 0.5rem; width: 280px;
+    }
+    .ai-voice-prog-bar { flex: 1; height: 3px; border-radius: 2px; background: hsl(var(--muted)); overflow: hidden; }
+    .ai-voice-prog-fill { height: 100%; border-radius: 2px; background: hsl(var(--primary)); transition: width 0.5s; }
 
     /* ---- Summary Persona ---- */
     .persona-card {
-      background: linear-gradient(135deg, hsl(var(--primary)/0.06) 0%, hsl(270 60% 55%/0.06) 50%, hsl(340 70% 55%/0.06) 100%);
+      background: linear-gradient(135deg, hsl(var(--primary)/0.06) 0%, hsl(197 68% 20%/0.06) 50%, hsl(197 68% 20%/0.04) 100%);
       border: 1px solid hsl(var(--border)); border-radius: var(--radius); padding: 2rem;
     }
     .persona-section { margin-bottom: 1.25rem; }
     .persona-section:last-child { margin-bottom: 0; }
-    .persona-section-title {
-      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.05em; color: hsl(var(--muted-foreground)); margin-bottom: 0.5rem;
-      display: flex; align-items: center; gap: 0.375rem;
-    }
+    .persona-section-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: hsl(var(--muted-foreground)); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem; }
     .persona-section-title i { width: 14px; height: 14px; }
-    .persona-tag {
-      display: inline-flex; align-items: center; gap: 0.25rem;
-      padding: 0.25rem 0.625rem; border-radius: 999px; font-size: 0.7rem; font-weight: 500;
-      background: hsl(var(--muted)/0.6); color: hsl(var(--foreground)); margin: 0.125rem;
-    }
+    .persona-tag { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.625rem; border-radius: 999px; font-size: 0.6875rem; font-weight: 500; background: hsl(var(--primary)/0.08); color: hsl(var(--primary)); margin: 0.125rem; }
 
-    /* ---- Confetti ---- */
-    .confetti-piece {
-      position: fixed; width: 8px; height: 8px; border-radius: 2px;
-      animation: confettiFall 2.5s ease-out forwards; pointer-events: none; z-index: 9999;
-    }
-    @keyframes confettiFall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
+    @keyframes wizFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .wiz-panel { display: none; animation: wizFadeIn 0.3s ease; }
+    .wiz-panel.active { display: block; }
 
-    /* ---- Section helpers ---- */
-    .sec-label { font-size: 0.8125rem; font-weight: 600; color: hsl(var(--foreground)); margin-bottom: 0.625rem; display: flex; align-items: center; gap: 0.375rem; }
-    .sec-hint { font-size: 0.7rem; color: hsl(var(--muted-foreground)); margin-bottom: 0.75rem; }
+    .confetti-piece { position: fixed; z-index: 999; pointer-events: none; animation: confettiFall linear forwards; }
+    @keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 
-    /* ---- Step header icon bubble ---- */
-    .step-hero-icon {
-      width: 52px; height: 52px; border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 0.75rem;
-    }
-    .step-hero-icon i { width: 26px; height: 26px; }
-
-    /* ---- Intro Panel ---- */
-    .intro-panel { animation: wizFadeIn 0.4s ease; }
-    .intro-hero {
-      background: linear-gradient(135deg, hsl(var(--primary)/0.07) 0%, hsl(260 60% 55%/0.07) 40%, hsl(330 65% 55%/0.07) 100%);
-      border: 1px solid hsl(var(--border)); border-radius: var(--radius);
-      padding: 2.5rem 2rem; text-align: center; position: relative; overflow: hidden;
-    }
-    .intro-hero::before {
-      content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px;
-      border-radius: 50%; background: hsl(var(--primary)/0.06);
-    }
-    .intro-hero::after {
-      content: ''; position: absolute; bottom: -30px; left: -30px; width: 120px; height: 120px;
-      border-radius: 50%; background: hsl(260 60% 55%/0.06);
-    }
-    .intro-flow {
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .intro-flow-step {
-      display: flex; flex-direction: column; align-items: center; gap: 0.375rem;
-      padding: 0.75rem; border-radius: var(--radius);
-      background: hsl(var(--card)); border: 1px solid hsl(var(--border));
-      min-width: 100px; flex: 0 0 auto;
-    }
-    .intro-flow-arrow { color: hsl(var(--muted-foreground)); flex-shrink: 0; }
-    .intro-flow-icon {
-      width: 40px; height: 40px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .intro-flow-icon i { width: 20px; height: 20px; }
-    .intro-benefit {
-      display: flex; align-items: flex-start; gap: 0.75rem;
-      padding: 0.75rem; border-radius: calc(var(--radius) - 2px);
-      background: hsl(var(--card)); border: 1px solid hsl(var(--border));
-    }
-    .intro-benefit-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .intro-benefit-icon i { width: 18px; height: 18px; }
-    .consent-card {
-      border: 1px solid hsl(var(--border)); border-radius: var(--radius);
-      padding: 1.25rem 1.5rem; background: hsl(var(--card));
-    }
-    .consent-item {
-      display: flex; align-items: flex-start; gap: 0.625rem;
-      padding: 0.5rem 0;
-    }
-    .consent-icon {
-      width: 28px; height: 28px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
-    }
-    .consent-icon i { width: 14px; height: 14px; }
-
-    /* ---- Choose Path Cards ---- */
-    .path-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 540px) { .path-grid { grid-template-columns: 1fr; } }
-    .path-card {
-      position: relative; border: 2px solid hsl(var(--border)); border-radius: var(--radius);
-      padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.25s;
-      background: hsl(var(--card));
-    }
-    .path-card:hover { border-color: hsl(var(--primary)/0.5); transform: translateY(-2px); box-shadow: 0 4px 16px hsl(var(--primary)/0.08); }
-    .path-card.disabled { opacity: 0.5; pointer-events: none; }
-    .path-card-badge {
-      position: absolute; top: 0.75rem; right: 0.75rem;
-      font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
-      padding: 0.15rem 0.5rem; border-radius: 999px;
-    }
-    .path-card-icon {
-      width: 56px; height: 56px; border-radius: 16px;
-      display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem;
-    }
-    .path-card-icon i { width: 28px; height: 28px; }
-
-    /* ---- Voice Assistant Overlay ---- */
-    .voice-overlay {
-      display: none; position: fixed; inset: 0; z-index: 100;
-      background: hsl(var(--background)/0.97); backdrop-filter: blur(12px);
-      animation: wizFadeIn 0.3s ease;
-    }
-    .voice-overlay.open { display: flex; flex-direction: column; }
-    .voice-container {
-      flex: 1; display: flex; flex-direction: column;
-      max-width: 40rem; width: 100%; margin: 0 auto; padding: 1rem 1.5rem;
-    }
-    .voice-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.75rem 0; border-bottom: 1px solid hsl(var(--border)); margin-bottom: 1rem;
-    }
-    .voice-messages {
-      flex: 1; overflow-y: auto; padding: 0.5rem 0;
-      display: flex; flex-direction: column; gap: 0.75rem;
-    }
-    .voice-msg {
-      max-width: 80%; padding: 0.75rem 1rem; border-radius: var(--radius);
-      font-size: 0.8125rem; line-height: 1.5; animation: wizFadeIn 0.3s ease;
-    }
-    .voice-msg.ai {
-      align-self: flex-start; background: hsl(var(--muted));
-      border-bottom-left-radius: 4px;
-    }
-    .voice-msg.user {
-      align-self: flex-end; background: hsl(var(--primary));
-      color: hsl(var(--primary-foreground)); border-bottom-right-radius: 4px;
-    }
-    .voice-msg .msg-label {
-      font-size: 0.625rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.04em; margin-bottom: 0.25rem; opacity: 0.7;
-    }
-    .voice-typing {
-      display: flex; gap: 4px; align-items: center; padding: 0.5rem 0;
-      align-self: flex-start;
-    }
-    .voice-typing span {
-      width: 6px; height: 6px; border-radius: 50%; background: hsl(var(--primary));
-      animation: voiceBounce 1.2s infinite;
-    }
-    .voice-typing span:nth-child(2) { animation-delay: 0.15s; }
-    .voice-typing span:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes voiceBounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-6px); opacity: 1; }
-    }
-    .voice-controls {
-      padding: 0.75rem 0; border-top: 1px solid hsl(var(--border));
-      display: flex; align-items: center; gap: 0.75rem;
-    }
-    .voice-mic-btn {
-      width: 52px; height: 52px; border-radius: 50%; border: none;
-      background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s; flex-shrink: 0;
-    }
-    .voice-mic-btn:hover { transform: scale(1.05); box-shadow: 0 0 0 6px hsl(var(--primary)/0.15); }
-    .voice-mic-btn.listening {
-      animation: micPulse 1.5s ease-in-out infinite;
-      background: hsl(0 72% 51%); box-shadow: 0 0 0 6px hsl(0 72% 51%/0.15);
-    }
-    @keyframes micPulse {
-      0%, 100% { box-shadow: 0 0 0 4px hsl(0 72% 51%/0.15); }
-      50% { box-shadow: 0 0 0 12px hsl(0 72% 51%/0.08); }
-    }
-    .voice-mic-btn i { width: 22px; height: 22px; }
-    .voice-text-input {
-      flex: 1; padding: 0.625rem 1rem; border: 1px solid hsl(var(--border));
-      border-radius: var(--radius); font-size: 0.8125rem; outline: none;
-      background: hsl(var(--card)); color: hsl(var(--foreground));
-      transition: border-color 0.2s;
-    }
-    .voice-text-input:focus { border-color: hsl(var(--primary)); }
-    .voice-send-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: none;
-      background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s; flex-shrink: 0;
-    }
-    .voice-send-btn:hover { transform: scale(1.05); }
-    .voice-send-btn i { width: 18px; height: 18px; }
-    .voice-progress {
-      display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0;
-    }
-    .voice-progress-bar {
-      flex: 1; height: 4px; border-radius: 2px; background: hsl(var(--muted));
-      overflow: hidden;
-    }
-    .voice-progress-fill {
-      height: 100%; border-radius: 2px; background: hsl(var(--primary));
-      transition: width 0.4s ease;
-    }
+    /* ---- Consent ---- */
+    .consent-item { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.375rem 0; }
+    .consent-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .consent-icon i { width: 12px; height: 12px; }
   </style>
 </head>
 <body class="font-sans bg-background text-foreground">
 
-  <div class="emp-layout">
-    <header class="emp-navbar">
-      <div class="flex items-center gap-6">
-        <a href="dashboard.html" class="emp-navbar-brand">
-          <div class="brand-icon"><i data-lucide="globe"></i></div>
-          <span class="brand-name">Trvello</span>
-          <span class="brand-org">Acme Corp</span>
-        </a>
-        <nav class="emp-nav-links">
-          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
-          <a href="peer-recognition.html" class="emp-nav-link"><i data-lucide="heart-handshake"></i> Recognition</a>
-        </nav>
-      </div>
-      <div class="emp-nav-right">
-        <button class="btn-ghost btn-icon relative" title="Notifications">
-          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
-          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
-        </button>
-        <div class="dropdown">
-          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
-            <div class="avatar text-xs">RS</div>
-          </button>
-          <div class="dropdown-menu w-48">
-            <div class="px-3 py-2 border-b border-border">
-              <div class="text-sm font-semibold">Rahul Sharma</div>
-              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
-            </div>
-            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
-            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
-            <div class="my-1 border-t border-border"></div>
-            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
-          </div>
+  <!-- ================================================================
+       FULL-SCREEN PREFERENCE MODAL
+       ================================================================ -->
+  <div class="pref-modal" id="prefModal">
+
+    <!-- Modal Header -->
+    <div class="pref-modal-header">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4 text-primary"></i>
+        </div>
+        <div>
+          <div class="text-sm font-bold">Travel Preferences</div>
+          <div class="text-[0.625rem] text-muted-foreground" id="headerSubtitle">Set up your profile for AI-powered trip matching</div>
         </div>
       </div>
-    </header>
 
-    <main class="emp-content" style="max-width:56rem;">
+      <!-- Phase Progress -->
+      <div class="phase-bar" id="phaseBar">
+        <div class="flex flex-col items-center">
+          <div class="phase-dot active" id="phaseDot1">1</div>
+          <div class="phase-label active" id="phaseLabel1">Basic</div>
+        </div>
+        <div class="phase-line" id="phaseLine1"></div>
+        <div class="flex flex-col items-center">
+          <div class="phase-dot" id="phaseDot2">2</div>
+          <div class="phase-label" id="phaseLabel2">Detailed</div>
+        </div>
+      </div>
+
+      <a href="dashboard.html" class="btn-ghost btn-icon" title="Close">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </a>
+    </div>
+
+    <div class="pref-modal-body">
 
       <!-- ================================================================
-           INTRO PANEL — shown before wizard starts
+           PHASE 0: WELCOME / CONSENT
            ================================================================ -->
-      <div id="introPanel" class="intro-panel">
+      <div id="phaseWelcome">
+        <div class="text-center mb-6 pt-4">
+          <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="brain" class="w-8 h-8 text-primary"></i>
+          </div>
+          <h1 class="text-2xl font-bold mb-1">Your Preferences Power Our AI</h1>
+          <p class="text-sm text-muted-foreground max-w-lg mx-auto">The more we know about what you love, the smarter our AI gets at finding your perfect trips.</p>
+        </div>
 
-        <!-- Hero -->
-        <div class="intro-hero mb-6">
-          <div class="relative z-10">
-            <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <i data-lucide="brain" class="w-8 h-8 text-primary"></i>
-            </div>
-            <h1 class="text-2xl font-bold mb-1">Your Preferences Power Our AI</h1>
-            <p class="text-sm text-muted-foreground max-w-lg mx-auto">The more we know about what you love, the smarter our AI gets at finding your perfect trips — for this year and the next decade.</p>
+        <!-- How it works -->
+        <div class="flex items-center justify-center gap-3 flex-wrap mb-8">
+          <div class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border bg-card min-w-[100px]">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600"><i data-lucide="user-check" class="w-5 h-5"></i></div>
+            <span class="text-[0.65rem] font-semibold text-center">You share</span>
+          </div>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-muted-foreground"></i>
+          <div class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border bg-card min-w-[100px]">
+            <div class="w-10 h-10 rounded-xl bg-brand-light flex items-center justify-center text-brand"><i data-lucide="brain" class="w-5 h-5"></i></div>
+            <span class="text-[0.65rem] font-semibold text-center">AI learns</span>
+          </div>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-muted-foreground"></i>
+          <div class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border bg-card min-w-[100px]">
+            <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center text-green-600"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+            <span class="text-[0.65rem] font-semibold text-center">Perfect trips</span>
           </div>
         </div>
 
-        <!-- How it works — visual flow -->
-        <div class="mb-6">
+        <!-- Privacy consent -->
+        <div class="border border-border rounded-lg p-4 bg-card mb-6 max-w-lg mx-auto">
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center"><i data-lucide="workflow" class="w-4 h-4 text-primary"></i></div>
-            <span class="text-sm font-semibold">How our AI matching works</span>
-          </div>
-          <div class="intro-flow">
-            <div class="intro-flow-step">
-              <div class="intro-flow-icon bg-blue-100 text-blue-600"><i data-lucide="user-check"></i></div>
-              <span class="text-[0.7rem] font-semibold">You share preferences</span>
-            </div>
-            <div class="intro-flow-arrow"><i data-lucide="arrow-right" class="w-4 h-4"></i></div>
-            <div class="intro-flow-step">
-              <div class="intro-flow-icon bg-purple-100 text-purple-600"><i data-lucide="brain"></i></div>
-              <span class="text-[0.7rem] font-semibold">AI builds your profile</span>
-            </div>
-            <div class="intro-flow-arrow"><i data-lucide="arrow-right" class="w-4 h-4"></i></div>
-            <div class="intro-flow-step">
-              <div class="intro-flow-icon bg-amber-100 text-amber-600"><i data-lucide="cpu"></i></div>
-              <span class="text-[0.7rem] font-semibold">Match score engine</span>
-            </div>
-            <div class="intro-flow-arrow"><i data-lucide="arrow-right" class="w-4 h-4"></i></div>
-            <div class="intro-flow-step">
-              <div class="intro-flow-icon bg-green-100 text-green-600"><i data-lucide="sparkles"></i></div>
-              <span class="text-[0.7rem] font-semibold">Personalised trips</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Benefits -->
-        <div class="mb-6">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="gift" class="w-4 h-4 text-green-600"></i></div>
-            <span class="text-sm font-semibold">What you get</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="intro-benefit">
-              <div class="intro-benefit-icon bg-blue-100 text-blue-600"><i data-lucide="target"></i></div>
-              <div>
-                <div class="text-sm font-semibold">Accurate match scores</div>
-                <div class="text-xs text-muted-foreground">Every destination gets a personalised match percentage — 95% means it's practically perfect for you</div>
-              </div>
-            </div>
-            <div class="intro-benefit">
-              <div class="intro-benefit-icon bg-purple-100 text-purple-600"><i data-lucide="calendar-range"></i></div>
-              <div>
-                <div class="text-sm font-semibold">Smart year planner</div>
-                <div class="text-xs text-muted-foreground">AI curates quarterly trip suggestions for the current year based on seasons, budget, and your leave balance</div>
-              </div>
-            </div>
-            <div class="intro-benefit">
-              <div class="intro-benefit-icon bg-amber-100 text-amber-600"><i data-lucide="compass"></i></div>
-              <div>
-                <div class="text-sm font-semibold">5-year travel canvas</div>
-                <div class="text-xs text-muted-foreground">A long-term horizon planner mapping dream destinations, savings goals, and milestone trips across the next decade</div>
-              </div>
-            </div>
-            <div class="intro-benefit">
-              <div class="intro-benefit-icon bg-green-100 text-green-600"><i data-lucide="trending-up"></i></div>
-              <div>
-                <div class="text-sm font-semibold">Gets smarter over time</div>
-                <div class="text-xs text-muted-foreground">Every trip you take, every rating you leave — the AI refines its understanding of what makes you happy</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Accuracy impact -->
-        <div class="flex items-center gap-4 p-4 rounded-lg border border-primary/20 bg-primary/5 mb-6">
-          <div class="flex-shrink-0">
-            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-              <span class="text-lg font-bold text-primary">95%</span>
-            </div>
-          </div>
-          <div>
-            <div class="text-sm font-semibold">Employees who complete all 7 steps see 95% match accuracy</div>
-            <div class="text-xs text-muted-foreground mt-0.5">Skipping steps means the AI guesses instead of knowing. It only takes 3–4 minutes to complete everything.</div>
-          </div>
-        </div>
-
-        <!-- Privacy & Consent -->
-        <div class="consent-card mb-6">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center"><i data-lucide="lock" class="w-4 h-4 text-emerald-600"></i></div>
+            <div class="w-6 h-6 rounded-md bg-green-100 flex items-center justify-center"><i data-lucide="lock" class="w-3 h-3 text-green-600"></i></div>
             <span class="text-sm font-semibold">Your Data, Your Control</span>
           </div>
-
-          <div class="consent-item">
-            <div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div>
-            <div>
-              <div class="text-sm font-medium">Used only for AI trip matching</div>
-              <div class="text-xs text-muted-foreground">Your preferences are exclusively used by our recommendation engine to find destinations, packages, and experiences that suit you. Nothing else.</div>
-            </div>
-          </div>
-          <div class="consent-item">
-            <div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div>
-            <div>
-              <div class="text-sm font-medium">Kept strictly private</div>
-              <div class="text-xs text-muted-foreground">Your dietary choices, health info, budget, and personal preferences are never shared with your employer, colleagues, or any third party.</div>
-            </div>
-          </div>
-          <div class="consent-item">
-            <div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div>
-            <div>
-              <div class="text-sm font-medium">Not used for performance or HR processes</div>
-              <div class="text-xs text-muted-foreground">This data has zero connection to your work profile, reviews, or any organisational decisions. It's purely for your travel experience.</div>
-            </div>
-          </div>
-          <div class="consent-item">
-            <div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div>
-            <div>
-              <div class="text-sm font-medium">Editable and deletable anytime</div>
-              <div class="text-xs text-muted-foreground">You can update or completely remove your preference data from Settings &gt; Data &amp; Privacy at any time.</div>
-            </div>
-          </div>
-
-          <div class="mt-4 pt-3 border-t border-border">
-            <label class="flex items-center gap-3 cursor-pointer" id="consentCheck">
-              <input type="checkbox" class="accent-primary w-4 h-4" id="consentInput" onchange="toggleConsent(this.checked)">
-              <div class="text-sm">I understand that my preferences are <strong>used only for AI-based trip matching</strong> and will be <strong>kept private</strong>.</div>
+          <div class="consent-item"><div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div><div class="text-xs text-muted-foreground">Used <strong>only</strong> for AI trip matching — nothing else</div></div>
+          <div class="consent-item"><div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div><div class="text-xs text-muted-foreground">Never shared with employer, colleagues, or third parties</div></div>
+          <div class="consent-item"><div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div><div class="text-xs text-muted-foreground">Not used for HR, performance, or any work decisions</div></div>
+          <div class="consent-item"><div class="consent-icon bg-green-100 text-green-600"><i data-lucide="check-circle"></i></div><div class="text-xs text-muted-foreground">Editable and deletable from Settings anytime</div></div>
+          <div class="mt-3 pt-3 border-t border-border">
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" class="accent-primary w-4 h-4" id="consentCb" onchange="document.getElementById('startBasicBtn').disabled=!this.checked; document.getElementById('startBasicBtn').classList.toggle('opacity-50',!this.checked);">
+              <span class="text-xs">I understand my preferences are used <strong>only for AI trip matching</strong> and kept <strong>private</strong>.</span>
             </label>
           </div>
         </div>
 
-        <!-- Choose Your Path -->
-        <div class="mb-4">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-7 h-7 rounded-lg bg-violet-100 flex items-center justify-center"><i data-lucide="route" class="w-4 h-4 text-violet-600"></i></div>
-            <span class="text-sm font-semibold">Choose how you'd like to set up</span>
-          </div>
-          <div class="path-grid">
-            <!-- Option 1: Manual Steps -->
-            <div class="path-card opacity-50" id="pathManual" onclick="if(!document.getElementById('consentInput').checked) return; startWizard();">
-              <div class="path-card-icon bg-blue-100 text-blue-600"><i data-lucide="list-checks"></i></div>
-              <div class="text-sm font-bold mb-0.5">Step-by-Step Wizard</div>
-              <div class="text-xs text-muted-foreground mb-3">Pick visually from cards, sliders, and interactive tiles across 7 quick steps</div>
-              <div class="flex items-center justify-center gap-3 text-[0.675rem] text-muted-foreground">
-                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 3–4 min</span>
-                <span class="flex items-center gap-1"><i data-lucide="mouse-pointer-click" class="w-3 h-3"></i> Visual picks</span>
-              </div>
-            </div>
-            <!-- Option 2: AI Voice Assistant -->
-            <div class="path-card opacity-50" id="pathVoice" onclick="if(!document.getElementById('consentInput').checked) return; openVoiceAssistant();">
-              <div class="path-card-badge bg-violet-100 text-violet-700">AI-Powered</div>
-              <div class="path-card-icon bg-gradient-to-br from-violet-100 to-purple-100 text-violet-600"><i data-lucide="mic"></i></div>
-              <div class="text-sm font-bold mb-0.5">Talk to AI Assistant</div>
-              <div class="text-xs text-muted-foreground mb-3">Have a conversation — voice or text — and let the AI capture your preferences naturally</div>
-              <div class="flex items-center justify-center gap-3 text-[0.675rem] text-muted-foreground">
-                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 2–3 min</span>
-                <span class="flex items-center gap-1"><i data-lucide="audio-waveform" class="w-3 h-3"></i> Voice / Text</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p class="text-center text-[0.675rem] text-muted-foreground">You can switch between methods anytime. Skip any step and come back later.</p>
-      </div>
-
-      <!-- ================================================================
-           VOICE ASSISTANT OVERLAY
-           ================================================================ -->
-      <div class="voice-overlay" id="voiceOverlay">
-        <div class="voice-container">
-
-          <!-- Header -->
-          <div class="voice-header">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white">
-                <i data-lucide="bot" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <div class="text-sm font-bold">Trvello AI Assistant</div>
-                <div class="text-[0.65rem] text-green-600 font-medium flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span> Online
-                </div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <button class="btn-ghost btn-sm text-xs" onclick="switchToManual()" title="Switch to manual steps">
-                <i data-lucide="list-checks" class="w-3.5 h-3.5"></i> Switch to Steps
-              </button>
-              <button class="btn-ghost btn-icon" onclick="closeVoiceAssistant()" title="Close">
-                <i data-lucide="x" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Progress -->
-          <div class="voice-progress">
-            <span class="text-[0.625rem] font-medium text-muted-foreground" id="voiceProgLabel">Getting started</span>
-            <div class="voice-progress-bar">
-              <div class="voice-progress-fill" id="voiceProgFill" style="width:0%"></div>
-            </div>
-            <span class="text-[0.625rem] font-bold text-primary" id="voiceProgPct">0%</span>
-          </div>
-
-          <!-- Messages -->
-          <div class="voice-messages" id="voiceMsgs">
-            <!-- AI messages will be appended here -->
-          </div>
-
-          <!-- Controls -->
-          <div class="voice-controls">
-            <button class="voice-mic-btn" id="voiceMicBtn" onclick="toggleMic()" title="Hold to speak">
-              <i data-lucide="mic" class="w-5 h-5"></i>
-            </button>
-            <input type="text" class="voice-text-input" id="voiceTextInput" placeholder="Or type your answer here..." onkeydown="if(event.key==='Enter') sendVoiceText();">
-            <button class="voice-send-btn" onclick="sendVoiceText()" title="Send">
-              <i data-lucide="send" class="w-4 h-4"></i>
-            </button>
-          </div>
-
+        <div class="text-center">
+          <button class="btn-primary px-8 py-2.5 opacity-50" id="startBasicBtn" disabled onclick="goPhase('basic')">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Get Started
+          </button>
+          <p class="text-[0.625rem] text-muted-foreground mt-2">Takes about 3–4 minutes total</p>
         </div>
       </div>
 
 
       <!-- ================================================================
-           WIZARD (hidden until user clicks Start)
+           PHASE 1: BASIC PREFERENCES (single scrollable panel)
            ================================================================ -->
-      <div id="wizardWrap" style="display:none;">
+      <div id="phaseBasic" style="display:none;">
 
-      <div class="text-center mb-2">
-        <h1 class="text-2xl font-bold">Personalise Your Travel</h1>
-        <p class="text-muted-foreground mt-1 text-sm">Tell us what you love — we'll find your perfect trips</p>
-      </div>
-
-      <!-- Progress Bar -->
-      <div class="mb-5">
-        <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs font-medium text-muted-foreground" id="progLabel">Step 1 of 7</span>
-          <span class="text-xs font-bold text-primary" id="progPct">0%</span>
-        </div>
-        <div class="wiz-progress"><div class="wiz-progress-fill" id="progBar" style="width:0%"></div></div>
-      </div>
-
-      <!-- Step Indicators -->
-      <div class="wiz-steps" id="wizSteps">
-        <div class="wiz-step active" data-step="1" onclick="goStep(1)">
-          <div class="wiz-step-dot"><i data-lucide="user" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">About You</span>
-        </div>
-        <div class="wiz-step-line" id="line1"></div>
-        <div class="wiz-step" data-step="2" onclick="goStep(2)">
-          <div class="wiz-step-dot"><i data-lucide="sparkles" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">Travel Vibe</span>
-        </div>
-        <div class="wiz-step-line" id="line2"></div>
-        <div class="wiz-step" data-step="3" onclick="goStep(3)">
-          <div class="wiz-step-dot"><i data-lucide="map" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">Destinations</span>
-        </div>
-        <div class="wiz-step-line" id="line3"></div>
-        <div class="wiz-step" data-step="4" onclick="goStep(4)">
-          <div class="wiz-step-dot"><i data-lucide="wallet" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">Budget</span>
-        </div>
-        <div class="wiz-step-line" id="line4"></div>
-        <div class="wiz-step" data-step="5" onclick="goStep(5)">
-          <div class="wiz-step-dot"><i data-lucide="utensils" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">Food</span>
-        </div>
-        <div class="wiz-step-line" id="line5"></div>
-        <div class="wiz-step" data-step="6" onclick="goStep(6)">
-          <div class="wiz-step-dot"><i data-lucide="bed" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">Stay & Go</span>
-        </div>
-        <div class="wiz-step-line" id="line6"></div>
-        <div class="wiz-step" data-step="7" onclick="goStep(7)">
-          <div class="wiz-step-dot"><i data-lucide="shield-check" class="w-4 h-4"></i></div>
-          <span class="wiz-step-label">Practical</span>
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 1 — ABOUT YOU
-           ================================================================ -->
-      <div class="wiz-panel active" data-panel="1">
         <div class="text-center mb-6">
-          <div class="step-hero-icon bg-blue-100 text-blue-600"><i data-lucide="hand-metal"></i></div>
-          <h2 class="text-lg font-bold">Who's Travelling?</h2>
-          <p class="text-sm text-muted-foreground">This helps us tailor group-friendly or solo experiences</p>
+          <h2 class="text-xl font-bold">Basic Preferences</h2>
+          <p class="text-sm text-muted-foreground">Quick picks to get your AI matching started</p>
         </div>
 
+        <!-- Travel Type -->
         <div class="sec-label"><i data-lucide="users" class="w-4 h-4 text-primary"></i> I usually travel...</div>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6" data-single="travelType">
-          <div class="icard selected" onclick="singleSelect(this)">
-            <div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="user"></i></div>
-            <div class="icard-label">Solo</div>
-            <div class="icard-sub">Just me</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-pink-100 text-pink-600"><i data-lucide="heart"></i></div>
-            <div class="icard-label">Couple</div>
-            <div class="icard-sub">Romantic getaway</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="baby"></i></div>
-            <div class="icard-label">Family</div>
-            <div class="icard-sub">Kids & all</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-green-100 text-green-600"><i data-lucide="users"></i></div>
-            <div class="icard-label">Friends</div>
-            <div class="icard-sub">Squad goals</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="briefcase"></i></div>
-            <div class="icard-label">Business</div>
-            <div class="icard-sub">Work + leisure</div>
-          </div>
+          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="user"></i></div><div class="icard-label">Solo</div><div class="icard-sub">Just me</div></div>
+          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-pink-100 text-pink-600"><i data-lucide="heart"></i></div><div class="icard-label">Couple</div><div class="icard-sub">Romantic getaway</div></div>
+          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="baby"></i></div><div class="icard-label">Family</div><div class="icard-sub">Kids & all</div></div>
+          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="users"></i></div><div class="icard-label">Friends</div><div class="icard-sub">Squad goals</div></div>
+          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-brand-light text-brand"><i data-lucide="briefcase"></i></div><div class="icard-label">Business</div><div class="icard-sub">Work + leisure</div></div>
         </div>
 
-        <div class="sec-label"><i data-lucide="user-plus" class="w-4 h-4 text-primary"></i> Group Composition</div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          <div class="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
-            <div><div class="text-sm font-medium">Adults</div><div class="text-xs text-muted-foreground">18+</div></div>
-            <div class="flex items-center gap-2" data-counter>
-              <button type="button" data-decrement class="w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-muted">−</button>
-              <input type="number" value="2" min="1" max="20" class="w-8 text-center text-sm font-semibold border-none bg-transparent outline-none">
-              <button type="button" data-increment class="w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-muted">+</button>
-            </div>
-          </div>
-          <div class="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
-            <div><div class="text-sm font-medium">Children</div><div class="text-xs text-muted-foreground">2–17 yrs</div></div>
-            <div class="flex items-center gap-2" data-counter>
-              <button type="button" data-decrement class="w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-muted">−</button>
-              <input type="number" value="0" min="0" max="10" class="w-8 text-center text-sm font-semibold border-none bg-transparent outline-none" id="childCount">
-              <button type="button" data-increment class="w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-muted">+</button>
-            </div>
-          </div>
-          <div class="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
-            <div><div class="text-sm font-medium">Seniors</div><div class="text-xs text-muted-foreground">65+</div></div>
-            <div class="flex items-center gap-2" data-counter>
-              <button type="button" data-decrement class="w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-muted">−</button>
-              <input type="number" value="0" min="0" max="10" class="w-8 text-center text-sm font-semibold border-none bg-transparent outline-none">
-              <button type="button" data-increment class="w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-muted">+</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="childAgesRow" class="mb-6" style="display:none;">
-          <div class="sec-label"><i data-lucide="baby" class="w-4 h-4 text-primary"></i> Children's Ages</div>
-          <div class="flex flex-wrap gap-2" data-multi="childAges">
-            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Infant (0–2)</button>
-            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Toddler (3–5)</button>
-            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Child (6–12)</button>
-            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Teen (13–17)</button>
-          </div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="accessibility" class="w-4 h-4 text-primary"></i> Accessibility & Special Needs</div>
-        <div class="sec-hint">Select any that apply — we'll ensure suitable options</div>
-        <div class="flex flex-wrap gap-2 mb-6" data-multi="specialNeeds">
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="accessibility" class="w-3.5 h-3.5"></i> Wheelchair</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="ear" class="w-3.5 h-3.5"></i> Hearing</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="eye" class="w-3.5 h-3.5"></i> Visual</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="apple" class="w-3.5 h-3.5"></i> Dietary</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="move" class="w-3.5 h-3.5"></i> Mobility</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="paw-print" class="w-3.5 h-3.5"></i> Travelling with Pets</button>
-        </div>
-
-        <div class="sec-label"><i data-lucide="languages" class="w-4 h-4 text-primary"></i> Languages Spoken</div>
-        <div class="tag-input-wrap mb-4" id="langTags">
-          <span class="tag-pill">Hindi <button onclick="this.parentElement.remove()">&times;</button></span>
-          <span class="tag-pill">English <button onclick="this.parentElement.remove()">&times;</button></span>
-          <input type="text" placeholder="Add a language..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('langTags',this.value);this.value='';}">
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 2 — TRAVEL VIBE
-           ================================================================ -->
-      <div class="wiz-panel" data-panel="2">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-purple-100 text-purple-600"><i data-lucide="sparkles"></i></div>
-          <h2 class="text-lg font-bold">Your Travel Vibe</h2>
-          <p class="text-sm text-muted-foreground">How do you like to experience the world?</p>
-        </div>
-
-        <div class="sec-label"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> My style is...</div>
+        <!-- Travel Style -->
+        <div class="sec-label"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> My travel style is...</div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="travelStyle">
-          <div class="ptile selected" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop" alt="Luxury">
-            <div class="ptile-overlay"><div class="ptile-name">Luxury</div><div class="ptile-sub">Five-star everything</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop" alt="Comfort">
-            <div class="ptile-overlay"><div class="ptile-name">Comfort</div><div class="ptile-sub">Quality & value</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=300&fit=crop" alt="Adventure">
-            <div class="ptile-overlay"><div class="ptile-name">Adventure</div><div class="ptile-sub">Off the beaten path</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=400&h=300&fit=crop" alt="Backpacker">
-            <div class="ptile-overlay"><div class="ptile-name">Backpacker</div><div class="ptile-sub">Hostels & freedom</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=400&h=300&fit=crop" alt="Boutique">
-            <div class="ptile-overlay"><div class="ptile-name">Boutique</div><div class="ptile-sub">Unique & curated</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop" alt="Eco">
-            <div class="ptile-overlay"><div class="ptile-name">Eco</div><div class="ptile-sub">Sustainable travel</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=400&h=300&fit=crop" alt="Experiential">
-            <div class="ptile-overlay"><div class="ptile-name">Experiential</div><div class="ptile-sub">Live like a local</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="singleSelect(this)">
-            <img src="https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=400&h=300&fit=crop" alt="Glamour">
-            <div class="ptile-overlay"><div class="ptile-name">Glamour</div><div class="ptile-sub">Red-carpet vibes</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
+          <div class="ptile selected" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop" alt="Luxury"><div class="ptile-overlay"><div class="ptile-name">Luxury</div><div class="ptile-sub">Five-star everything</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop" alt="Comfort"><div class="ptile-overlay"><div class="ptile-name">Comfort</div><div class="ptile-sub">Quality & value</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=300&fit=crop" alt="Adventure"><div class="ptile-overlay"><div class="ptile-name">Adventure</div><div class="ptile-sub">Off the beaten path</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=400&h=300&fit=crop" alt="Backpacker"><div class="ptile-overlay"><div class="ptile-name">Backpacker</div><div class="ptile-sub">Hostels & freedom</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=400&h=300&fit=crop" alt="Boutique"><div class="ptile-overlay"><div class="ptile-name">Boutique</div><div class="ptile-sub">Unique & curated</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop" alt="Eco"><div class="ptile-overlay"><div class="ptile-name">Eco</div><div class="ptile-sub">Sustainable travel</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=400&h=300&fit=crop" alt="Experiential"><div class="ptile-overlay"><div class="ptile-name">Experiential</div><div class="ptile-sub">Live like a local</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="singleSelect(this)"><img src="https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=400&h=300&fit=crop" alt="Glamour"><div class="ptile-overlay"><div class="ptile-name">Glamour</div><div class="ptile-sub">Red-carpet vibes</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
         </div>
 
-        <div class="sec-label"><i data-lucide="gauge" class="w-4 h-4 text-primary"></i> Travel Pace</div>
-        <div class="vscale mb-6" data-single="pace">
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-green-100 text-green-600"><i data-lucide="snail"></i></div><div class="vscale-label">Very Slow</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-teal-100 text-teal-600"><i data-lucide="footprints"></i></div><div class="vscale-label">Slow</div></div>
-          <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-blue-100 text-blue-600"><i data-lucide="scale"></i></div><div class="vscale-label">Balanced</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-orange-100 text-orange-600"><i data-lucide="rabbit"></i></div><div class="vscale-label">Fast</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-red-100 text-red-600"><i data-lucide="rocket"></i></div><div class="vscale-label">Very Fast</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="zap" class="w-4 h-4 text-primary"></i> Activity Level</div>
-        <div class="vscale mb-6" data-single="activityLevel">
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-gray-100 text-gray-500"><i data-lucide="sofa"></i></div><div class="vscale-label">Sedentary</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-green-100 text-green-600"><i data-lucide="flower-2"></i></div><div class="vscale-label">Light</div></div>
-          <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-blue-100 text-blue-600"><i data-lucide="bike"></i></div><div class="vscale-label">Moderate</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-orange-100 text-orange-600"><i data-lucide="dumbbell"></i></div><div class="vscale-label">Active</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-red-100 text-red-600"><i data-lucide="mountain-snow"></i></div><div class="vscale-label">Extreme</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="calendar" class="w-4 h-4 text-primary"></i> Planning Style</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="planningStyle">
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="clipboard-list"></i></div>
-            <div class="icard-label">Fully Planned</div>
-            <div class="icard-sub">Every hour mapped</div>
-          </div>
-          <div class="icard selected" onclick="singleSelect(this)">
-            <div class="icard-icon bg-green-100 text-green-600"><i data-lucide="notebook-pen"></i></div>
-            <div class="icard-label">Semi-Planned</div>
-            <div class="icard-sub">Key things booked</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="compass"></i></div>
-            <div class="icard-label">Flexible</div>
-            <div class="icard-sub">Go with the flow</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-pink-100 text-pink-600"><i data-lucide="dice-5"></i></div>
-            <div class="icard-label">Spontaneous</div>
-            <div class="icard-sub">Zero plans, pure magic</div>
-          </div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="users" class="w-4 h-4 text-primary"></i> Social Preference</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="socialPref">
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-gray-100 text-gray-600"><i data-lucide="eye-off"></i></div>
-            <div class="icard-label">Private</div>
-            <div class="icard-sub">Just my group</div>
-          </div>
-          <div class="icard selected" onclick="singleSelect(this)">
-            <div class="icard-icon bg-green-100 text-green-600"><i data-lucide="users"></i></div>
-            <div class="icard-label">Small Group</div>
-            <div class="icard-sub">Intimate circles</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="handshake"></i></div>
-            <div class="icard-label">Meet People</div>
-            <div class="icard-sub">Love new friends</div>
-          </div>
-          <div class="icard" onclick="singleSelect(this)">
-            <div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="party-popper"></i></div>
-            <div class="icard-label">Party</div>
-            <div class="icard-sub">The more the merrier</div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
-          <div>
-            <div class="sec-label"><i data-lucide="sunrise" class="w-4 h-4 text-primary"></i> Morning Type</div>
-            <div class="vscale" data-single="wakeUp">
-              <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-amber-100 text-amber-600"><i data-lucide="sunrise"></i></div><div class="vscale-label">Early Bird</div></div>
-              <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-yellow-100 text-yellow-600"><i data-lucide="sun"></i></div><div class="vscale-label">Moderate</div></div>
-              <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-indigo-100 text-indigo-600"><i data-lucide="moon"></i></div><div class="vscale-label">Late Riser</div></div>
-            </div>
-          </div>
-          <div>
-            <div class="sec-label"><i data-lucide="moon" class="w-4 h-4 text-primary"></i> Nightlife Interest</div>
-            <div class="vscale" data-single="nightlife">
-              <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-gray-100 text-gray-500"><i data-lucide="house"></i></div><div class="vscale-label">None</div></div>
-              <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-purple-100 text-purple-600"><i data-lucide="wine"></i></div><div class="vscale-label">Occasional</div></div>
-              <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-pink-100 text-pink-600"><i data-lucide="music"></i></div><div class="vscale-label">Moderate</div></div>
-              <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-fuchsia-100 text-fuchsia-600"><i data-lucide="disc-3"></i></div><div class="vscale-label">Party</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 3 — DREAM DESTINATIONS
-           ================================================================ -->
-      <div class="wiz-panel" data-panel="3">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-emerald-100 text-emerald-600"><i data-lucide="globe-2"></i></div>
-          <h2 class="text-lg font-bold">Dream Destinations</h2>
-          <p class="text-sm text-muted-foreground">Where does your heart want to go?</p>
-        </div>
-
+        <!-- Destination Types -->
         <div class="sec-label"><i data-lucide="map-pin" class="w-4 h-4 text-primary"></i> I love these places</div>
         <div class="sec-hint">Pick as many as you like</div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-multi="destTypes">
-          <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop" alt="Beach">
-            <div class="ptile-overlay"><div class="ptile-name">Beach</div><div class="ptile-sub">Sun, sand & waves</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop" alt="Mountains">
-            <div class="ptile-overlay"><div class="ptile-name">Mountains</div><div class="ptile-sub">Peaks & valleys</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&h=300&fit=crop" alt="City">
-            <div class="ptile-overlay"><div class="ptile-name">City</div><div class="ptile-sub">Urban adventures</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=300&fit=crop" alt="Countryside">
-            <div class="ptile-overlay"><div class="ptile-name">Countryside</div><div class="ptile-sub">Rolling green hills</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&h=300&fit=crop" alt="Desert">
-            <div class="ptile-overlay"><div class="ptile-name">Desert</div><div class="ptile-sub">Golden dunes</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=400&h=300&fit=crop" alt="Island">
-            <div class="ptile-overlay"><div class="ptile-name">Island</div><div class="ptile-sub">Tropical paradise</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&h=300&fit=crop" alt="Historical">
-            <div class="ptile-overlay"><div class="ptile-name">Historical</div><div class="ptile-sub">Ancient wonders</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()">
-            <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=300&fit=crop" alt="Lake">
-            <div class="ptile-overlay"><div class="ptile-name">Lakeside</div><div class="ptile-sub">Serene waters</div></div>
-            <div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
-          </div>
+          <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop" alt="Beach"><div class="ptile-overlay"><div class="ptile-name">Beach</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop" alt="Mountains"><div class="ptile-overlay"><div class="ptile-name">Mountains</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&h=300&fit=crop" alt="City"><div class="ptile-overlay"><div class="ptile-name">City</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=300&fit=crop" alt="Countryside"><div class="ptile-overlay"><div class="ptile-name">Countryside</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&h=300&fit=crop" alt="Desert"><div class="ptile-overlay"><div class="ptile-name">Desert</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=400&h=300&fit=crop" alt="Island"><div class="ptile-overlay"><div class="ptile-name">Island</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&h=300&fit=crop" alt="Historical"><div class="ptile-overlay"><div class="ptile-name">Historical</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
+          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()"><img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=300&fit=crop" alt="Lakeside"><div class="ptile-overlay"><div class="ptile-name">Lakeside</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
         </div>
 
-        <div class="sec-label"><i data-lucide="cloud-sun" class="w-4 h-4 text-primary"></i> Climate Preference</div>
-        <div class="flex flex-wrap gap-2 mb-6" data-multi="climate">
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="palm-tree" class="w-3.5 h-3.5"></i> Tropical</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="cloud-sun" class="w-3.5 h-3.5"></i> Temperate</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="snowflake" class="w-3.5 h-3.5"></i> Cold</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="sun" class="w-3.5 h-3.5"></i> Dry & Arid</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="globe" class="w-3.5 h-3.5"></i> Any</button>
-        </div>
-
-        <div class="sec-label"><i data-lucide="calendar-days" class="w-4 h-4 text-primary"></i> Favourite Seasons</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-multi="seasons">
-          <div class="icard selected" onclick="this.classList.toggle('selected')">
-            <div class="icard-icon bg-pink-100 text-pink-600"><i data-lucide="flower-2"></i></div>
-            <div class="icard-label">Spring</div>
-            <div class="icard-sub">Mar–May</div>
-          </div>
-          <div class="icard" onclick="this.classList.toggle('selected')">
-            <div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="sun"></i></div>
-            <div class="icard-label">Summer</div>
-            <div class="icard-sub">Jun–Aug</div>
-          </div>
-          <div class="icard selected" onclick="this.classList.toggle('selected')">
-            <div class="icard-icon bg-orange-100 text-orange-600"><i data-lucide="leaf"></i></div>
-            <div class="icard-label">Autumn</div>
-            <div class="icard-sub">Sep–Nov</div>
-          </div>
-          <div class="icard" onclick="this.classList.toggle('selected')">
-            <div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="snowflake"></i></div>
-            <div class="icard-label">Winter</div>
-            <div class="icard-sub">Dec–Feb</div>
-          </div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="globe-2" class="w-4 h-4 text-primary"></i> Continent Interest</div>
-        <div class="sec-hint">Pick regions that excite you</div>
-        <div class="flex flex-wrap gap-2 mb-6" data-multi="continents">
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Asia</button>
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Europe</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Americas</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Africa</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Oceania</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Antarctica</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Middle East</button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div>
-            <div class="sec-label"><i data-lucide="heart" class="w-4 h-4 text-primary"></i> Bucket List</div>
-            <div class="tag-input-wrap" id="bucketTags">
-              <span class="tag-pill">Japan <button onclick="this.parentElement.remove()">&times;</button></span>
-              <span class="tag-pill">Iceland <button onclick="this.parentElement.remove()">&times;</button></span>
-              <input type="text" placeholder="Add a dream destination..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('bucketTags',this.value);this.value='';}">
-            </div>
-          </div>
-          <div>
-            <div class="sec-label"><i data-lucide="x-circle" class="w-4 h-4 text-destructive"></i> Rather Avoid</div>
-            <div class="tag-input-wrap" id="avoidTags">
-              <input type="text" placeholder="Any places to skip..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('avoidTags',this.value);this.value='';}">
-            </div>
-          </div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="clock" class="w-4 h-4 text-primary"></i> Ideal Trip Duration</div>
-        <div class="range-wrap mb-2">
-          <input type="range" min="2" max="30" value="7" id="durSlider" oninput="document.getElementById('durVal').textContent=this.value+' days'">
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-xs text-muted-foreground">2 days</span>
-          <span class="text-sm font-semibold text-primary" id="durVal">7 days</span>
-          <span class="text-xs text-muted-foreground">30 days</span>
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 4 — BUDGET
-           ================================================================ -->
-      <div class="wiz-panel" data-panel="4">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-amber-100 text-amber-600"><i data-lucide="wallet"></i></div>
-          <h2 class="text-lg font-bold">Budget & Spending</h2>
-          <p class="text-sm text-muted-foreground">Help us match the right price range for you</p>
-        </div>
-
+        <!-- Budget Tier -->
         <div class="sec-label"><i data-lucide="wallet" class="w-4 h-4 text-primary"></i> Budget Tier</div>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6" data-single="budgetCat">
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="backpack"></i></div><div class="icard-label">Budget</div><div class="icard-sub">&lt; ₹15K</div></div>
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="briefcase"></i></div><div class="icard-label">Economy</div><div class="icard-sub">₹15K–30K</div></div>
           <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="star"></i></div><div class="icard-label">Mid-Range</div><div class="icard-sub">₹30K–60K</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="gem"></i></div><div class="icard-label">Premium</div><div class="icard-sub">₹60K–1L</div></div>
+          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-brand-light text-brand"><i data-lucide="gem"></i></div><div class="icard-label">Premium</div><div class="icard-sub">₹60K–1L</div></div>
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-rose-100 text-rose-600"><i data-lucide="crown"></i></div><div class="icard-label">Luxury</div><div class="icard-sub">₹1L–3L</div></div>
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="castle"></i></div><div class="icard-label">Ultra Luxury</div><div class="icard-sub">₹3L+</div></div>
         </div>
 
-        <div class="sec-label"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-primary"></i> Per-Person Budget Range</div>
-        <div class="flex items-center gap-4 mb-1">
-          <span class="text-sm font-semibold text-green-600" id="budgetMinLabel">₹20,000</span>
-          <div class="range-wrap flex-1">
-            <input type="range" min="5000" max="500000" step="5000" value="60000" id="budgetSlider" oninput="document.getElementById('budgetMaxLabel').textContent='₹'+Number(this.value).toLocaleString('en-IN')">
-          </div>
-          <span class="text-sm font-semibold text-primary" id="budgetMaxLabel">₹60,000</span>
-        </div>
-        <div class="range-labels mb-6"><span>₹5K</span><span>₹5L</span></div>
-
-        <div class="sec-label"><i data-lucide="move-horizontal" class="w-4 h-4 text-primary"></i> Budget Flexibility</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="budgetFlex">
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-red-100 text-red-600"><i data-lucide="lock"></i></div><div class="icard-label">Strict</div><div class="icard-sub">Cannot exceed</div></div>
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="unlock"></i></div><div class="icard-label">Somewhat</div><div class="icard-sub">A little flexible</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="waves"></i></div><div class="icard-label">Flexible</div><div class="icard-sub">For the right trip</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="rainbow"></i></div><div class="icard-label">Very Flexible</div><div class="icard-sub">Experience first</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="target" class="w-4 h-4 text-primary"></i> What Matters Most?</div>
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4" data-single="budgetPriority">
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="piggy-bank"></i></div><div class="icard-label">Save Money</div></div>
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="scale"></i></div><div class="icard-label">Value for Money</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="circle-dot"></i></div><div class="icard-label">Balanced</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-pink-100 text-pink-600"><i data-lucide="heart"></i></div><div class="icard-label">Experience First</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="crown"></i></div><div class="icard-label">Spare No Expense</div></div>
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 5 — FOOD & DINING
-           ================================================================ -->
-      <div class="wiz-panel" data-panel="5">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-orange-100 text-orange-600"><i data-lucide="utensils"></i></div>
-          <h2 class="text-lg font-bold">Food & Dining</h2>
-          <p class="text-sm text-muted-foreground">Good food makes every trip memorable</p>
-        </div>
-
+        <!-- Diet Type -->
         <div class="sec-label"><i data-lucide="leaf" class="w-4 h-4 text-primary"></i> Diet Type</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 mb-3" data-single="dietType">
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 mb-6" data-single="dietType">
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="leaf"></i></div><div class="icard-label">Vegetarian</div></div>
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-emerald-100 text-emerald-600"><i data-lucide="vegan"></i></div><div class="icard-label">Vegan</div></div>
           <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-red-100 text-red-600"><i data-lucide="beef"></i></div><div class="icard-label">Non-Veg</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="fish"></i></div><div class="icard-label">Pescatarian</div></div>
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="hand-heart"></i></div><div class="icard-label">Jain</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-emerald-100 text-emerald-600"><i data-lucide="moon-star"></i></div><div class="icard-label">Halal</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="star"></i></div><div class="icard-label">Kosher</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-orange-100 text-orange-600"><i data-lucide="sprout"></i></div><div class="icard-label">Sattvic</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="repeat"></i></div><div class="icard-label">Flexitarian</div></div>
           <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-gray-100 text-gray-500"><i data-lucide="utensils-crossed"></i></div><div class="icard-label">No Preference</div></div>
         </div>
 
-        <label class="tcard mb-6 cursor-pointer" id="dietStrict">
-          <input type="checkbox" class="accent-primary w-4 h-4" onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-          <div class="flex-1">
-            <div class="text-sm font-medium">This is a strict requirement</div>
-            <div class="text-xs text-muted-foreground">Only show options that meet this diet — no exceptions</div>
-          </div>
-          <i data-lucide="shield-check" class="w-5 h-5 text-muted-foreground"></i>
-        </label>
-
-        <div class="sec-label"><i data-lucide="chef-hat" class="w-4 h-4 text-primary"></i> Favourite Cuisines</div>
-        <div class="sec-hint">Pick cuisines you'd love to explore</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6" data-multi="cuisines">
-          <div class="cuisine-tile selected" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇮🇳</span> Indian</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇮🇹</span> Italian</div>
-          <div class="cuisine-tile selected" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇯🇵</span> Japanese</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇹🇭</span> Thai</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇲🇽</span> Mexican</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇨🇳</span> Chinese</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇫🇷</span> French</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇬🇷</span> Greek</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇰🇷</span> Korean</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇱🇧</span> Lebanese</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇹🇷</span> Turkish</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇪🇸</span> Spanish</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇻🇳</span> Vietnamese</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇧🇷</span> Brazilian</div>
-          <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇪🇹</span> Ethiopian</div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="compass" class="w-4 h-4 text-primary"></i> Food Exploration Level</div>
-        <div class="vscale mb-6" data-single="foodExplore">
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-gray-100 text-gray-500"><i data-lucide="minus"></i></div><div class="vscale-label">Not Interested</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-yellow-100 text-yellow-600"><i data-lucide="help-circle"></i></div><div class="vscale-label">Cautious</div></div>
-          <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-green-100 text-green-600"><i data-lucide="smile"></i></div><div class="vscale-label">Moderate</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-orange-100 text-orange-600"><i data-lucide="flame"></i></div><div class="vscale-label">Adventurous</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-red-100 text-red-600"><i data-lucide="flame-kindling"></i></div><div class="vscale-label">Extreme</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i> Allergies</div>
-        <div class="flex flex-wrap gap-2 mb-2" data-multi="allergies">
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="nut" class="w-3.5 h-3.5"></i> Nuts</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="milk" class="w-3.5 h-3.5"></i> Dairy</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="wheat" class="w-3.5 h-3.5"></i> Gluten</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="fish" class="w-3.5 h-3.5"></i> Shellfish</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="bean" class="w-3.5 h-3.5"></i> Soy</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="egg" class="w-3.5 h-3.5"></i> Eggs</button>
-        </div>
-        <div class="tag-input-wrap mb-6" id="allergyTags">
-          <input type="text" placeholder="Add other allergies..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('allergyTags',this.value);this.value='';}">
-        </div>
-
-        <div class="sec-label"><i data-lucide="wine" class="w-4 h-4 text-primary"></i> Alcohol Preference</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4" data-single="alcohol">
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-gray-100 text-gray-500"><i data-lucide="circle-off"></i></div><div class="icard-label">No Alcohol</div></div>
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="wine"></i></div><div class="icard-label">Occasional</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="beer"></i></div><div class="icard-label">Moderate</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="martini"></i></div><div class="icard-label">Enthusiast</div></div>
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 6 — STAY & TRANSPORT
-           ================================================================ -->
-      <div class="wiz-panel" data-panel="6">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-cyan-100 text-cyan-600"><i data-lucide="bed"></i></div>
-          <h2 class="text-lg font-bold">Stay & Getting There</h2>
-          <p class="text-sm text-muted-foreground">Where you sleep and how you move</p>
-        </div>
-
+        <!-- Accommodation -->
         <div class="sec-label"><i data-lucide="bed" class="w-4 h-4 text-primary"></i> Where I Like to Stay</div>
         <div class="sec-hint">Pick all that interest you</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 mb-6" data-multi="accomType">
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 mb-8" data-multi="accomType">
           <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300&h=300&fit=crop" alt="Hotel"><div class="ptile-overlay"><div class="ptile-name">Hotel</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
           <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=300&fit=crop" alt="Resort"><div class="ptile-overlay"><div class="ptile-name">Resort</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
           <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=300&fit=crop" alt="Villa"><div class="ptile-overlay"><div class="ptile-name">Villa</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
           <div class="ptile selected" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=300&h=300&fit=crop" alt="Homestay"><div class="ptile-overlay"><div class="ptile-name">Homestay</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
           <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=300&h=300&fit=crop" alt="Boutique"><div class="ptile-overlay"><div class="ptile-name">Boutique</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=300&h=300&fit=crop" alt="Camping"><div class="ptile-overlay"><div class="ptile-name">Camping</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=300&h=300&fit=crop" alt="Glamping"><div class="ptile-overlay"><div class="ptile-name">Glamping</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1488462237308-ecaa28b729d7?w=300&h=300&fit=crop" alt="Treehouse"><div class="ptile-overlay"><div class="ptile-name">Treehouse</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=300&fit=crop" alt="Houseboat"><div class="ptile-overlay"><div class="ptile-name">Houseboat</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
-          <div class="ptile" onclick="this.classList.toggle('selected');reIcon()" style="aspect-ratio:1/1;"><img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=300&h=300&fit=crop" alt="Hostel"><div class="ptile-overlay"><div class="ptile-name">Hostel</div></div><div class="ptile-check"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></div>
         </div>
 
-        <div class="sec-label"><i data-lucide="star" class="w-4 h-4 text-amber-500"></i> Minimum Hotel Class</div>
-        <div class="star-sel mb-6" id="starSel">
-          <div class="star-sel-star" onclick="selectStars(1)"><i data-lucide="star" class="w-4 h-4"></i></div>
-          <div class="star-sel-star" onclick="selectStars(2)"><i data-lucide="star" class="w-4 h-4"></i></div>
-          <div class="star-sel-star active" onclick="selectStars(3)"><i data-lucide="star" class="w-4 h-4"></i></div>
-          <div class="star-sel-star" onclick="selectStars(4)"><i data-lucide="star" class="w-4 h-4"></i></div>
-          <div class="star-sel-star" onclick="selectStars(5)"><i data-lucide="star" class="w-4 h-4"></i></div>
-          <div class="star-sel-star" onclick="selectStars(6)"><i data-lucide="star" class="w-4 h-4"></i></div>
-          <div class="star-sel-star" onclick="selectStars(7)"><i data-lucide="star" class="w-4 h-4"></i></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> Must-Have Amenities</div>
-        <div class="flex flex-wrap gap-2 mb-6" data-multi="amenities">
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="wifi" class="w-3.5 h-3.5"></i> Wi-Fi</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="waves" class="w-3.5 h-3.5"></i> Pool</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="dumbbell" class="w-3.5 h-3.5"></i> Gym</button>
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="coffee" class="w-3.5 h-3.5"></i> Breakfast</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i> Spa</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="car" class="w-3.5 h-3.5"></i> Parking</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="cooking-pot" class="w-3.5 h-3.5"></i> Kitchen</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="wind" class="w-3.5 h-3.5"></i> AC</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="mountain-snow" class="w-3.5 h-3.5"></i> Balcony / View</button>
-        </div>
-
-        <div class="sec-label"><i data-lucide="map-pin" class="w-4 h-4 text-primary"></i> Stay Location</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="stayLocation">
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="building"></i></div><div class="icard-label">City Centre</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-cyan-100 text-cyan-600"><i data-lucide="umbrella"></i></div><div class="icard-label">Beachfront</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="mountain"></i></div><div class="icard-label">Mountain View</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="wheat"></i></div><div class="icard-label">Countryside</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="plane" class="w-4 h-4 text-primary"></i> Preferred Transport</div>
-        <div class="sec-hint">Select all you're comfortable with</div>
-        <div class="flex flex-wrap gap-2 mb-6" data-multi="transport">
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="plane" class="w-3.5 h-3.5"></i> Flight</button>
-          <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="train-front" class="w-3.5 h-3.5"></i> Train</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="bus" class="w-3.5 h-3.5"></i> Bus</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="car" class="w-3.5 h-3.5"></i> Car</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="ship" class="w-3.5 h-3.5"></i> Boat / Ferry</button>
-          <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="bike" class="w-3.5 h-3.5"></i> Bicycle</button>
-        </div>
-
-        <div class="sec-label"><i data-lucide="armchair" class="w-4 h-4 text-primary"></i> Preferred Flight Class</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="flightClass">
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-gray-100 text-gray-600"><i data-lucide="armchair"></i></div><div class="icard-label">Economy</div><div class="icard-sub">Standard seat</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="armchair"></i></div><div class="icard-label">Premium Economy</div><div class="icard-sub">Extra legroom</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="sofa"></i></div><div class="icard-label">Business</div><div class="icard-sub">Lie-flat seats</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="crown"></i></div><div class="icard-label">First Class</div><div class="icard-sub">Private suite</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="clock" class="w-4 h-4 text-primary"></i> Max Flight Duration</div>
-        <div class="range-wrap mb-1">
-          <input type="range" min="1" max="24" value="8" id="flightDurSlider" oninput="document.getElementById('flightDurVal').textContent=this.value+'h'">
-        </div>
-        <div class="flex items-center justify-between mb-6">
-          <span class="text-xs text-muted-foreground">1 hour</span>
-          <span class="text-sm font-semibold text-primary" id="flightDurVal">8h</span>
-          <span class="text-xs text-muted-foreground">24 hours</span>
-        </div>
-
-        <div class="sec-label"><i data-lucide="timer" class="w-4 h-4 text-primary"></i> Layover Tolerance</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4" data-single="layover">
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-red-100 text-red-600"><i data-lucide="circle-off"></i></div><div class="icard-label">Non-Stop Only</div></div>
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="timer"></i></div><div class="icard-label">Short</div><div class="icard-sub">&lt; 3 hours</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="coffee"></i></div><div class="icard-label">Moderate</div><div class="icard-sub">3–6 hours</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="shopping-bag"></i></div><div class="icard-label">Flexible</div><div class="icard-sub">I'll explore the airport</div></div>
+        <div class="flex items-center justify-between pb-6">
+          <button class="btn-outline" onclick="goPhase('welcome')"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+          <button class="btn-primary" onclick="goPhase('chooser')">Continue to Detailed <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
         </div>
       </div>
 
 
       <!-- ================================================================
-           STEP 7 — PRACTICAL & HEALTH
+           PHASE 2 CHOOSER: Manual Steps or AI Voice
            ================================================================ -->
-      <div class="wiz-panel" data-panel="7">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-indigo-100 text-indigo-600"><i data-lucide="shield-check"></i></div>
-          <h2 class="text-lg font-bold">Practical & Health</h2>
-          <p class="text-sm text-muted-foreground">A few last things to keep you safe and sorted</p>
+      <div id="phaseChooser" style="display:none;">
+        <div class="text-center mb-8 pt-4">
+          <div class="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-3">
+            <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+          </div>
+          <h2 class="text-xl font-bold mb-1">Basic Preferences Saved!</h2>
+          <p class="text-sm text-muted-foreground max-w-md mx-auto">Now let's go deeper. Choose how you'd like to complete the detailed preferences — they help the AI fine-tune your matches.</p>
         </div>
 
-        <div class="sec-label"><i data-lucide="stamp" class="w-4 h-4 text-primary"></i> Visa Preference</div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6" data-single="visaPref">
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="book-open-check"></i></div><div class="icard-label">Visa-Free Only</div><div class="icard-sub">No hassle destinations</div></div>
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="stamp"></i></div><div class="icard-label">Visa on Arrival OK</div><div class="icard-sub">Easy entry is fine</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="globe"></i></div><div class="icard-label">Any Destination</div><div class="icard-sub">I'll get any visa needed</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="shield" class="w-4 h-4 text-primary"></i> Safety Priority</div>
-        <div class="vscale mb-6" data-single="safety">
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-green-100 text-green-600"><i data-lucide="shield"></i></div><div class="vscale-label">Low</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-yellow-100 text-yellow-600"><i data-lucide="shield"></i></div><div class="vscale-label">Medium</div></div>
-          <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-orange-100 text-orange-600"><i data-lucide="shield-alert"></i></div><div class="vscale-label">High</div></div>
-          <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-red-100 text-red-600"><i data-lucide="shield-check"></i></div><div class="vscale-label">Very High</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="wifi" class="w-4 h-4 text-primary"></i> Connectivity Needs</div>
-        <div class="space-y-2 mb-6">
-          <label class="tcard cursor-pointer on">
-            <input type="checkbox" class="accent-primary w-4 h-4" checked onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-            <div class="flex-1"><div class="text-sm font-medium">Wi-Fi is essential</div><div class="text-xs text-muted-foreground">Need internet access everywhere</div></div>
-            <i data-lucide="wifi" class="w-5 h-5 text-muted-foreground"></i>
-          </label>
-          <label class="tcard cursor-pointer">
-            <input type="checkbox" class="accent-primary w-4 h-4" onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-            <div class="flex-1"><div class="text-sm font-medium">Need to work remotely</div><div class="text-xs text-muted-foreground">Co-working spaces or fast internet required</div></div>
-            <i data-lucide="laptop" class="w-5 h-5 text-muted-foreground"></i>
-          </label>
-          <label class="tcard cursor-pointer">
-            <input type="checkbox" class="accent-primary w-4 h-4" onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-            <div class="flex-1"><div class="text-sm font-medium">Digital detox mode</div><div class="text-xs text-muted-foreground">I want to unplug completely</div></div>
-            <i data-lucide="smartphone-off" class="w-5 h-5 text-muted-foreground"></i>
-          </label>
-        </div>
-
-        <div class="sec-label"><i data-lucide="heart-pulse" class="w-4 h-4 text-primary"></i> Health Considerations</div>
-        <div class="space-y-2 mb-6">
-          <label class="tcard cursor-pointer on">
-            <input type="checkbox" class="accent-primary w-4 h-4" checked onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-            <div class="flex-1"><div class="text-sm font-medium">Vaccinations up to date</div><div class="text-xs text-muted-foreground">Standard travel vaccinations completed</div></div>
-            <i data-lucide="syringe" class="w-5 h-5 text-muted-foreground"></i>
-          </label>
-          <label class="tcard cursor-pointer">
-            <input type="checkbox" class="accent-primary w-4 h-4" onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-            <div class="flex-1"><div class="text-sm font-medium">Altitude sensitive</div><div class="text-xs text-muted-foreground">Issues above 2,500m elevation</div></div>
-            <i data-lucide="mountain" class="w-5 h-5 text-muted-foreground"></i>
-          </label>
-          <label class="tcard cursor-pointer">
-            <input type="checkbox" class="accent-primary w-4 h-4" onchange="this.closest('.tcard').classList.toggle('on',this.checked)">
-            <div class="flex-1"><div class="text-sm font-medium">Motion sickness</div><div class="text-xs text-muted-foreground">Prone to car/boat/air sickness</div></div>
-            <i data-lucide="ship" class="w-5 h-5 text-muted-foreground"></i>
-          </label>
-        </div>
-
-        <div class="sec-label"><i data-lucide="shield-check" class="w-4 h-4 text-primary"></i> Travel Insurance</div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="insurance">
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-gray-100 text-gray-500"><i data-lucide="x"></i></div><div class="icard-label">None</div><div class="icard-sub">I'll skip it</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="shield"></i></div><div class="icard-label">Basic</div><div class="icard-sub">Medical only</div></div>
-          <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="shield-check"></i></div><div class="icard-label">Comprehensive</div><div class="icard-sub">Full coverage</div></div>
-          <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-purple-100 text-purple-600"><i data-lucide="gem"></i></div><div class="icard-label">Premium</div><div class="icard-sub">Everything + luxury</div></div>
-        </div>
-
-        <div class="sec-label"><i data-lucide="book-open" class="w-4 h-4 text-primary"></i> Passport Expiry</div>
-        <div class="flex items-center gap-3 mb-4">
-          <input type="month" class="input text-sm h-9" style="max-width:200px" id="passportExpiry" value="2029-06">
-          <span class="text-xs text-green-600 font-medium flex items-center gap-1" id="passportStatus"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Valid for 3+ years</span>
-        </div>
-      </div>
-
-
-      <!-- ================================================================
-           STEP 8 — SUMMARY / PERSONA
-           ================================================================ -->
-      <div class="wiz-panel" data-panel="8">
-        <div class="text-center mb-6">
-          <div class="step-hero-icon bg-green-100 text-green-600"><i data-lucide="party-popper"></i></div>
-          <h2 class="text-lg font-bold">Your Travel Persona</h2>
-          <p class="text-sm text-muted-foreground">Here's what we know about your perfect trip</p>
-        </div>
-
-        <div class="persona-card" id="personaSummary">
-          <div class="flex items-center gap-4 mb-6 pb-4 border-b border-border">
-            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center"><i data-lucide="luggage" class="w-7 h-7 text-primary"></i></div>
-            <div>
-              <div class="text-lg font-bold">Rahul Sharma</div>
-              <div class="text-sm text-muted-foreground">Acme Corp</div>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700" id="completionBadge">100% Complete</span>
-              </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto mb-6">
+          <div class="chooser-card" onclick="goPhase('manual')">
+            <div class="chooser-icon bg-blue-100 text-blue-600"><i data-lucide="list-checks"></i></div>
+            <div class="text-base font-bold mb-1">Step-by-Step</div>
+            <div class="text-sm text-muted-foreground mb-3">Visual cards, sliders, and interactive tiles</div>
+            <div class="flex items-center justify-center gap-3 text-xs text-muted-foreground">
+              <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 2–3 min</span>
+              <span class="flex items-center gap-1"><i data-lucide="mouse-pointer-click" class="w-3 h-3"></i> Visual picks</span>
             </div>
           </div>
-          <div id="summaryContent"></div>
+          <div class="chooser-card" onclick="openAiVoice()">
+            <div class="absolute top-3 right-3 text-[0.6rem] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-brand-light text-brand">AI-Powered</div>
+            <div class="chooser-icon bg-brand-light text-brand"><i data-lucide="mic"></i></div>
+            <div class="text-base font-bold mb-1">Talk to AI</div>
+            <div class="text-sm text-muted-foreground mb-3">Voice conversation — just speak naturally</div>
+            <div class="flex items-center justify-center gap-3 text-xs text-muted-foreground">
+              <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 1–2 min</span>
+              <span class="flex items-center gap-1"><i data-lucide="audio-waveform" class="w-3 h-3"></i> Full-page mic</span>
+            </div>
+          </div>
         </div>
 
-        <div class="flex items-center justify-center gap-3 mt-8">
-          <button class="btn-outline" onclick="goStep(1)"><i data-lucide="pencil" class="w-4 h-4"></i> Edit Preferences</button>
-          <a href="destinations.html" class="btn-primary"><i data-lucide="compass" class="w-4 h-4"></i> Explore Destinations</a>
+        <div class="text-center">
+          <button class="btn-ghost text-sm text-muted-foreground" onclick="goPhase('basic')"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to Basic</button>
+          <span class="mx-3 text-muted-foreground">|</span>
+          <a href="dashboard.html" class="btn-ghost text-sm text-muted-foreground">Skip for now, go to Dashboard</a>
         </div>
       </div>
 
 
-      <!-- Navigation Buttons -->
-      <div class="flex items-center justify-between mt-8 pb-8" id="wizNav">
-        <button class="btn-outline" id="btnPrev" onclick="prevStep()"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
-        <div class="flex items-center gap-2">
-          <button class="btn-ghost text-sm text-muted-foreground" id="btnSkip" onclick="nextStep()">Skip for now</button>
-          <button class="btn-primary" id="btnNext" onclick="nextStep()">Continue <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+      <!-- ================================================================
+           PHASE 2A: MANUAL DETAILED STEPS
+           ================================================================ -->
+      <div id="phaseManual" style="display:none;">
+
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-lg font-bold">Detailed Preferences</h2>
+            <p class="text-xs text-muted-foreground">Fine-tune for better AI accuracy</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-muted-foreground">
+            <span id="manualStepLabel">Step 1 of 5</span>
+            <span class="font-bold text-primary" id="manualPct">0%</span>
+          </div>
+        </div>
+        <div style="height:3px;background:hsl(var(--muted));border-radius:2px;overflow:hidden;margin-bottom:1.5rem;">
+          <div id="manualProgBar" style="height:100%;border-radius:2px;background:hsl(var(--primary));width:0%;transition:width 0.4s;"></div>
+        </div>
+
+        <!-- Manual Step 1: Travel Vibe Details -->
+        <div class="wiz-panel active" data-mpanel="1">
+          <div class="sec-label"><i data-lucide="gauge" class="w-4 h-4 text-primary"></i> Travel Pace</div>
+          <div class="vscale mb-6" data-single="pace">
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-green-100 text-green-600"><i data-lucide="snail"></i></div><div class="vscale-label">Very Slow</div></div>
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-teal-100 text-teal-600"><i data-lucide="footprints"></i></div><div class="vscale-label">Slow</div></div>
+            <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-blue-100 text-blue-600"><i data-lucide="scale"></i></div><div class="vscale-label">Balanced</div></div>
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-orange-100 text-orange-600"><i data-lucide="rabbit"></i></div><div class="vscale-label">Fast</div></div>
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-red-100 text-red-600"><i data-lucide="rocket"></i></div><div class="vscale-label">Very Fast</div></div>
+          </div>
+          <div class="sec-label"><i data-lucide="calendar" class="w-4 h-4 text-primary"></i> Planning Style</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" data-single="planningStyle">
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="clipboard-list"></i></div><div class="icard-label">Fully Planned</div></div>
+            <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="notebook-pen"></i></div><div class="icard-label">Semi-Planned</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="compass"></i></div><div class="icard-label">Flexible</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-pink-100 text-pink-600"><i data-lucide="dice-5"></i></div><div class="icard-label">Spontaneous</div></div>
+          </div>
+          <div class="sec-label"><i data-lucide="clock" class="w-4 h-4 text-primary"></i> Ideal Trip Duration</div>
+          <div class="range-wrap mb-1"><input type="range" min="2" max="30" value="7" id="durSlider" oninput="document.getElementById('durVal').textContent=this.value+' days'"></div>
+          <div class="flex items-center justify-between mb-4"><span class="text-xs text-muted-foreground">2 days</span><span class="text-sm font-semibold text-primary" id="durVal">7 days</span><span class="text-xs text-muted-foreground">30 days</span></div>
+        </div>
+
+        <!-- Manual Step 2: Destinations Deep -->
+        <div class="wiz-panel" data-mpanel="2">
+          <div class="sec-label"><i data-lucide="cloud-sun" class="w-4 h-4 text-primary"></i> Climate Preference</div>
+          <div class="flex flex-wrap gap-2 mb-6" data-multi="climate">
+            <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="palm-tree" class="w-3.5 h-3.5"></i> Tropical</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="cloud-sun" class="w-3.5 h-3.5"></i> Temperate</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="snowflake" class="w-3.5 h-3.5"></i> Cold</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="sun" class="w-3.5 h-3.5"></i> Dry & Arid</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="globe" class="w-3.5 h-3.5"></i> Any</button>
+          </div>
+          <div class="sec-label"><i data-lucide="globe-2" class="w-4 h-4 text-primary"></i> Continent Interest</div>
+          <div class="flex flex-wrap gap-2 mb-6" data-multi="continents">
+            <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">Asia</button>
+            <button type="button" class="chip selected" onclick="this.classList.toggle('selected')">Europe</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Americas</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Africa</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Oceania</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')">Middle East</button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><div class="sec-label"><i data-lucide="heart" class="w-4 h-4 text-primary"></i> Bucket List</div><div class="tag-input-wrap" id="bucketTags"><span class="tag-pill">Japan <button onclick="this.parentElement.remove()">&times;</button></span><span class="tag-pill">Iceland <button onclick="this.parentElement.remove()">&times;</button></span><input type="text" placeholder="Add a dream destination..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('bucketTags',this.value);this.value='';}"></div></div>
+            <div><div class="sec-label"><i data-lucide="x-circle" class="w-4 h-4 text-destructive"></i> Rather Avoid</div><div class="tag-input-wrap" id="avoidTags"><input type="text" placeholder="Any places to skip..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('avoidTags',this.value);this.value='';}"></div></div>
+          </div>
+        </div>
+
+        <!-- Manual Step 3: Food Deep -->
+        <div class="wiz-panel" data-mpanel="3">
+          <div class="sec-label"><i data-lucide="chef-hat" class="w-4 h-4 text-primary"></i> Favourite Cuisines</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6" data-multi="cuisines">
+            <div class="cuisine-tile selected" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇮🇳</span> Indian</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇮🇹</span> Italian</div>
+            <div class="cuisine-tile selected" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇯🇵</span> Japanese</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇹🇭</span> Thai</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇲🇽</span> Mexican</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇨🇳</span> Chinese</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇫🇷</span> French</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇰🇷</span> Korean</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇱🇧</span> Lebanese</div>
+            <div class="cuisine-tile" onclick="this.classList.toggle('selected')"><span class="cuisine-flag">🇹🇷</span> Turkish</div>
+          </div>
+          <div class="sec-label"><i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i> Allergies</div>
+          <div class="flex flex-wrap gap-2 mb-2" data-multi="allergies">
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="nut" class="w-3.5 h-3.5"></i> Nuts</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="milk" class="w-3.5 h-3.5"></i> Dairy</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="wheat" class="w-3.5 h-3.5"></i> Gluten</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="fish" class="w-3.5 h-3.5"></i> Shellfish</button>
+          </div>
+          <div class="tag-input-wrap mb-4" id="allergyTags"><input type="text" placeholder="Add other allergies..." onkeydown="if(event.key==='Enter'){event.preventDefault();addTag('allergyTags',this.value);this.value='';}"></div>
+        </div>
+
+        <!-- Manual Step 4: Stay & Transport Deep -->
+        <div class="wiz-panel" data-mpanel="4">
+          <div class="sec-label"><i data-lucide="star" class="w-4 h-4 text-amber-500"></i> Minimum Hotel Class</div>
+          <div class="star-sel mb-6" id="starSel">
+            <div class="star-sel-star" onclick="selectStars(1)"><i data-lucide="star" class="w-4 h-4"></i></div>
+            <div class="star-sel-star" onclick="selectStars(2)"><i data-lucide="star" class="w-4 h-4"></i></div>
+            <div class="star-sel-star active" onclick="selectStars(3)"><i data-lucide="star" class="w-4 h-4"></i></div>
+            <div class="star-sel-star" onclick="selectStars(4)"><i data-lucide="star" class="w-4 h-4"></i></div>
+            <div class="star-sel-star" onclick="selectStars(5)"><i data-lucide="star" class="w-4 h-4"></i></div>
+          </div>
+          <div class="sec-label"><i data-lucide="plane" class="w-4 h-4 text-primary"></i> Preferred Transport</div>
+          <div class="flex flex-wrap gap-2 mb-6" data-multi="transport">
+            <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="plane" class="w-3.5 h-3.5"></i> Flight</button>
+            <button type="button" class="chip selected" onclick="this.classList.toggle('selected')"><i data-lucide="train-front" class="w-3.5 h-3.5"></i> Train</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="bus" class="w-3.5 h-3.5"></i> Bus</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="car" class="w-3.5 h-3.5"></i> Car</button>
+            <button type="button" class="chip" onclick="this.classList.toggle('selected')"><i data-lucide="ship" class="w-3.5 h-3.5"></i> Boat / Ferry</button>
+          </div>
+          <div class="sec-label"><i data-lucide="armchair" class="w-4 h-4 text-primary"></i> Flight Class</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4" data-single="flightClass">
+            <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-gray-100 text-gray-600"><i data-lucide="armchair"></i></div><div class="icard-label">Economy</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="armchair"></i></div><div class="icard-label">Premium Eco</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-brand-light text-brand"><i data-lucide="sofa"></i></div><div class="icard-label">Business</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-amber-100 text-amber-600"><i data-lucide="crown"></i></div><div class="icard-label">First Class</div></div>
+          </div>
+        </div>
+
+        <!-- Manual Step 5: Practical -->
+        <div class="wiz-panel" data-mpanel="5">
+          <div class="sec-label"><i data-lucide="stamp" class="w-4 h-4 text-primary"></i> Visa Preference</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6" data-single="visaPref">
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="book-open-check"></i></div><div class="icard-label">Visa-Free Only</div></div>
+            <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="stamp"></i></div><div class="icard-label">Visa on Arrival OK</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-brand-light text-brand"><i data-lucide="globe"></i></div><div class="icard-label">Any Destination</div></div>
+          </div>
+          <div class="sec-label"><i data-lucide="shield" class="w-4 h-4 text-primary"></i> Safety Priority</div>
+          <div class="vscale mb-6" data-single="safety">
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-green-100 text-green-600"><i data-lucide="shield"></i></div><div class="vscale-label">Low</div></div>
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-yellow-100 text-yellow-600"><i data-lucide="shield"></i></div><div class="vscale-label">Medium</div></div>
+            <div class="vscale-opt selected" onclick="singleSelect(this)"><div class="vscale-icon bg-orange-100 text-orange-600"><i data-lucide="shield-alert"></i></div><div class="vscale-label">High</div></div>
+            <div class="vscale-opt" onclick="singleSelect(this)"><div class="vscale-icon bg-red-100 text-red-600"><i data-lucide="shield-check"></i></div><div class="vscale-label">Very High</div></div>
+          </div>
+          <div class="sec-label"><i data-lucide="shield-check" class="w-4 h-4 text-primary"></i> Travel Insurance</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4" data-single="insurance">
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-gray-100 text-gray-500"><i data-lucide="x"></i></div><div class="icard-label">None</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-green-100 text-green-600"><i data-lucide="shield"></i></div><div class="icard-label">Basic</div></div>
+            <div class="icard selected" onclick="singleSelect(this)"><div class="icard-icon bg-blue-100 text-blue-600"><i data-lucide="shield-check"></i></div><div class="icard-label">Comprehensive</div></div>
+            <div class="icard" onclick="singleSelect(this)"><div class="icard-icon bg-brand-light text-brand"><i data-lucide="gem"></i></div><div class="icard-label">Premium</div></div>
+          </div>
+        </div>
+
+        <!-- Manual Nav -->
+        <div class="flex items-center justify-between mt-6 pb-6" id="manualNav">
+          <button class="btn-outline" id="manualPrevBtn" onclick="manualPrev()"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+          <div class="flex items-center gap-2">
+            <button class="btn-ghost text-sm text-muted-foreground" onclick="manualNext()">Skip</button>
+            <button class="btn-primary" id="manualNextBtn" onclick="manualNext()">Continue <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+
+        <!-- Summary (shown after last manual step) -->
+        <div id="manualSummary" style="display:none;">
+          <div class="text-center mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-3"><i data-lucide="party-popper" class="w-7 h-7 text-green-600"></i></div>
+            <h2 class="text-xl font-bold">You're All Set!</h2>
+            <p class="text-sm text-muted-foreground">Your AI match accuracy is now at <strong class="text-primary">95%</strong></p>
+          </div>
+          <div class="persona-card mb-6" id="summaryContent"></div>
+          <div class="flex items-center justify-center gap-3 pb-6">
+            <a href="destinations.html" class="btn-primary"><i data-lucide="compass" class="w-4 h-4"></i> Explore Destinations</a>
+            <a href="dashboard.html" class="btn-outline">Go to Dashboard</a>
+          </div>
         </div>
       </div>
 
-      </div><!-- /wizardWrap -->
+    </div><!-- /pref-modal-body -->
+  </div><!-- /pref-modal -->
 
-    </main>
+
+  <!-- ================================================================
+       FULL-PAGE AI VOICE EXPERIENCE
+       ================================================================ -->
+  <div class="ai-voice-page" id="aiVoicePage">
+    <div class="ai-voice-header">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white"><i data-lucide="bot" class="w-4 h-4"></i></div>
+        <div>
+          <div class="text-sm font-bold">Trvello AI</div>
+          <div class="text-[0.6rem] text-green-600 font-medium flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span> Listening</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn-ghost btn-sm text-xs" onclick="switchToManualFromVoice()"><i data-lucide="list-checks" class="w-3.5 h-3.5"></i> Switch to Steps</button>
+        <button class="btn-ghost btn-icon" onclick="closeAiVoice()"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+
+    <div class="ai-voice-center">
+      <div class="ai-field-label" id="aiFieldLabel">Getting started</div>
+      <div class="ai-question" id="aiQuestion">Hi Rahul! Tap the mic and tell me about your travel preferences. I'll ask you a few questions.</div>
+      <div class="ai-transcript" id="aiTranscript">&nbsp;</div>
+
+      <div class="ai-wave-bars" id="aiWaveBars">
+        <div class="ai-wave-bar"></div><div class="ai-wave-bar"></div><div class="ai-wave-bar"></div>
+        <div class="ai-wave-bar"></div><div class="ai-wave-bar"></div><div class="ai-wave-bar"></div>
+        <div class="ai-wave-bar"></div>
+      </div>
+
+      <div class="ai-mic-ring" id="aiMicRing" onclick="toggleAiMic()">
+        <div class="ai-mic-inner"><i data-lucide="mic" class="w-8 h-8"></i></div>
+      </div>
+      <p class="text-xs text-muted-foreground mt-3" id="aiMicHint">Tap to start speaking</p>
+    </div>
+
+    <div class="ai-voice-progress">
+      <span class="text-[0.6rem] text-muted-foreground" id="aiProgLabel">0%</span>
+      <div class="ai-voice-prog-bar"><div class="ai-voice-prog-fill" id="aiProgFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="ai-voice-footer">
+      <input type="text" class="input text-sm h-9" style="max-width:320px;flex:1;" placeholder="Or type your answer..." id="aiTextInput" onkeydown="if(event.key==='Enter') sendAiText();">
+      <button class="btn-primary btn-sm" onclick="sendAiText()"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
+    </div>
   </div>
+
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="../js/main.js"></script>
 <script>
   lucide.createIcons();
-
-  const TOTAL_STEPS = 7;
-  let currentStep = 1;
-
-  function goStep(n) {
-    if (n < 1 || n > TOTAL_STEPS + 1) return;
-    currentStep = n;
-
-    document.querySelectorAll('.wiz-panel').forEach(p => p.classList.remove('active'));
-    const target = document.querySelector('[data-panel="'+n+'"]');
-    if (target) target.classList.add('active');
-
-    document.querySelectorAll('.wiz-step').forEach(s => {
-      const sn = parseInt(s.getAttribute('data-step'));
-      s.classList.toggle('active', sn === n);
-      s.classList.toggle('done', sn < n);
-    });
-
-    // Color connector lines
-    for (let i = 1; i < TOTAL_STEPS; i++) {
-      const line = document.getElementById('line' + i);
-      if (line) line.classList.toggle('done', i < n);
-    }
-
-    const pct = n > TOTAL_STEPS ? 100 : Math.round(((n - 1) / TOTAL_STEPS) * 100);
-    document.getElementById('progBar').style.width = pct + '%';
-    document.getElementById('progPct').textContent = pct + '%';
-    document.getElementById('progLabel').textContent = n > TOTAL_STEPS ? 'Complete!' : 'Step ' + n + ' of ' + TOTAL_STEPS;
-
-    const nav = document.getElementById('wizNav');
-    nav.style.display = n > TOTAL_STEPS ? 'none' : '';
-    document.getElementById('btnPrev').style.visibility = n <= 1 ? 'hidden' : 'visible';
-
-    if (n === TOTAL_STEPS) {
-      document.getElementById('btnNext').innerHTML = 'Finish <i data-lucide="check" class="w-4 h-4"></i>';
-      document.getElementById('btnSkip').style.display = 'none';
-    } else {
-      document.getElementById('btnNext').innerHTML = 'Continue <i data-lucide="arrow-right" class="w-4 h-4"></i>';
-      document.getElementById('btnSkip').style.display = '';
-    }
-
-    if (n > TOTAL_STEPS) buildSummary();
-    reIcon();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function nextStep() {
-    if (currentStep === TOTAL_STEPS) {
-      goStep(TOTAL_STEPS + 1);
-      fireConfetti();
-      showToast('Preferences saved!', 'success');
-    } else {
-      goStep(currentStep + 1);
-    }
-  }
-  function prevStep() { goStep(currentStep - 1); }
   function reIcon() { try { lucide.createIcons(); } catch(e){} }
 
   function singleSelect(el) {
     el.parentElement.querySelectorAll('.icard,.ptile,.vscale-opt').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    reIcon();
+    el.classList.add('selected'); reIcon();
   }
-
   function selectStars(n) {
-    document.querySelectorAll('#starSel .star-sel-star').forEach((s, i) => {
-      s.classList.toggle('active', i < n);
-    });
+    document.querySelectorAll('#starSel .star-sel-star').forEach((s, i) => s.classList.toggle('active', i < n));
   }
-
   function addTag(containerId, value) {
     if (!value.trim()) return;
     const wrap = document.getElementById(containerId);
@@ -1542,238 +702,232 @@
     wrap.insertBefore(pill, input);
   }
 
-  const childInput = document.getElementById('childCount');
-  if (childInput) {
-    setInterval(() => {
-      const v = parseInt(childInput.value) || 0;
-      document.getElementById('childAgesRow').style.display = v > 0 ? '' : 'none';
-    }, 300);
+  /* ---- Phase Navigation ---- */
+  function goPhase(phase) {
+    ['phaseWelcome','phaseBasic','phaseChooser','phaseManual'].forEach(id => document.getElementById(id).style.display = 'none');
+
+    if (phase === 'welcome') {
+      document.getElementById('phaseWelcome').style.display = '';
+      setPhaseProgress(0);
+    } else if (phase === 'basic') {
+      document.getElementById('phaseBasic').style.display = '';
+      setPhaseProgress(1);
+    } else if (phase === 'chooser') {
+      document.getElementById('phaseChooser').style.display = '';
+      setPhaseProgress(1, true);
+    } else if (phase === 'manual') {
+      document.getElementById('phaseManual').style.display = '';
+      manualStep = 1; updateManualStep();
+      setPhaseProgress(2);
+    }
+    reIcon();
+    document.querySelector('.pref-modal').scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  const ppInput = document.getElementById('passportExpiry');
-  if (ppInput) {
-    ppInput.addEventListener('change', function() {
-      const exp = new Date(this.value + '-01');
-      const now = new Date();
-      const months = (exp.getFullYear() - now.getFullYear()) * 12 + exp.getMonth() - now.getMonth();
-      const statusEl = document.getElementById('passportStatus');
-      if (months < 6) {
-        statusEl.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Expiring soon — renew before travel';
-        statusEl.className = 'text-xs text-destructive font-medium flex items-center gap-1';
-      } else if (months < 12) {
-        statusEl.innerHTML = '<i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Valid but renewal recommended';
-        statusEl.className = 'text-xs text-amber-600 font-medium flex items-center gap-1';
-      } else {
-        const yrs = Math.floor(months / 12);
-        statusEl.innerHTML = '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Valid for ' + yrs + '+ years';
-        statusEl.className = 'text-xs text-green-600 font-medium flex items-center gap-1';
-      }
-      reIcon();
-    });
+  function setPhaseProgress(active, phase1Done) {
+    const d1 = document.getElementById('phaseDot1');
+    const d2 = document.getElementById('phaseDot2');
+    const l1 = document.getElementById('phaseLine1');
+    const lb1 = document.getElementById('phaseLabel1');
+    const lb2 = document.getElementById('phaseLabel2');
+
+    d1.className = 'phase-dot' + (active === 1 && !phase1Done ? ' active' : '') + (phase1Done || active >= 2 ? ' done' : '');
+    d1.innerHTML = (phase1Done || active >= 2) ? '<i data-lucide="check" class="w-4 h-4"></i>' : '1';
+    d2.className = 'phase-dot' + (active >= 2 ? ' active' : '');
+    l1.className = 'phase-line' + (phase1Done || active >= 2 ? ' done' : '');
+    lb1.className = 'phase-label' + (active === 1 && !phase1Done ? ' active' : '');
+    lb2.className = 'phase-label' + (active >= 2 ? ' active' : '');
+    reIcon();
   }
 
+  /* ---- Manual Detailed Steps ---- */
+  const MANUAL_TOTAL = 5;
+  let manualStep = 1;
+
+  function updateManualStep() {
+    document.querySelectorAll('[data-mpanel]').forEach(p => p.classList.remove('active'));
+    const target = document.querySelector('[data-mpanel="'+manualStep+'"]');
+    if (target) target.classList.add('active');
+
+    const pct = Math.round(((manualStep - 1) / MANUAL_TOTAL) * 100);
+    document.getElementById('manualProgBar').style.width = pct + '%';
+    document.getElementById('manualPct').textContent = pct + '%';
+    document.getElementById('manualStepLabel').textContent = 'Step ' + manualStep + ' of ' + MANUAL_TOTAL;
+    document.getElementById('manualPrevBtn').style.visibility = manualStep <= 1 ? 'hidden' : 'visible';
+
+    if (manualStep === MANUAL_TOTAL) {
+      document.getElementById('manualNextBtn').innerHTML = 'Finish <i data-lucide="check" class="w-4 h-4"></i>';
+    } else {
+      document.getElementById('manualNextBtn').innerHTML = 'Continue <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+    }
+    reIcon();
+  }
+
+  function manualNext() {
+    if (manualStep >= MANUAL_TOTAL) {
+      document.getElementById('manualNav').style.display = 'none';
+      document.querySelectorAll('[data-mpanel]').forEach(p => p.classList.remove('active'));
+      document.getElementById('manualProgBar').style.width = '100%';
+      document.getElementById('manualPct').textContent = '100%';
+      document.getElementById('manualStepLabel').textContent = 'Complete!';
+      document.getElementById('manualSummary').style.display = '';
+      buildSummary();
+      fireConfetti();
+    } else {
+      manualStep++;
+      updateManualStep();
+    }
+    document.querySelector('.pref-modal').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function manualPrev() {
+    if (manualStep <= 1) { goPhase('chooser'); return; }
+    manualStep--;
+    updateManualStep();
+  }
+
+  /* ---- AI Voice Experience ---- */
+  const aiQuestions = [
+    { q: "Hi Rahul! Tap the mic and tell me about your travel preferences. I'll ask you a few questions.", field: "Getting started", progress: 0 },
+    { q: "Who do you usually travel with — solo, with a partner, family, or friends?", field: "Travel group", progress: 15 },
+    { q: "What's your travel vibe — adventure, relaxation, cultural exploration, or a mix of everything?", field: "Travel style", progress: 30 },
+    { q: "What kind of destinations excite you — beaches, mountains, cities, countryside?", field: "Destinations", progress: 45 },
+    { q: "How would you describe your budget comfort — budget-friendly, mid-range, or premium?", field: "Budget", progress: 55 },
+    { q: "Any dietary preferences or food restrictions I should know about?", field: "Food & diet", progress: 65 },
+    { q: "What type of accommodation do you prefer — hotels, resorts, homestays, boutique stays?", field: "Accommodation", progress: 75 },
+    { q: "Do you prefer visa-free destinations? How important is safety rating to you?", field: "Practical", progress: 85 },
+    { q: "What activities do you enjoy — water sports, hiking, photography, food tours, nightlife?", field: "Interests", progress: 95 },
+    { q: "That's everything! Your AI match accuracy is now at 94%. You're all set, Rahul!", field: "Complete!", progress: 100, done: true },
+  ];
+  let aiStep = 0;
+  let aiListening = false;
+
+  function openAiVoice() {
+    document.getElementById('aiVoicePage').classList.add('open');
+    aiStep = 0;
+    showAiQuestion(0);
+    reIcon();
+  }
+
+  function closeAiVoice() {
+    document.getElementById('aiVoicePage').classList.remove('open');
+    aiListening = false;
+  }
+
+  function switchToManualFromVoice() {
+    closeAiVoice();
+    goPhase('manual');
+  }
+
+  function showAiQuestion(idx) {
+    const q = aiQuestions[idx];
+    document.getElementById('aiFieldLabel').textContent = q.field;
+    document.getElementById('aiQuestion').textContent = q.q;
+    document.getElementById('aiTranscript').innerHTML = '&nbsp;';
+    document.getElementById('aiProgFill').style.width = q.progress + '%';
+    document.getElementById('aiProgLabel').textContent = q.progress + '%';
+
+    if (q.done) {
+      document.getElementById('aiMicHint').textContent = 'All done!';
+      document.getElementById('aiMicRing').style.pointerEvents = 'none';
+      document.getElementById('aiTextInput').disabled = true;
+      setTimeout(() => { fireConfetti(); }, 500);
+    } else {
+      document.getElementById('aiMicHint').textContent = 'Tap to start speaking';
+      document.getElementById('aiMicRing').style.pointerEvents = '';
+      document.getElementById('aiTextInput').disabled = false;
+    }
+    reIcon();
+  }
+
+  function advanceAi(userText) {
+    document.getElementById('aiTranscript').textContent = '"' + userText + '"';
+    aiStep++;
+    if (aiStep < aiQuestions.length) {
+      setTimeout(() => showAiQuestion(aiStep), 1200);
+    }
+  }
+
+  function toggleAiMic() {
+    const ring = document.getElementById('aiMicRing');
+    const bars = document.getElementById('aiWaveBars');
+    aiListening = !aiListening;
+    ring.classList.toggle('listening', aiListening);
+    bars.classList.toggle('active', aiListening);
+    document.getElementById('aiMicHint').textContent = aiListening ? 'Listening...' : 'Tap to start speaking';
+
+    if (aiListening) {
+      const sampleResponses = [
+        "I usually travel with my partner or friends",
+        "I love a mix of adventure and cultural experiences",
+        "Beaches and mountains — Goa, Manali, Bali",
+        "Mid-range, comfortable but not over the top",
+        "I'm vegetarian but open to trying local food",
+        "Boutique hotels and resorts mostly",
+        "Visa-free preferred, safety is important",
+        "Photography, food tours, hiking, water sports",
+      ];
+      setTimeout(() => {
+        aiListening = false;
+        ring.classList.remove('listening');
+        bars.classList.remove('active');
+        const idx = Math.min(aiStep - 1, sampleResponses.length - 1);
+        if (idx >= 0) advanceAi(sampleResponses[Math.max(0, idx)]);
+        else { aiStep++; if (aiStep < aiQuestions.length) showAiQuestion(aiStep); }
+      }, 2500);
+    }
+  }
+
+  function sendAiText() {
+    const input = document.getElementById('aiTextInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    advanceAi(text);
+  }
+
+  /* ---- Summary Builder ---- */
   function buildSummary() {
     function getSelected(container) {
       const el = document.querySelector('[data-single="'+container+'"] .selected, [data-multi="'+container+'"]');
       if (!el) return [];
       const parent = el.closest('[data-single], [data-multi]') || el.parentElement;
-      return Array.from(parent.querySelectorAll('.selected')).map(s => {
-        return (s.querySelector('.icard-label') || s.querySelector('.ptile-name') || s.querySelector('.vscale-label') || s).textContent.trim();
-      });
+      return Array.from(parent.querySelectorAll('.selected')).map(s =>
+        (s.querySelector('.icard-label') || s.querySelector('.ptile-name') || s.querySelector('.vscale-label') || s).textContent.trim()
+      );
     }
-    function getChips(container) {
-      const el = document.querySelector('[data-multi="'+container+'"]');
-      if (!el) return [];
-      return Array.from(el.querySelectorAll('.selected')).map(s => s.textContent.trim());
-    }
-
-    const dur = document.getElementById('durSlider')?.value || '7';
-    const budget = document.getElementById('budgetMaxLabel')?.textContent || '';
-
-    function sec(title, lucideIcon, tags) {
+    function sec(title, icon, tags) {
       if (!tags.length) return '';
-      return '<div class="persona-section"><div class="persona-section-title"><i data-lucide="' + lucideIcon + '"></i> ' + title + '</div><div>' + tags.map(t => '<span class="persona-tag">' + t + '</span>').join('') + '</div></div>';
+      return '<div class="persona-section"><div class="persona-section-title"><i data-lucide="'+icon+'"></i> '+title+'</div><div>'+tags.map(t=>'<span class="persona-tag">'+t+'</span>').join('')+'</div></div>';
     }
-
     let html = '';
-    html += sec('Travel Type', 'users', getSelected('travelType'));
-    html += sec('Style', 'sparkles', getSelected('travelStyle'));
-    html += sec('Pace & Energy', 'zap', [...getSelected('pace'), ...getSelected('activityLevel')]);
-    html += sec('Planning & Social', 'calendar', [...getSelected('planningStyle'), ...getSelected('socialPref'), ...getSelected('wakeUp'), ...getSelected('nightlife')]);
-    html += sec('Destination Types', 'map', getSelected('destTypes'));
-    html += sec('Climate & Seasons', 'cloud-sun', [...getChips('climate'), ...getSelected('seasons')]);
-    html += sec('Continents', 'globe-2', getChips('continents'));
-    if (dur) html += sec('Trip Duration', 'clock', [dur + ' days']);
-    html += sec('Budget', 'wallet', [...getSelected('budgetCat'), budget, ...getSelected('budgetFlex'), ...getSelected('budgetPriority')]);
-    html += sec('Diet & Food', 'utensils', [...getSelected('dietType'), ...getSelected('foodExplore'), ...getSelected('alcohol')]);
-    html += sec('Cuisines', 'chef-hat', getSelected('cuisines'));
-    const allergies = getChips('allergies');
-    if (allergies.length) html += sec('Allergies', 'alert-triangle', allergies);
-    html += sec('Accommodation', 'bed', getSelected('accomType'));
-    html += sec('Transport', 'plane', [...getChips('transport'), ...getSelected('flightClass'), ...getSelected('layover')]);
-    html += sec('Practical', 'shield-check', [...getSelected('visaPref'), ...getSelected('safety'), ...getSelected('insurance')]);
-
+    html += sec('Travel Type','users',getSelected('travelType'));
+    html += sec('Style','sparkles',getSelected('travelStyle'));
+    html += sec('Destinations','map',getSelected('destTypes'));
+    html += sec('Budget','wallet',getSelected('budgetCat'));
+    html += sec('Diet','leaf',getSelected('dietType'));
+    html += sec('Accommodation','bed',getSelected('accomType'));
+    html += sec('Pace & Planning','gauge',[...getSelected('pace'),...getSelected('planningStyle')]);
+    html += sec('Visa & Safety','shield-check',[...getSelected('visaPref'),...getSelected('safety')]);
+    html += sec('Transport','plane',[...getSelected('flightClass')]);
+    html += sec('Insurance','shield',getSelected('insurance'));
     document.getElementById('summaryContent').innerHTML = html;
     reIcon();
   }
 
   function fireConfetti() {
-    const colors = ['#6366f1','#ec4899','#f59e0b','#10b981','#3b82f6','#8b5cf6'];
-    for (let i = 0; i < 60; i++) {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = Math.random() * 100 + 'vw';
-      piece.style.top = -10 + 'px';
-      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      piece.style.animationDelay = Math.random() * 0.8 + 's';
-      piece.style.animationDuration = (1.5 + Math.random()) + 's';
-      piece.style.width = (6 + Math.random() * 6) + 'px';
-      piece.style.height = (6 + Math.random() * 6) + 'px';
-      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      document.body.appendChild(piece);
-      setTimeout(() => piece.remove(), 3000);
-    }
-  }
-
-  document.querySelectorAll('.tcard').forEach(tc => {
-    const cb = tc.querySelector('input[type=checkbox]');
-    if (cb && cb.checked) tc.classList.add('on');
-  });
-
-  function toggleConsent(checked) {
-    document.getElementById('pathManual').classList.toggle('opacity-50', !checked);
-    document.getElementById('pathVoice').classList.toggle('opacity-50', !checked);
-  }
-
-  function startWizard() {
-    document.getElementById('introPanel').style.display = 'none';
-    document.getElementById('voiceOverlay').classList.remove('open');
-    document.getElementById('wizardWrap').style.display = '';
-    goStep(1);
-    reIcon();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  /* ---- Voice Assistant ---- */
-  const voiceConversation = [
-    { ai: "Hi Rahul! I'm your Trvello AI assistant. I'll help you set up your travel preferences through a quick chat. You can speak or type — whatever feels comfortable. Let's start! 😊", progress: 0 },
-    { ai: "First, tell me a bit about yourself — are you someone who usually travels solo, with a partner, with family, or in a group with friends?", field: "Travel Group", progress: 8 },
-    { ai: "Great! And what's your general travel vibe — do you lean more towards adventure and outdoor activities, cultural and heritage experiences, relaxation and wellness, or maybe a mix?", field: "Travel Style", progress: 20 },
-    { ai: "Nice taste! Now, what kind of destinations excite you? Think beaches, mountains, cities, deserts, countryside — feel free to mention a few.", field: "Destinations", progress: 32 },
-    { ai: "Love those choices! When it comes to budget, how would you describe your comfort level — are you a budget-conscious traveller, mid-range, or do you prefer premium and luxury experiences?", field: "Budget", progress: 44 },
-    { ai: "Got it. Let's talk food — any dietary preferences or restrictions I should know about? Like vegetarian, vegan, gluten-free, halal, or are you open to trying everything?", field: "Food & Diet", progress: 56 },
-    { ai: "Awesome! How about accommodation — do you usually prefer hotels, boutique stays, resorts, homestays, hostels, or maybe a mix depending on the trip?", field: "Accommodation", progress: 68 },
-    { ai: "Almost there! A couple of practical things — do you prefer destinations where Indians don't need a visa or visa-on-arrival? And how important is safety rating to you — very important, somewhat, or not a big factor?", field: "Practical", progress: 82 },
-    { ai: "Last one! What kind of activities do you enjoy on trips? Think water sports, hiking, photography, food tours, nightlife, temple visits, wildlife safaris — list as many as you like!", field: "Interests", progress: 92 },
-    { ai: "That's everything I need! 🎉 I've built your travel persona. Your AI match accuracy is now at 94%. You can always come back to fine-tune things in the step-by-step wizard. Happy travels, Rahul!", progress: 100, done: true },
-  ];
-
-  let voiceStep = 0;
-  let isMicListening = false;
-
-  function openVoiceAssistant() {
-    const overlay = document.getElementById('voiceOverlay');
-    overlay.classList.add('open');
-    document.getElementById('voiceMsgs').innerHTML = '';
-    voiceStep = 0;
-    reIcon();
-    setTimeout(() => addAiMessage(voiceConversation[0].ai, voiceConversation[0].progress), 500);
-  }
-
-  function closeVoiceAssistant() {
-    document.getElementById('voiceOverlay').classList.remove('open');
-    voiceStep = 0;
-  }
-
-  function switchToManual() {
-    closeVoiceAssistant();
-    startWizard();
-  }
-
-  function addAiMessage(text, progress) {
-    const msgs = document.getElementById('voiceMsgs');
-    const typing = document.createElement('div');
-    typing.className = 'voice-typing';
-    typing.innerHTML = '<span></span><span></span><span></span>';
-    msgs.appendChild(typing);
-    msgs.scrollTop = msgs.scrollHeight;
-
-    setTimeout(() => {
-      typing.remove();
-      const div = document.createElement('div');
-      div.className = 'voice-msg ai';
-      const label = voiceConversation[voiceStep]?.field
-        ? '<div class="msg-label">Asking about: ' + voiceConversation[voiceStep].field + '</div>'
-        : '';
-      div.innerHTML = label + text;
-      msgs.appendChild(div);
-      msgs.scrollTop = msgs.scrollHeight;
-
-      if (typeof progress === 'number') {
-        document.getElementById('voiceProgFill').style.width = progress + '%';
-        document.getElementById('voiceProgPct').textContent = progress + '%';
-        const labels = ['Getting started','Travel group','Travel style','Destinations','Budget','Food & diet','Accommodation','Practical','Interests','Complete!'];
-        document.getElementById('voiceProgLabel').textContent = labels[Math.min(voiceStep, labels.length - 1)];
-      }
-
-      if (voiceConversation[voiceStep]?.done) {
-        document.getElementById('voiceTextInput').disabled = true;
-        document.getElementById('voiceMicBtn').disabled = true;
-      }
-    }, 1200);
-  }
-
-  function addUserMessage(text) {
-    const msgs = document.getElementById('voiceMsgs');
-    const div = document.createElement('div');
-    div.className = 'voice-msg user';
-    div.textContent = text;
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  function sendVoiceText() {
-    const input = document.getElementById('voiceTextInput');
-    const text = input.value.trim();
-    if (!text || voiceConversation[voiceStep]?.done) return;
-    input.value = '';
-    addUserMessage(text);
-    voiceStep++;
-    if (voiceStep < voiceConversation.length) {
-      setTimeout(() => addAiMessage(voiceConversation[voiceStep].ai, voiceConversation[voiceStep].progress), 800);
-    }
-  }
-
-  function toggleMic() {
-    const btn = document.getElementById('voiceMicBtn');
-    isMicListening = !isMicListening;
-    btn.classList.toggle('listening', isMicListening);
-    reIcon();
-
-    if (isMicListening) {
-      setTimeout(() => {
-        isMicListening = false;
-        btn.classList.remove('listening');
-        const sampleResponses = [
-          "I usually travel with my partner or sometimes with close friends",
-          "I love a mix of adventure and cultural experiences",
-          "Beaches and mountains for sure — I love Goa, Manali, and Bali",
-          "I'd say mid-range, comfortable but not over the top",
-          "I'm vegetarian but open to trying local specialities",
-          "Boutique hotels and resorts mostly, sometimes homestays",
-          "Visa-free or visa-on-arrival is preferred, and safety is quite important to me",
-          "Photography, food tours, hiking, and some water sports",
-        ];
-        const responseIdx = Math.min(voiceStep - 1, sampleResponses.length - 1);
-        if (responseIdx >= 0) {
-          addUserMessage(sampleResponses[Math.max(0, responseIdx)]);
-          voiceStep++;
-          if (voiceStep < voiceConversation.length) {
-            setTimeout(() => addAiMessage(voiceConversation[voiceStep].ai, voiceConversation[voiceStep].progress), 800);
-          }
-        }
-        reIcon();
-      }, 2500);
+    const colors = ['#114459','#ec4899','#f59e0b','#10b981','#3b82f6'];
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random()*100+'vw'; p.style.top = '-10px';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDelay = Math.random()*0.8+'s';
+      p.style.animationDuration = (1.5+Math.random())+'s';
+      p.style.width = (6+Math.random()*6)+'px'; p.style.height = (6+Math.random()*6)+'px';
+      p.style.borderRadius = Math.random()>0.5?'50%':'2px';
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),3000);
     }
   }
 </script>
