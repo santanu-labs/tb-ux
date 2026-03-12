@@ -36,9 +36,9 @@
 
   <div class="min-h-screen flex">
     <!-- Left — Brand Panel -->
-    <div class="hidden lg:flex lg:w-1/2 bg-primary relative flex-col justify-between p-12 text-white overflow-hidden">
-      <div class="absolute top-[-5rem] left-[-5rem] w-64 h-64 bg-white/10 rounded-full"></div>
-      <div class="absolute bottom-[-8rem] right-[-4rem] w-80 h-80 bg-white/5 rounded-full"></div>
+    <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 text-white overflow-hidden bg-cover bg-center" style="background-image: url('https://i.pinimg.com/736x/46/fc/7e/46fc7ebc878b74ef8229da14dd03005b.jpg');">
+      <!-- Overlay for contrast -->
+      <div class="absolute inset-0 bg-gradient-to-br from-[#114459]/90 via-[#0d3544]/85 to-black/80" aria-hidden="true"></div>
 
       <div class="relative z-10">
         <div class="flex items-center gap-3 mb-2">
@@ -110,7 +110,9 @@
           </button>
         </form>
 
-        <p class="text-center text-xs text-muted-foreground">
+        <p class="text-center text-xs text-muted-foreground space-x-2">
+          <a href="employee/onboarding/" class="text-primary hover:underline">First time? Complete onboarding</a>
+          <span>·</span>
           <a href="admin/dashboard.html" class="text-primary hover:underline">Sign in as Admin →</a>
         </p>
 

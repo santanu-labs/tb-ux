@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome — Trvello</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))', input: 'hsl(var(--input))', ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .onboard-step { display: none; animation: stepFade 0.3s ease; }
+    .onboard-step.active { display: block; }
+    @keyframes stepFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .step-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; border: 2px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); transition: all 0.25s; }
+    .step-dot.active { border-color: hsl(var(--primary)); background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+    .step-dot.done { border-color: hsl(142 71% 45%); background: hsl(142 71% 45%); color: white; }
+    .step-line { width: 32px; height: 2px; background: hsl(var(--border)); transition: background 0.25s; }
+    .step-line.done { background: hsl(142 71% 45%); }
+  </style>
+</head>
+<body class="font-sans bg-muted/30 text-foreground min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-lg">
+    <!-- Progress: Step X of 4 + % -->
+    <div class="flex items-center justify-between mb-6">
+      <span class="text-sm font-semibold text-muted-foreground" id="stepLabel">Step 1 of 4</span>
+      <span class="text-sm font-bold text-primary" id="stepPct">0%</span>
+    </div>
+    <div class="h-1.5 bg-muted rounded-full overflow-hidden mb-6">
+      <div id="progBar" class="h-full bg-primary rounded-full transition-all duration-400" style="width:0%"></div>
+    </div>
+
+    <!-- Icon Stepper -->
+    <div class="flex items-center justify-center gap-0 mb-8">
+      <div class="flex flex-col items-center">
+        <div class="step-dot active" id="dot1"><i data-lucide="sparkles" class="w-4 h-4"></i></div>
+        <span class="text-[0.6rem] font-medium text-muted-foreground mt-1">Welcome</span>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot" id="dot2"><i data-lucide="user" class="w-4 h-4"></i></div>
+        <span class="text-[0.6rem] font-medium text-muted-foreground mt-1">Profile</span>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot" id="dot3"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+        <span class="text-[0.6rem] font-medium text-muted-foreground mt-1">Terms</span>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot" id="dot4"><i data-lucide="settings" class="w-4 h-4"></i></div>
+        <span class="text-[0.6rem] font-medium text-muted-foreground mt-1">Done</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Welcome -->
+    <div class="onboard-step active" data-step="1">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="sparkles" class="w-8 h-8 text-primary-foreground"></i>
+        </div>
+        <h1 class="text-2xl font-bold mb-1">Welcome to Acme Corp!</h1>
+        <p class="text-sm text-muted-foreground">Let's get you set up with your profile. This will only take a couple of minutes.</p>
+      </div>
+
+      <div class="rounded-xl border border-border bg-card p-5 mb-8">
+        <h3 class="text-sm font-semibold mb-4">What you'll get:</h3>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="compass" class="w-5 h-5 text-blue-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">AI-Powered Trip Matching</p>
+              <p class="text-xs text-muted-foreground">Get personalised travel recommendations based on your preferences.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="gift" class="w-5 h-5 text-amber-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Exclusive Travel Perks</p>
+              <p class="text-xs text-muted-foreground">Access special discounts and benefits from your employer.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-light flex items-center justify-center flex-shrink-0">
+              <i data-lucide="calendar-pen" class="w-5 h-5 text-brand"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Smart Planning Tools</p>
+              <p class="text-xs text-muted-foreground">Plan and manage your trips with AI assistance throughout the year.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button class="btn-primary" onclick="goStep(2)">Continue <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 2: Complete Profile -->
+    <div class="onboard-step" data-step="2">
+      <div class="mb-6">
+        <h1 class="text-xl font-bold mb-1">Complete Your Profile</h1>
+        <p class="text-sm text-muted-foreground">Tell us a bit about yourself</p>
+      </div>
+
+      <div class="space-y-4 mb-8">
+        <div>
+          <label class="label">First name <span class="text-destructive">*</span></label>
+          <input class="input w-full" value="Rahul" placeholder="First name">
+        </div>
+        <div>
+          <label class="label">Display name</label>
+          <input class="input w-full" placeholder="How others see you">
+        </div>
+        <div>
+          <label class="label">Phone</label>
+          <input class="input w-full" value="+91 98765 43210" placeholder="+1 (555) 000-0000">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="label">Job title</label>
+            <input class="input w-full" value="Software Engineer" placeholder="Job title">
+          </div>
+          <div>
+            <label class="label">Date of birth</label>
+            <div class="relative">
+              <input class="input w-full pr-9" placeholder="dd-mm-yyyy">
+              <i data-lucide="calendar" class="w-4 h-4 text-muted-foreground absolute right-2.5 top-1/2 -translate-y-1/2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button class="btn-ghost text-sm text-muted-foreground" onclick="goStep(1)"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <button class="btn-primary" onclick="goStep(3)">Continue <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 3: Terms & Conditions -->
+    <div class="onboard-step" data-step="3">
+      <div class="mb-6">
+        <h1 class="text-xl font-bold mb-1">Terms & Conditions</h1>
+        <p class="text-sm text-muted-foreground">Please review and accept to continue</p>
+      </div>
+
+      <div class="rounded-xl border border-border bg-card p-5 mb-6">
+        <h3 class="text-sm font-semibold mb-3">Terms of Service</h3>
+        <p class="text-xs text-muted-foreground mb-3">By using the Acme Corp travel platform powered by Trvello, you agree to the following:</p>
+        <ul class="space-y-2 text-xs text-muted-foreground mb-4">
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i> Your travel preferences used only for AI-based trip matching.</li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i> Personal data (diet, medical, budget) is kept strictly private and never shared with your employer.</li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i> You can update or delete your data at any time from your profile settings.</li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i> Recommendations are suggestions — all bookings require your approval.</li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i> Usage data may be collected to improve the service; it is anonymised and aggregated.</li>
+        </ul>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" class="checkbox mt-0.5 accent-primary" id="termsCb" onchange="document.getElementById('completeBtn').disabled=!this.checked">
+          <span class="text-sm">I have read and agree to the terms of service and privacy policy.</span>
+        </label>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button class="btn-ghost text-sm text-muted-foreground" onclick="goStep(2)"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+        <button class="btn-primary" id="completeBtn" disabled onclick="goStep(4)">Complete <i data-lucide="check" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 4: Done -->
+    <div class="onboard-step" data-step="4">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="party-popper" class="w-8 h-8 text-green-600"></i>
+        </div>
+        <h1 class="text-2xl font-bold mb-1">You're all set!</h1>
+        <p class="text-sm text-muted-foreground">Your profile is ready. Start exploring destinations and plan your next trip.</p>
+      </div>
+
+      <a href="../dashboard.html" class="btn-primary w-full justify-center">
+        Go to Dashboard
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    lucide.createIcons();
+    let currentStep = 1;
+    const TOTAL = 4;
+
+    function goStep(n) {
+      if (n < 1 || n > TOTAL) return;
+      currentStep = n;
+
+      document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
+      document.querySelector('[data-step="'+n+'"]').classList.add('active');
+
+      const pct = Math.round(((n - 1) / (TOTAL - 1)) * 100);
+      if (n === TOTAL) document.getElementById('progBar').style.width = '100%';
+      else document.getElementById('progBar').style.width = pct + '%';
+      document.getElementById('stepPct').textContent = (n === TOTAL ? 100 : pct) + '%';
+      document.getElementById('stepLabel').textContent = 'Step ' + n + ' of ' + TOTAL;
+
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById('dot' + i);
+        dot.className = 'step-dot';
+        dot.innerHTML = i <= 3 ? '<i data-lucide="' + (i===1?'sparkles':i===2?'user':'file-text') + '" class="w-4 h-4"></i>' : '<i data-lucide="settings" class="w-4 h-4"></i>';
+        if (i < n) { dot.classList.add('done'); dot.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>'; }
+        else if (i === n) dot.classList.add('active');
+      }
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById('line' + i).classList.toggle('done', i < n);
+      }
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
