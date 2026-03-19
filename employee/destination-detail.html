@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Goa — Trvello</title>
+  <title>Goa — Leave Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -188,6 +188,166 @@
     }
     .gallery-grid .g-item:hover img { transform: scale(1.05); }
     .gallery-grid .g-item:first-child { grid-row: 1 / 3; }
+    /* Itinerary styles */
+    .itin-day { margin-bottom: 0.25rem; }
+    .itin-day-head {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.65rem 0; cursor: pointer; user-select: none;
+    }
+    .itin-day:first-child .itin-day-head { padding-top: 0; }
+    .itin-day + .itin-day { border-top: 1px solid hsl(var(--border)); }
+    .itin-day-badge {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+      font-size: 0.8125rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .itin-day-title { flex: 1; }
+    .itin-day-title strong { font-size: 0.8125rem; font-weight: 600; display: block; }
+    .itin-day-title span { font-size: 0.6875rem; color: hsl(var(--muted-foreground)); }
+    .itin-steps { padding: 0 0 0.5rem 0; }
+    .itin-step { display: flex; gap: 0.625rem; position: relative; padding-bottom: 0.125rem; }
+    .itin-step-rail {
+      width: 38px; display: flex; flex-direction: column; align-items: center;
+      flex-shrink: 0; position: relative;
+    }
+    .itin-step-rail::after {
+      content: ''; position: absolute; top: 28px; bottom: -2px; left: 50%;
+      width: 1.5px; background: hsl(var(--border)); transform: translateX(-50%);
+    }
+    .itin-step:last-child .itin-step-rail::after { display: none; }
+    .itin-step-time {
+      font-size: 0.625rem; font-weight: 600; color: hsl(var(--muted-foreground));
+      line-height: 1; margin-bottom: 0.2rem; text-align: center; white-space: nowrap;
+    }
+    .itin-step-dot {
+      width: 26px; height: 26px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .itin-step-body {
+      flex: 1; display: flex; align-items: flex-start; gap: 0.625rem;
+      padding: 0.5rem 0.625rem; border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px); margin-bottom: 0.375rem;
+      transition: background 0.12s;
+    }
+    .itin-step-body:hover { background: hsl(var(--accent) / 0.5); }
+    .itin-step-info { flex: 1; min-width: 0; }
+    .itin-step-name { font-size: 0.8125rem; font-weight: 600; line-height: 1.25; }
+    .itin-step-desc { font-size: 0.6875rem; color: hsl(var(--muted-foreground)); margin-top: 0.1rem; line-height: 1.4; }
+    .itin-step-meta { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.3rem; }
+    .itin-step-tag {
+      font-size: 0.5625rem; padding: 0.125rem 0.4rem; border-radius: 999px;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .itin-step-dur {
+      font-size: 0.625rem; color: hsl(var(--muted-foreground));
+      display: flex; align-items: center; gap: 0.2rem;
+    }
+
+    /* Calendar View */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .cal-hour-col {
+      background: hsl(var(--muted) / 0.5);
+      border-right: 1px solid hsl(var(--border));
+    }
+    .cal-hour-label {
+      height: 48px;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 0.2rem;
+      font-size: 0.5625rem; font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      border-bottom: 1px solid hsl(var(--border) / 0.5);
+    }
+    .cal-body { position: relative; }
+    .cal-row {
+      height: 48px;
+      border-bottom: 1px solid hsl(var(--border) / 0.4);
+    }
+    .cal-row:last-child { border-bottom: none; }
+    .cal-event {
+      position: absolute; left: 4px; right: 4px;
+      border-radius: 8px; padding: 0.3rem 0.5rem;
+      display: flex; align-items: flex-start; gap: 0.4rem;
+      overflow: hidden; cursor: default;
+      transition: box-shadow 0.12s, transform 0.12s;
+      border-left: 3px solid;
+    }
+    .cal-event:hover {
+      box-shadow: 0 3px 12px hsl(var(--foreground) / 0.08);
+      transform: translateY(-1px);
+    }
+    .cal-event-icon {
+      width: 22px; height: 22px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .cal-event-info { flex: 1; min-width: 0; }
+    .cal-event-name {
+      font-size: 0.6875rem; font-weight: 600; line-height: 1.2;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cal-event-time {
+      font-size: 0.5625rem; opacity: 0.75; line-height: 1; margin-top: 1px;
+    }
+    .cal-day-tabs {
+      display: flex; gap: 0.25rem; margin-bottom: 0.75rem; position: relative;
+    }
+    .cal-day-tab {
+      flex: 1; text-align: center; padding: 0.5rem 0.25rem;
+      border-radius: 10px; cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      position: relative; z-index: 1;
+    }
+    .cal-day-tab:hover:not(.active) { background: hsl(var(--muted)); }
+    .cal-day-tab.active { color: hsl(var(--primary)); }
+    .cal-day-tab .cal-tab-day { font-size: 0.875rem; font-weight: 700; line-height: 1.2; }
+    .cal-day-tab .cal-tab-dow {
+      font-size: 0.5625rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: hsl(var(--muted-foreground));
+    }
+    .cal-day-tab.active .cal-tab-dow { color: hsl(var(--primary)); }
+    .cal-day-tab .cal-tab-month { font-size: 0.5rem; color: hsl(var(--muted-foreground)); }
+    .cal-tab-slider {
+      position: absolute; top: 0; left: 0; height: 100%;
+      border-radius: 10px;
+      background: hsl(var(--primary) / 0.08);
+      border: 1.5px solid hsl(var(--primary));
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+    .cal-day-grid { display: none; }
+    .cal-day-grid.active { display: grid; }
+
+    .hero-slide-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: white; cursor: pointer; z-index: 5;
+      transition: background 0.15s;
+    }
+    .hero-slide-btn:hover { background: rgba(0,0,0,0.6); }
+    .hero-slide-prev { left: 0.75rem; }
+    .hero-slide-next { right: 0.75rem; }
+    .hero-dots {
+      position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 5;
+    }
+    .hero-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.4); cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .hero-dot.active { background: white; transform: scale(1.25); }
   </style>
 </head>
 <body class="font-sans bg-background text-foreground">
@@ -198,12 +358,11 @@
       <div class="flex items-center gap-6">
         <a href="dashboard.html" class="emp-navbar-brand">
           <div class="brand-icon"><i data-lucide="globe"></i></div>
-          <span class="brand-name">Trvello</span>
+          <span class="brand-name">Leave Studio</span>
           <span class="brand-org">Acme Corp</span>
         </a>
         <nav class="emp-nav-links">
           <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
           <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
         </nav>
       </div>
@@ -223,6 +382,10 @@
             </div>
           </a>
         </div>
+        <a href="cart.html" class="btn-ghost btn-icon relative" title="Cart">
+          <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+          <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[0.625rem] font-bold rounded-full flex items-center justify-center px-1">3</span>
+        </a>
         <button class="btn-ghost btn-icon relative" title="Notifications">
           <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
           <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
@@ -237,6 +400,8 @@
               <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
             </div>
             <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="my-plans.html" class="dropdown-item"><i data-lucide="history" class="w-4 h-4"></i> Planned History</a>
+            <a href="payment-history.html" class="dropdown-item"><i data-lucide="indian-rupee" class="w-4 h-4"></i> Payment History</a>
             <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
             <div class="my-1 border-t border-border"></div>
             <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
@@ -257,9 +422,15 @@
         <span class="text-foreground font-medium">Goa, India</span>
       </nav>
 
-      <!-- ═══════ HERO BANNER ═══════ -->
-      <div class="dest-hero">
-        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1400&h=500&fit=crop" alt="Goa Beach Aerial">
+      <!-- ═══════ HERO BANNER — SLIDER ═══════ -->
+      <div class="dest-hero" id="heroSlider">
+        <div class="hero-slides" id="heroSlides" style="display:flex;transition:transform 0.4s ease;width:100%;height:100%;">
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1400&h=500&fit=crop" alt="Goa Beach Aerial" style="min-width:100%;height:100%;object-fit:cover;">
+          <img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=1400&h=500&fit=crop" alt="Goa Church" style="min-width:100%;height:100%;object-fit:cover;">
+          <img src="https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=1400&h=500&fit=crop" alt="Goa Sunset" style="min-width:100%;height:100%;object-fit:cover;">
+          <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=1400&h=500&fit=crop" alt="Goa Market" style="min-width:100%;height:100%;object-fit:cover;">
+          <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1400&h=500&fit=crop" alt="Goa Fort" style="min-width:100%;height:100%;object-fit:cover;">
+        </div>
         <div class="dest-hero-overlay">
           <div class="flex items-center gap-2 mb-2">
             <span class="match-badge text-sm"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 95% Match</span>
@@ -273,11 +444,33 @@
           <h1 class="text-3xl font-extrabold text-white mb-1">Goa, India</h1>
           <p class="text-white/70 text-sm">Tropical paradise · Beaches · Portuguese heritage · Nightlife · Seafood</p>
         </div>
+        <!-- Slider Nav -->
+        <button class="hero-slide-btn hero-slide-prev" onclick="slideHero(-1)" title="Previous"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+        <button class="hero-slide-btn hero-slide-next" onclick="slideHero(1)" title="Next"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+        <!-- Dots -->
+        <div class="hero-dots" id="heroDots">
+          <span class="hero-dot active"></span>
+          <span class="hero-dot"></span>
+          <span class="hero-dot"></span>
+          <span class="hero-dot"></span>
+          <span class="hero-dot"></span>
+        </div>
+        <!-- Counter + Expand -->
         <div class="dest-hero-actions">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur text-white text-xs font-semibold" id="heroCounter">1 / 5</span>
+          <button title="View All Photos" onclick="openHeroFullscreen()"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
           <button title="Share"><i data-lucide="share-2" class="w-4 h-4"></i></button>
           <button title="Save to Wishlist"><i data-lucide="heart" class="w-4 h-4"></i></button>
-          <button title="Compare"><i data-lucide="git-compare-arrows" class="w-4 h-4"></i></button>
         </div>
+      </div>
+
+      <!-- Fullscreen Gallery Overlay -->
+      <div id="heroFullscreen" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.95);flex-direction:column;align-items:center;justify-content:center;">
+        <button onclick="closeHeroFullscreen()" style="position:absolute;top:1rem;right:1rem;color:white;background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="slideHeroFS(-1)" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:white;background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+        <img id="heroFSImage" src="" alt="" style="max-width:90vw;max-height:80vh;object-fit:contain;border-radius:8px;">
+        <span id="heroFSCounter" style="color:white;margin-top:1rem;font-size:0.875rem;font-weight:600;">1 / 5</span>
+        <button onclick="slideHeroFS(1)" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:white;background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
       </div>
 
       <!-- ═══════ QUICK STATS ROW ═══════ -->
@@ -311,31 +504,6 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- ═══════ LEFT COLUMN ═══════ -->
         <div class="lg:col-span-2 space-y-6">
-
-          <!-- Photo Gallery -->
-          <div class="gallery-grid">
-            <div class="g-item"><img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&h=600&fit=crop" alt="Goa Beach"></div>
-            <div class="g-item"><img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=400&h=300&fit=crop" alt="Goa Church"></div>
-            <div class="g-item"><img src="https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=400&h=300&fit=crop" alt="Goa Sunset"></div>
-            <div class="g-item"><img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&h=300&fit=crop" alt="Goa Market"></div>
-            <div class="g-item relative">
-              <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" alt="Goa Fort">
-              <div class="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer hover:bg-black/40 transition-colors">
-                <span class="text-white font-bold text-sm">+18 Photos</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- About -->
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title text-base flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-primary"></i> About Goa</div>
-            </div>
-            <div class="card-content space-y-3 text-sm text-muted-foreground leading-relaxed">
-              <p>Goa, India's smallest state, is a tropical paradise on the western coast known for its stunning beaches, vibrant nightlife, and rich Portuguese heritage. From the lively shores of Baga and Calangute to the serene beauty of Palolem, every beach has its own character.</p>
-              <p>Beyond the beaches, explore centuries-old churches in Old Goa (a UNESCO World Heritage Site), spice plantations in the hinterland, and bustling local markets. The fusion of Indian and Portuguese cultures creates a unique culinary and architectural landscape.</p>
-            </div>
-          </div>
 
           <!-- Destination Highlights — Graphical Cards -->
           <div class="card">
@@ -440,51 +608,584 @@
             </div>
           </div>
 
-          <!-- Activities -->
+          <!-- Activities & Itinerary -->
           <div class="card">
-            <div class="card-header">
-              <div class="card-title text-base flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i> Things to Do</div>
-              <div class="card-description">Popular activities and experiences</div>
+            <div class="card-header" style="padding-bottom:0;">
+              <div class="tabs-list" data-tabs>
+                <button class="tab-trigger active" data-tab="dest-activities"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Things to Do</button>
+                <button class="tab-trigger" data-tab="dest-itinerary"><i data-lucide="route" class="w-3.5 h-3.5"></i> Itinerary</button>
+                <button class="tab-trigger" data-tab="dest-calendar"><i data-lucide="calendar-days" class="w-3.5 h-3.5"></i> Calendar</button>
+              </div>
             </div>
             <div class="card-content">
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-blue-50/70 border border-blue-100 cursor-pointer hover:border-blue-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><i data-lucide="waves" class="w-4 h-4 text-blue-600"></i></div>
-                  <span class="text-xs font-semibold">Water Sports</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-amber-50/70 border border-amber-100 cursor-pointer hover:border-amber-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><i data-lucide="umbrella" class="w-4 h-4 text-amber-600"></i></div>
-                  <span class="text-xs font-semibold">Beach Lounging</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-rose-50/70 border border-rose-100 cursor-pointer hover:border-rose-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"><i data-lucide="utensils" class="w-4 h-4 text-rose-600"></i></div>
-                  <span class="text-xs font-semibold">Food Tours</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-brand-mid border border-brand cursor-pointer hover:border-brand-md transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center"><i data-lucide="landmark" class="w-4 h-4 text-brand"></i></div>
-                  <span class="text-xs font-semibold">Heritage Walks</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-pink-50/70 border border-pink-100 cursor-pointer hover:border-pink-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center"><i data-lucide="music" class="w-4 h-4 text-pink-600"></i></div>
-                  <span class="text-xs font-semibold">Nightlife</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-green-50/70 border border-green-100 cursor-pointer hover:border-green-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="heart-pulse" class="w-4 h-4 text-green-600"></i></div>
-                  <span class="text-xs font-semibold">Spa & Wellness</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-teal-50/70 border border-teal-100 cursor-pointer hover:border-teal-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center"><i data-lucide="ship" class="w-4 h-4 text-teal-600"></i></div>
-                  <span class="text-xs font-semibold">Dolphin Cruise</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-cyan-50/70 border border-cyan-100 cursor-pointer hover:border-cyan-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-cyan-100 flex items-center justify-center"><i data-lucide="camera" class="w-4 h-4 text-cyan-600"></i></div>
-                  <span class="text-xs font-semibold">Photography</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-orange-50/70 border border-orange-100 cursor-pointer hover:border-orange-300 transition-colors">
-                  <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center"><i data-lucide="bike" class="w-4 h-4 text-orange-600"></i></div>
-                  <span class="text-xs font-semibold">Cycling Tours</span>
+
+              <!-- Things to Do Panel -->
+              <div data-tab-panel="dest-activities">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-blue-50/70 border border-blue-100 cursor-pointer hover:border-blue-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><i data-lucide="waves" class="w-4 h-4 text-blue-600"></i></div>
+                    <span class="text-xs font-semibold">Water Sports</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-amber-50/70 border border-amber-100 cursor-pointer hover:border-amber-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><i data-lucide="umbrella" class="w-4 h-4 text-amber-600"></i></div>
+                    <span class="text-xs font-semibold">Beach Lounging</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-rose-50/70 border border-rose-100 cursor-pointer hover:border-rose-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"><i data-lucide="utensils" class="w-4 h-4 text-rose-600"></i></div>
+                    <span class="text-xs font-semibold">Food Tours</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-brand-mid border border-brand cursor-pointer hover:border-brand-md transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center"><i data-lucide="landmark" class="w-4 h-4 text-brand"></i></div>
+                    <span class="text-xs font-semibold">Heritage Walks</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-pink-50/70 border border-pink-100 cursor-pointer hover:border-pink-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center"><i data-lucide="music" class="w-4 h-4 text-pink-600"></i></div>
+                    <span class="text-xs font-semibold">Nightlife</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-green-50/70 border border-green-100 cursor-pointer hover:border-green-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="heart-pulse" class="w-4 h-4 text-green-600"></i></div>
+                    <span class="text-xs font-semibold">Spa & Wellness</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-teal-50/70 border border-teal-100 cursor-pointer hover:border-teal-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center"><i data-lucide="ship" class="w-4 h-4 text-teal-600"></i></div>
+                    <span class="text-xs font-semibold">Dolphin Cruise</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-cyan-50/70 border border-cyan-100 cursor-pointer hover:border-cyan-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-100 flex items-center justify-center"><i data-lucide="camera" class="w-4 h-4 text-cyan-600"></i></div>
+                    <span class="text-xs font-semibold">Photography</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-orange-50/70 border border-orange-100 cursor-pointer hover:border-orange-300 transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center"><i data-lucide="bike" class="w-4 h-4 text-orange-600"></i></div>
+                    <span class="text-xs font-semibold">Cycling Tours</span>
+                  </div>
                 </div>
               </div>
+
+              <!-- Itinerary Panel -->
+              <div data-tab-panel="dest-itinerary" class="hidden" style="display:none;">
+                <div class="text-xs text-muted-foreground mb-4">Sample 4N/5D itinerary for Goa</div>
+
+                <div class="itin-day">
+                  <div class="itin-day-head">
+                    <div class="itin-day-badge">D1</div>
+                    <div class="itin-day-title">
+                      <strong>Arrival · Welcome Evening</strong>
+                      <span>3 activities</span>
+                    </div>
+                  </div>
+                  <div class="itin-steps">
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">11:00</div>
+                        <div class="itin-step-dot bg-blue-100"><i data-lucide="plane-landing" class="w-3 h-3 text-blue-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Arrive at Goa Airport</div>
+                          <div class="itin-step-desc">Transfer to hotel, check-in & freshen up</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-blue-100 text-blue-700">Flight</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">15:00</div>
+                        <div class="itin-step-dot bg-cyan-100"><i data-lucide="waves" class="w-3 h-3 text-cyan-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Calangute Beach</div>
+                          <div class="itin-step-desc">Relax at the beach, try water sports</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-cyan-100 text-cyan-700">Beach</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">19:00</div>
+                        <div class="itin-step-dot bg-amber-100"><i data-lucide="ship" class="w-3 h-3 text-amber-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Mandovi Sunset Cruise</div>
+                          <div class="itin-step-desc">River cruise with live music & dinner</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-amber-100 text-amber-700">Activity</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="itin-day">
+                  <div class="itin-day-head">
+                    <div class="itin-day-badge">D2</div>
+                    <div class="itin-day-title">
+                      <strong>North Goa Exploration</strong>
+                      <span>4 activities</span>
+                    </div>
+                  </div>
+                  <div class="itin-steps">
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">09:00</div>
+                        <div class="itin-step-dot bg-stone-100"><i data-lucide="landmark" class="w-3 h-3 text-stone-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Fort Aguada</div>
+                          <div class="itin-step-desc">17th-century Portuguese fort with panoramic views</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-stone-100 text-stone-700">Heritage</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1.5h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">11:30</div>
+                        <div class="itin-step-dot bg-cyan-100"><i data-lucide="waves" class="w-3 h-3 text-cyan-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Baga Beach & Water Sports</div>
+                          <div class="itin-step-desc">Parasailing, jet ski, banana boat rides</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-cyan-100 text-cyan-700">Beach</span><span class="itin-step-tag bg-orange-100 text-orange-700">Sports</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">15:00</div>
+                        <div class="itin-step-dot bg-rose-100"><i data-lucide="utensils" class="w-3 h-3 text-rose-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Goan Lunch at Gunpowder</div>
+                          <div class="itin-step-desc">Authentic Goan-Portuguese fusion cuisine in Assagao</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-rose-100 text-rose-700">Food</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 1.5h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">20:00</div>
+                        <div class="itin-step-dot bg-pink-100"><i data-lucide="music" class="w-3 h-3 text-pink-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Tito's Lane Nightlife</div>
+                          <div class="itin-step-desc">Live music, clubs & beach bars in Baga</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-pink-100 text-pink-700">Nightlife</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="itin-day">
+                  <div class="itin-day-head">
+                    <div class="itin-day-badge">D3</div>
+                    <div class="itin-day-title">
+                      <strong>Old Goa Heritage & South</strong>
+                      <span>3 activities</span>
+                    </div>
+                  </div>
+                  <div class="itin-steps">
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">09:00</div>
+                        <div class="itin-step-dot bg-brand-light"><i data-lucide="landmark" class="w-3 h-3 text-brand"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Old Goa Churches</div>
+                          <div class="itin-step-desc">Basilica of Bom Jesus & Se Cathedral (UNESCO)</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-brand-light text-brand">Heritage</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">13:00</div>
+                        <div class="itin-step-dot bg-green-100"><i data-lucide="trees" class="w-3 h-3 text-green-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Spice Plantation Tour</div>
+                          <div class="itin-step-desc">Guided tour with traditional Goan lunch</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-green-100 text-green-700">Nature</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">17:00</div>
+                        <div class="itin-step-dot bg-cyan-100"><i data-lucide="waves" class="w-3 h-3 text-cyan-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Palolem Beach Sunset</div>
+                          <div class="itin-step-desc">Kayaking, beach shacks & golden hour views</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-cyan-100 text-cyan-700">Beach</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 3h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="itin-day">
+                  <div class="itin-day-head">
+                    <div class="itin-day-badge">D4</div>
+                    <div class="itin-day-title">
+                      <strong>Leisure & Shopping</strong>
+                      <span>3 activities</span>
+                    </div>
+                  </div>
+                  <div class="itin-steps">
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">10:00</div>
+                        <div class="itin-step-dot bg-green-100"><i data-lucide="heart-pulse" class="w-3 h-3 text-green-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Spa & Ayurvedic Therapy</div>
+                          <div class="itin-step-desc">Relaxing couple's spa at hotel</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-green-100 text-green-700">Wellness</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">14:00</div>
+                        <div class="itin-step-dot bg-orange-100"><i data-lucide="shopping-bag" class="w-3 h-3 text-orange-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Anjuna Flea Market</div>
+                          <div class="itin-step-desc">Handicrafts, souvenirs, spices & local art</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-orange-100 text-orange-700">Shopping</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2.5h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">19:00</div>
+                        <div class="itin-step-dot bg-rose-100"><i data-lucide="utensils" class="w-3 h-3 text-rose-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Farewell Seafood Dinner</div>
+                          <div class="itin-step-desc">Beachside dinner at Martin's Corner, Betalbatim</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-rose-100 text-rose-700">Dinner</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="itin-day">
+                  <div class="itin-day-head">
+                    <div class="itin-day-badge">D5</div>
+                    <div class="itin-day-title">
+                      <strong>Departure</strong>
+                      <span>2 activities</span>
+                    </div>
+                  </div>
+                  <div class="itin-steps">
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">08:00</div>
+                        <div class="itin-step-dot bg-green-100"><i data-lucide="bed" class="w-3 h-3 text-green-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Hotel Checkout</div>
+                          <div class="itin-step-desc">Breakfast & checkout</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-green-100 text-green-700">Hotel</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="itin-step">
+                      <div class="itin-step-rail">
+                        <div class="itin-step-time">12:00</div>
+                        <div class="itin-step-dot bg-blue-100"><i data-lucide="plane-takeoff" class="w-3 h-3 text-blue-600"></i></div>
+                      </div>
+                      <div class="itin-step-body">
+                        <div class="itin-step-info">
+                          <div class="itin-step-name">Flight GOI → DEL</div>
+                          <div class="itin-step-desc">Transfer to airport & departure</div>
+                          <div class="itin-step-meta"><span class="itin-step-tag bg-blue-100 text-blue-700">Flight</span><span class="itin-step-dur"><i data-lucide="clock" class="w-2.5 h-2.5"></i> 2h 45m</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Calendar Panel -->
+              <div data-tab-panel="dest-calendar" class="hidden" style="display:none;">
+                <div class="text-xs text-muted-foreground mb-4">Sample 4N/5D calendar view for Goa</div>
+
+                <!-- Day Tabs -->
+                <div class="cal-day-tabs" id="destCalDayTabs">
+                  <div class="cal-tab-slider" id="destCalTabSlider"></div>
+                  <div class="cal-day-tab active" data-cal-day="0" onclick="switchDestCalDay(0)">
+                    <div class="cal-tab-dow">Wed</div>
+                    <div class="cal-tab-day">4</div>
+                    <div class="cal-tab-month">Mar</div>
+                  </div>
+                  <div class="cal-day-tab" data-cal-day="1" onclick="switchDestCalDay(1)">
+                    <div class="cal-tab-dow">Thu</div>
+                    <div class="cal-tab-day">5</div>
+                    <div class="cal-tab-month">Mar</div>
+                  </div>
+                  <div class="cal-day-tab" data-cal-day="2" onclick="switchDestCalDay(2)">
+                    <div class="cal-tab-dow">Fri</div>
+                    <div class="cal-tab-day">6</div>
+                    <div class="cal-tab-month">Mar</div>
+                  </div>
+                  <div class="cal-day-tab" data-cal-day="3" onclick="switchDestCalDay(3)">
+                    <div class="cal-tab-dow">Sat</div>
+                    <div class="cal-tab-day">7</div>
+                    <div class="cal-tab-month">Mar</div>
+                  </div>
+                  <div class="cal-day-tab" data-cal-day="4" onclick="switchDestCalDay(4)">
+                    <div class="cal-tab-dow">Sun</div>
+                    <div class="cal-tab-day">8</div>
+                    <div class="cal-tab-month">Mar</div>
+                  </div>
+                </div>
+
+                <!-- Day 1: Arrival — 07:00–21:00 -->
+                <div class="cal-day-grid active" data-cal-grid="0">
+                  <div class="cal-grid">
+                    <div class="cal-hour-col">
+                      <div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div><div class="cal-hour-label">07 PM</div><div class="cal-hour-label">08 PM</div><div class="cal-hour-label">09 PM</div>
+                    </div>
+                    <div class="cal-body">
+                      <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                      <!-- Flight DEL→GOI 08:45–11:30 -->
+                      <div class="cal-event bg-blue-50" style="top:calc(1.75*48px);height:calc(2.75*48px);border-color:#3b82f6;">
+                        <div class="cal-event-icon bg-blue-100"><i data-lucide="plane" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">✈ Flight DEL → GOI</div>
+                          <div class="cal-event-time">08:45 AM – 11:30 AM · 2h 45m</div>
+                        </div>
+                      </div>
+                      <!-- Airport Transfer 11:30–12:15 -->
+                      <div class="cal-event bg-gray-50" style="top:calc(4.5*48px);height:calc(0.75*48px);border-color:#6b7280;">
+                        <div class="cal-event-icon bg-gray-100"><i data-lucide="car" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🚗 Airport → Hotel</div>
+                          <div class="cal-event-time">11:30 AM – 12:15 PM · 45m</div>
+                        </div>
+                      </div>
+                      <!-- Hotel Check-in 14:00–16:00 -->
+                      <div class="cal-event bg-green-50" style="top:calc(7*48px);height:calc(2*48px);border-color:#22c55e;">
+                        <div class="cal-event-icon bg-green-100"><i data-lucide="bed" class="w-2.5 h-2.5 text-green-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🏨 Hotel Check-in & Rest</div>
+                          <div class="cal-event-time">02:00 PM – 04:00 PM · 2h</div>
+                        </div>
+                      </div>
+                      <!-- Sunset Cruise + Dinner 17:00–20:00 -->
+                      <div class="cal-event bg-amber-50" style="top:calc(10*48px);height:calc(3*48px);border-color:#f59e0b;">
+                        <div class="cal-event-icon bg-amber-100"><i data-lucide="ship" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🌅 Sunset Cruise + Dinner</div>
+                          <div class="cal-event-time">05:00 PM – 08:00 PM · 3h</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Day 2: North Goa — 07:00–23:00 -->
+                <div class="cal-day-grid" data-cal-grid="1">
+                  <div class="cal-grid">
+                    <div class="cal-hour-col">
+                      <div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div><div class="cal-hour-label">07 PM</div><div class="cal-hour-label">08 PM</div><div class="cal-hour-label">09 PM</div><div class="cal-hour-label">10 PM</div>
+                    </div>
+                    <div class="cal-body">
+                      <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                      <!-- Baga Beach 08:00–09:30 -->
+                      <div class="cal-event bg-cyan-50" style="top:calc(1*48px);height:calc(1.5*48px);border-color:#06b6d4;">
+                        <div class="cal-event-icon bg-cyan-100"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🏖 Baga Beach — Morning</div>
+                          <div class="cal-event-time">08:00 AM – 09:30 AM · 1.5h</div>
+                        </div>
+                      </div>
+                      <!-- Water Sports 09:30–11:30 -->
+                      <div class="cal-event bg-orange-50" style="top:calc(2.5*48px);height:calc(2*48px);border-color:#f97316;">
+                        <div class="cal-event-icon bg-orange-100"><i data-lucide="zap" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">⚡ Water Sports Session</div>
+                          <div class="cal-event-time">09:30 AM – 11:30 AM · 2h</div>
+                        </div>
+                      </div>
+                      <!-- Forts 14:00–16:30 -->
+                      <div class="cal-event bg-stone-50" style="top:calc(7*48px);height:calc(2.5*48px);border-color:#78716c;">
+                        <div class="cal-event-icon bg-stone-100"><i data-lucide="landmark" class="w-2.5 h-2.5 text-stone-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🏰 Fort Aguada & Chapora</div>
+                          <div class="cal-event-time">02:00 PM – 04:30 PM · 2.5h</div>
+                        </div>
+                      </div>
+                      <!-- Anjuna Market 17:00–19:00 -->
+                      <div class="cal-event bg-pink-50" style="top:calc(10*48px);height:calc(2*48px);border-color:#ec4899;">
+                        <div class="cal-event-icon bg-pink-100"><i data-lucide="shopping-bag" class="w-2.5 h-2.5 text-pink-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🛍 Anjuna Flea Market</div>
+                          <div class="cal-event-time">05:00 PM – 07:00 PM · 2h</div>
+                        </div>
+                      </div>
+                      <!-- Tito's Lane 21:00–23:00 -->
+                      <div class="cal-event bg-brand-mid" style="top:calc(14*48px);height:calc(2*48px);border-color:#114459;">
+                        <div class="cal-event-icon bg-brand-light"><i data-lucide="music" class="w-2.5 h-2.5 text-brand"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🎵 Tito's Lane — Night Out</div>
+                          <div class="cal-event-time">09:00 PM – 11:00 PM · 2h</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Day 3: Culture & Spice — 08:00–18:00 -->
+                <div class="cal-day-grid" data-cal-grid="2">
+                  <div class="cal-grid">
+                    <div class="cal-hour-col">
+                      <div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div>
+                    </div>
+                    <div class="cal-body">
+                      <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                      <!-- Heritage Walk 09:00–11:30 -->
+                      <div class="cal-event bg-orange-50" style="top:calc(1*48px);height:calc(2.5*48px);border-color:#f97316;">
+                        <div class="cal-event-icon bg-orange-100"><i data-lucide="church" class="w-2.5 h-2.5 text-orange-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">⛪ Old Goa Heritage Walk</div>
+                          <div class="cal-event-time">09:00 AM – 11:30 AM · 2.5h</div>
+                        </div>
+                      </div>
+                      <!-- Goan Thali 12:00–13:00 -->
+                      <div class="cal-event bg-rose-50" style="top:calc(4*48px);height:calc(1*48px);border-color:#f43f5e;">
+                        <div class="cal-event-icon bg-rose-100"><i data-lucide="utensils" class="w-2.5 h-2.5 text-rose-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🍛 Goan Thali Lunch</div>
+                          <div class="cal-event-time">12:00 PM – 01:00 PM · 1h</div>
+                        </div>
+                      </div>
+                      <!-- Spice Farm 14:00–16:00 -->
+                      <div class="cal-event bg-green-50" style="top:calc(6*48px);height:calc(2*48px);border-color:#22c55e;">
+                        <div class="cal-event-icon bg-green-100"><i data-lucide="leaf" class="w-2.5 h-2.5 text-green-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🌿 Sahakari Spice Farm</div>
+                          <div class="cal-event-time">02:00 PM – 04:00 PM · 2h</div>
+                        </div>
+                      </div>
+                      <!-- Elephant Interaction 16:30–18:00 -->
+                      <div class="cal-event bg-amber-50" style="top:calc(8.5*48px);height:calc(1.5*48px);border-color:#f59e0b;">
+                        <div class="cal-event-icon bg-amber-100"><i data-lucide="heart" class="w-2.5 h-2.5 text-amber-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🐘 Elephant Interaction</div>
+                          <div class="cal-event-time">04:30 PM – 06:00 PM · 1.5h</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Day 4: South Goa — 06:00–21:00 -->
+                <div class="cal-day-grid" data-cal-grid="3">
+                  <div class="cal-grid">
+                    <div class="cal-hour-col">
+                      <div class="cal-hour-label">06 AM</div><div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div><div class="cal-hour-label">06 PM</div><div class="cal-hour-label">07 PM</div><div class="cal-hour-label">08 PM</div><div class="cal-hour-label">09 PM</div>
+                    </div>
+                    <div class="cal-body">
+                      <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                      <!-- Dolphin 07:00–08:30 -->
+                      <div class="cal-event bg-blue-50" style="top:calc(1*48px);height:calc(1.5*48px);border-color:#3b82f6;">
+                        <div class="cal-event-icon bg-blue-100"><i data-lucide="fish" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🐬 Dolphin Spotting Boat</div>
+                          <div class="cal-event-time">07:00 AM – 08:30 AM · 1.5h</div>
+                        </div>
+                      </div>
+                      <!-- Kayaking 09:00–10:30 -->
+                      <div class="cal-event bg-teal-50" style="top:calc(3*48px);height:calc(1.5*48px);border-color:#14b8a6;">
+                        <div class="cal-event-icon bg-teal-100"><i data-lucide="sailboat" class="w-2.5 h-2.5 text-teal-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🛶 Mangrove Kayaking</div>
+                          <div class="cal-event-time">09:00 AM – 10:30 AM · 1.5h</div>
+                        </div>
+                      </div>
+                      <!-- Palolem 11:00–14:00 -->
+                      <div class="cal-event bg-cyan-50" style="top:calc(5*48px);height:calc(3*48px);border-color:#06b6d4;">
+                        <div class="cal-event-icon bg-cyan-100"><i data-lucide="waves" class="w-2.5 h-2.5 text-cyan-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🏖 Palolem Beach + Lunch</div>
+                          <div class="cal-event-time">11:00 AM – 02:00 PM · 3h</div>
+                        </div>
+                      </div>
+                      <!-- Cola Beach 15:00–17:00 -->
+                      <div class="cal-event bg-emerald-50" style="top:calc(9*48px);height:calc(2*48px);border-color:#10b981;">
+                        <div class="cal-event-icon bg-emerald-100"><i data-lucide="droplets" class="w-2.5 h-2.5 text-emerald-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">💧 Cola Beach Secret Lagoon</div>
+                          <div class="cal-event-time">03:00 PM – 05:00 PM · 2h</div>
+                        </div>
+                      </div>
+                      <!-- Spa Dinner 19:00–21:00 -->
+                      <div class="cal-event bg-brand-mid" style="top:calc(13*48px);height:calc(2*48px);border-color:#114459;">
+                        <div class="cal-event-icon bg-brand-light"><i data-lucide="heart-pulse" class="w-2.5 h-2.5 text-brand"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🍷 Farewell Spa Dinner</div>
+                          <div class="cal-event-time">07:00 PM – 09:00 PM · 2h</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Day 5: Departure — 07:00–17:00 -->
+                <div class="cal-day-grid" data-cal-grid="4">
+                  <div class="cal-grid">
+                    <div class="cal-hour-col">
+                      <div class="cal-hour-label">07 AM</div><div class="cal-hour-label">08 AM</div><div class="cal-hour-label">09 AM</div><div class="cal-hour-label">10 AM</div><div class="cal-hour-label">11 AM</div><div class="cal-hour-label">12 PM</div><div class="cal-hour-label">01 PM</div><div class="cal-hour-label">02 PM</div><div class="cal-hour-label">03 PM</div><div class="cal-hour-label">04 PM</div><div class="cal-hour-label">05 PM</div>
+                    </div>
+                    <div class="cal-body">
+                      <div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div><div class="cal-row"></div>
+                      <!-- Breakfast 08:00–09:00 -->
+                      <div class="cal-event bg-yellow-50" style="top:calc(1*48px);height:calc(1*48px);border-color:#eab308;">
+                        <div class="cal-event-icon bg-yellow-100"><i data-lucide="coffee" class="w-2.5 h-2.5 text-yellow-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">☕ Leisurely Breakfast</div>
+                          <div class="cal-event-time">08:00 AM – 09:00 AM · 1h</div>
+                        </div>
+                      </div>
+                      <!-- Checkout 11:00–12:00 -->
+                      <div class="cal-event bg-gray-50" style="top:calc(4*48px);height:calc(1*48px);border-color:#6b7280;">
+                        <div class="cal-event-icon bg-gray-100"><i data-lucide="log-out" class="w-2.5 h-2.5 text-gray-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">🚗 Checkout + Airport Transfer</div>
+                          <div class="cal-event-time">11:00 AM – 12:00 PM · 1h</div>
+                        </div>
+                      </div>
+                      <!-- Flight GOI→DEL 14:15–17:05 -->
+                      <div class="cal-event bg-blue-50" style="top:calc(7.25*48px);height:calc(2.83*48px);border-color:#3b82f6;">
+                        <div class="cal-event-icon bg-blue-100"><i data-lucide="plane-takeoff" class="w-2.5 h-2.5 text-blue-600"></i></div>
+                        <div class="cal-event-info">
+                          <div class="cal-event-name">✈ Flight GOI → DEL</div>
+                          <div class="cal-event-time">02:15 PM – 05:05 PM · 2h 50m</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
           </div>
 
@@ -716,7 +1417,7 @@
                       <span class="text-xs text-muted-foreground">Engineering · Dec 2025</span>
                     </div>
                     <div class="flex items-center gap-0.5 mb-1"><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-current"></i></div>
-                    <p class="text-xs text-muted-foreground leading-relaxed">"Absolutely loved it! Palolem beach was serene and perfect for the family. The hotel booked through Trvello was top-notch. Already planning our next visit."</p>
+                    <p class="text-xs text-muted-foreground leading-relaxed">"Absolutely loved it! Palolem beach was serene and perfect for the family. The hotel booked through Leave Studio was top-notch. Already planning our next visit."</p>
                   </div>
                 </div>
                 <div class="flex gap-3 p-3 rounded-lg border border-border">
@@ -848,21 +1549,21 @@
               <div class="card-title text-sm">You Might Also Like</div>
             </div>
             <div class="card-content space-y-2.5">
-              <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+              <a href="destination-detail.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Pondicherry"></div>
                 <div>
                   <div class="text-sm font-semibold">Pondicherry</div>
                   <div class="text-[0.625rem] text-muted-foreground">91% Match · From ₹16K</div>
                 </div>
               </a>
-              <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+              <a href="destination-detail.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Bali"></div>
                 <div>
                   <div class="text-sm font-semibold">Bali, Indonesia</div>
                   <div class="text-[0.625rem] text-muted-foreground">93% Match · From ₹42K</div>
                 </div>
               </a>
-              <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+              <a href="destination-detail.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"><img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Thailand"></div>
                 <div>
                   <div class="text-sm font-semibold">Phuket, Thailand</div>
@@ -880,5 +1581,122 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="../js/main.js"></script>
   <script>lucide.createIcons();</script>
+  <script>
+  (function() {
+    var slides = document.getElementById('heroSlides');
+    var dots = document.querySelectorAll('#heroDots .hero-dot');
+    var counter = document.getElementById('heroCounter');
+    var images = slides ? slides.querySelectorAll('img') : [];
+    var total = images.length;
+    var current = 0;
+
+    function goTo(idx) {
+      if (idx < 0) idx = total - 1;
+      if (idx >= total) idx = 0;
+      current = idx;
+      slides.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+      if (counter) counter.textContent = (current + 1) + ' / ' + total;
+    }
+
+    window.slideHero = function(dir) { goTo(current + dir); };
+
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() { goTo(i); });
+    });
+
+    // Fullscreen gallery
+    var fsOverlay = document.getElementById('heroFullscreen');
+    var fsImg = document.getElementById('heroFSImage');
+    var fsCounter = document.getElementById('heroFSCounter');
+    var fsCurrent = 0;
+    var srcs = [];
+    images.forEach(function(img) { srcs.push(img.src.replace('w=1400', 'w=1800')); });
+
+    window.openHeroFullscreen = function() {
+      fsCurrent = current;
+      fsImg.src = srcs[fsCurrent];
+      fsCounter.textContent = (fsCurrent + 1) + ' / ' + total;
+      fsOverlay.style.display = 'flex';
+    };
+    window.closeHeroFullscreen = function() {
+      fsOverlay.style.display = 'none';
+    };
+    window.slideHeroFS = function(dir) {
+      fsCurrent += dir;
+      if (fsCurrent < 0) fsCurrent = total - 1;
+      if (fsCurrent >= total) fsCurrent = 0;
+      fsImg.src = srcs[fsCurrent];
+      fsCounter.textContent = (fsCurrent + 1) + ' / ' + total;
+    };
+
+    document.addEventListener('keydown', function(e) {
+      if (fsOverlay.style.display === 'flex') {
+        if (e.key === 'Escape') closeHeroFullscreen();
+        if (e.key === 'ArrowLeft') slideHeroFS(-1);
+        if (e.key === 'ArrowRight') slideHeroFS(1);
+      }
+    });
+  })();
+
+  /* Calendar day tabs for destination detail */
+  function switchDestCalDay(idx) {
+    var container = document.querySelector('[data-tab-panel="dest-calendar"]');
+    if (!container) return;
+    container.querySelectorAll('.cal-day-tab').forEach(function(t) {
+      t.classList.toggle('active', +t.dataset.calDay === idx);
+    });
+    container.querySelectorAll('.cal-day-grid').forEach(function(g) {
+      g.classList.toggle('active', +g.dataset.calGrid === idx);
+    });
+    positionDestCalSlider();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  function positionDestCalSlider() {
+    var tab = document.querySelector('[data-tab-panel="dest-calendar"] .cal-day-tab.active');
+    var s = document.getElementById('destCalTabSlider');
+    if (tab && s) {
+      s.style.left = tab.offsetLeft + 'px';
+      s.style.width = tab.offsetWidth + 'px';
+    }
+  }
+
+  var origInitTabs = window._destCalObserver;
+  var calPanel = document.querySelector('[data-tab-panel="dest-calendar"]');
+  if (calPanel) {
+    var observer = new MutationObserver(function() {
+      if (calPanel.style.display !== 'none') {
+        requestAnimationFrame(function() { positionDestCalSlider(); });
+      }
+    });
+    observer.observe(calPanel, { attributes: true, attributeFilter: ['style'] });
+  }
+
+  requestAnimationFrame(function() { positionDestCalSlider(); });
+  </script>
+  <script>
+  (function() {
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var text = btn.textContent.trim().toLowerCase();
+
+      if (text.indexOf('wishlist') !== -1 || text.indexOf('save') !== -1) {
+        e.preventDefault();
+        var saved = btn.dataset.saved === 'true';
+        if (saved) {
+          btn.dataset.saved = 'false';
+          btn.innerHTML = btn.innerHTML.replace('Saved!', 'Save to Wishlist');
+          if (typeof showToast === 'function') showToast('Removed from wishlist', 'success');
+        } else {
+          btn.dataset.saved = 'true';
+          btn.innerHTML = btn.innerHTML.replace('Save to Wishlist', 'Saved!');
+          if (typeof showToast === 'function') showToast('Saved to wishlist!', 'success');
+        }
+      }
+    });
+  })();
+  </script>
 </body>
 </html>

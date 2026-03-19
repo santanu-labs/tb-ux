@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cart — Leave Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .cart-trip-card {
+      border: 2px solid hsl(var(--border));
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: hsl(var(--card));
+    }
+    .cart-trip-card.selected {
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 1px hsl(var(--primary) / 0.15), 0 4px 16px hsl(var(--primary) / 0.08);
+    }
+    .cart-trip-card:hover {
+      border-color: hsl(var(--primary) / 0.5);
+    }
+    .cart-trip-img {
+      width: 180px; min-height: 100%;
+      object-fit: cover; flex-shrink: 0;
+    }
+    @media (max-width: 640px) {
+      .cart-trip-img { width: 100%; height: 140px; }
+      .cart-trip-card .flex-row-layout { flex-direction: column; }
+    }
+    
+    .finance-card {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      position: sticky; top: 5rem;
+    }
+    .emi-table th {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: hsl(var(--muted-foreground));
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+    .emi-table td {
+      font-size: 0.8125rem;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid hsl(var(--border) / 0.5);
+    }
+    .emi-table tr:last-child td { border-bottom: none; }
+    .emi-option {
+      border: 1.5px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px);
+      padding: 0.625rem 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .emi-option:hover { border-color: hsl(var(--primary) / 0.4); }
+    .emi-option.active {
+      border-color: hsl(var(--primary));
+      background: hsl(var(--primary) / 0.04);
+    }
+    .trip-payment-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.625rem;
+      background: hsl(var(--muted) / 0.5);
+      border-radius: calc(var(--radius) - 2px);
+      flex-wrap: wrap;
+    }
+    .trip-pay-options {
+      display: flex; gap: 0.25rem;
+    }
+    .trip-pay-opt {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.6875rem; font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 999px;
+      border: 1.5px solid hsl(var(--border));
+      cursor: pointer;
+      transition: all 0.15s;
+      background: hsl(var(--card));
+    }
+    .trip-pay-opt:hover { border-color: hsl(var(--primary) / 0.4); }
+    .trip-pay-opt.active {
+      border-color: hsl(var(--primary));
+      background: hsl(var(--primary) / 0.08);
+      color: hsl(var(--primary));
+    }
+  </style>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Leave Studio</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <div class="perk-pill-group flex-1 justify-center">
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-green-100"><i data-lucide="credit-card" class="text-green-600"></i></span>
+            <span class="text-green-700">₹9,000</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-green-600"></i></div>
+                <div>
+                  <div class="text-sm font-semibold">Travel Credit</div>
+                  <div class="text-[0.6875rem] text-muted-foreground">Annual allowance</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-base font-bold text-green-600">₹9,000</span>
+                <span class="text-[0.6875rem] text-muted-foreground">of ₹15,000</span>
+              </div>
+              <div class="progress-bar"><div class="progress-bar-fill success" style="width: 60%"></div></div>
+              <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Dec 2025</div>
+            </div>
+          </a>
+        </div>
+        <a href="cart.html" class="btn-ghost btn-icon relative" title="Cart">
+          <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+          <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[0.625rem] font-bold rounded-full flex items-center justify-center px-1" data-cart-count>3</span>
+        </a>
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="my-plans.html" class="dropdown-item"><i data-lucide="history" class="w-4 h-4"></i> Planned History</a>
+            <a href="payment-history.html" class="dropdown-item"><i data-lucide="indian-rupee" class="w-4 h-4"></i> Payment History</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+
+      <!-- Page Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-bold flex items-center gap-2">
+            <i data-lucide="shopping-cart" class="w-6 h-6 text-primary"></i> My Cart
+          </h1>
+          <p class="text-muted-foreground text-sm mt-1">Review your planned trips and proceed to book</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-muted-foreground"><strong class="text-foreground" id="selectedCount">3</strong> of <span id="totalCount">3</span> selected</span>
+        </div>
+      </div>
+
+      <!-- Two-column layout -->
+      <div class="grid gap-6" style="grid-template-columns: 1fr 380px;">
+
+        <!-- LEFT: Trip Cards -->
+        <div class="space-y-4" id="cartItems">
+
+          <!-- Select All -->
+          <div class="flex items-center gap-3 mb-1">
+            <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold">
+              <input type="checkbox" checked class="w-4 h-4 rounded accent-[hsl(var(--primary))]" id="selectAll" onchange="toggleAll(this.checked)">
+              Select All
+            </label>
+            <button class="text-xs text-destructive hover:underline ml-auto" onclick="removeSelected()">
+              <i data-lucide="trash-2" class="w-3 h-3 inline"></i> Remove Selected
+            </button>
+          </div>
+
+          <!-- Trip 1: Goa — NEARBY (4 Mar, ~2 weeks away) → Full Payment only -->
+          <div class="cart-trip-card selected" data-price="33600" data-trip="goa" data-timing="nearby" data-pay="full">
+            <div class="flex flex-row-layout">
+              <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa" class="cart-trip-img">
+              <div class="flex-1 p-4">
+                <div class="flex items-start gap-3">
+                  <input type="checkbox" checked class="w-4 h-4 mt-1 rounded accent-[hsl(var(--primary))] cart-check" onchange="updateTotals()">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                      <h3 class="font-bold text-sm">Goa Beach & Culture Getaway</h3>
+                      <div class="flex items-center gap-1.5">
+                        <span class="badge badge-warning text-[0.5625rem]">In 16 days</span>
+                        <span class="badge badge-primary text-[0.625rem]">4N / 5D</span>
+                      </div>
+                    </div>
+                    <div class="text-xs text-muted-foreground space-y-0.5 mb-2">
+                      <p class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3 h-3"></i> 4 Apr – 8 Apr 2026</p>
+                      <p class="flex items-center gap-1.5"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</p>
+                      <p class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3 h-3"></i> Baga, Panjim, Old Goa, Palolem</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                      <span class="badge badge-outline text-[0.5625rem]">Flight</span>
+                      <span class="badge badge-outline text-[0.5625rem]">4★ Hotel</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Breakfast</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Transfers</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Water Sports</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                      <div>
+                        <span class="text-base font-bold text-primary">₹33,600</span>
+                        <span class="text-[0.6875rem] text-muted-foreground"> for 2 pax</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="badge badge-success text-[0.5625rem]">via Suggested</span>
+                        <a href="destination-detail.html" class="text-xs text-primary hover:underline font-medium">View Details →</a>
+                      </div>
+                    </div>
+                    <!-- Per-trip payment: Nearby → Full Payment only -->
+                    <div class="trip-payment-bar">
+                      <div class="flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground">
+                        <i data-lucide="wallet" class="w-3 h-3"></i> Payment:
+                      </div>
+                      <div class="trip-pay-options">
+                        <label class="trip-pay-opt active">
+                          <input type="radio" name="pay-goa" value="full" checked class="hidden" onchange="setTripPay(this)">
+                          <i data-lucide="banknote" class="w-3 h-3"></i> Full Payment
+                        </label>
+                      </div>
+                      <span class="text-[0.5625rem] text-amber-600 font-medium ml-auto">Nearby trip — full payment required</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trip 2: Pondicherry — FUTURE (14 Jun) → Full + EMI -->
+          <div class="cart-trip-card selected" data-price="16800" data-trip="pondi" data-timing="future" data-pay="full">
+            <div class="flex flex-row-layout">
+              <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" alt="Pondicherry" class="cart-trip-img">
+              <div class="flex-1 p-4">
+                <div class="flex items-start gap-3">
+                  <input type="checkbox" checked class="w-4 h-4 mt-1 rounded accent-[hsl(var(--primary))] cart-check" onchange="updateTotals()">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                      <h3 class="font-bold text-sm">Pondicherry Escape</h3>
+                      <div class="flex items-center gap-1.5">
+                        <span class="badge badge-outline text-[0.5625rem]">In 3 months</span>
+                        <span class="badge badge-primary text-[0.625rem]">2N / 3D</span>
+                      </div>
+                    </div>
+                    <div class="text-xs text-muted-foreground space-y-0.5 mb-2">
+                      <p class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3 h-3"></i> 14 Jun – 16 Jun 2026</p>
+                      <p class="flex items-center gap-1.5"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</p>
+                      <p class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3 h-3"></i> Promenade, Auroville, French Quarter</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                      <span class="badge badge-outline text-[0.5625rem]">Flight</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Boutique Stay</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Breakfast</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Café Tour</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                      <div>
+                        <span class="text-base font-bold text-primary">₹16,800</span>
+                        <span class="text-[0.6875rem] text-muted-foreground"> for 2 pax</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="badge badge-success text-[0.5625rem]">via Suggested</span>
+                        <a href="destination-detail.html" class="text-xs text-primary hover:underline font-medium">View Details →</a>
+                      </div>
+                    </div>
+                    <!-- Per-trip payment: Future → Full + EMI -->
+                    <div class="trip-payment-bar">
+                      <div class="flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground">
+                        <i data-lucide="wallet" class="w-3 h-3"></i> Payment:
+                      </div>
+                      <div class="trip-pay-options">
+                        <label class="trip-pay-opt active">
+                          <input type="radio" name="pay-pondi" value="full" checked class="hidden" onchange="setTripPay(this)">
+                          <i data-lucide="banknote" class="w-3 h-3"></i> Full Payment
+                        </label>
+                        <label class="trip-pay-opt">
+                          <input type="radio" name="pay-pondi" value="emi" class="hidden" onchange="setTripPay(this)">
+                          <i data-lucide="calendar-range" class="w-3 h-3"></i> EMI
+                        </label>
+                      </div>
+                    </div>
+                    <!-- EMI details (shown when EMI selected) -->
+                    <div class="trip-emi-details" style="display:none;">
+                      <div class="flex gap-2 mt-2">
+                        <div class="emi-option active" onclick="selectTripEmi(this, 'pondi', 3)">
+                          <div class="text-xs font-bold">3 mo</div>
+                          <div class="text-[0.6875rem] text-muted-foreground">₹5,600/mo</div>
+                        </div>
+                        <div class="emi-option" onclick="selectTripEmi(this, 'pondi', 6)">
+                          <div class="text-xs font-bold">6 mo</div>
+                          <div class="text-[0.6875rem] text-muted-foreground">₹2,800/mo</div>
+                        </div>
+                      </div>
+                      <p class="text-[0.5625rem] text-muted-foreground mt-1">0% interest · Auto-deducted from payroll</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trip 3: Coorg — FUTURE (1 Aug) → Full + EMI -->
+          <div class="cart-trip-card selected" data-price="14500" data-trip="coorg" data-timing="future" data-pay="full">
+            <div class="flex flex-row-layout">
+              <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Coorg" class="cart-trip-img">
+              <div class="flex-1 p-4">
+                <div class="flex items-start gap-3">
+                  <input type="checkbox" checked class="w-4 h-4 mt-1 rounded accent-[hsl(var(--primary))] cart-check" onchange="updateTotals()">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                      <h3 class="font-bold text-sm">Coorg Coffee Trail</h3>
+                      <div class="flex items-center gap-1.5">
+                        <span class="badge badge-outline text-[0.5625rem]">In 5 months</span>
+                        <span class="badge badge-primary text-[0.625rem]">2N / 3D</span>
+                      </div>
+                    </div>
+                    <div class="text-xs text-muted-foreground space-y-0.5 mb-2">
+                      <p class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3 h-3"></i> 1 Aug – 3 Aug 2026</p>
+                      <p class="flex items-center gap-1.5"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</p>
+                      <p class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3 h-3"></i> Abbey Falls, Raja's Seat, Coffee Plantation</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                      <span class="badge badge-outline text-[0.5625rem]">Train</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Homestay</span>
+                      <span class="badge badge-outline text-[0.5625rem]">All Meals</span>
+                      <span class="badge badge-outline text-[0.5625rem]">Trekking</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                      <div>
+                        <span class="text-base font-bold text-primary">₹14,500</span>
+                        <span class="text-[0.6875rem] text-muted-foreground"> for 2 pax</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="badge badge-outline text-[0.5625rem]">via Custom</span>
+                        <a href="destination-detail.html" class="text-xs text-primary hover:underline font-medium">View Details →</a>
+                      </div>
+                    </div>
+                    <!-- Per-trip payment: Future → Full + EMI -->
+                    <div class="trip-payment-bar">
+                      <div class="flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground">
+                        <i data-lucide="wallet" class="w-3 h-3"></i> Payment:
+                      </div>
+                      <div class="trip-pay-options">
+                        <label class="trip-pay-opt active">
+                          <input type="radio" name="pay-coorg" value="full" checked class="hidden" onchange="setTripPay(this)">
+                          <i data-lucide="banknote" class="w-3 h-3"></i> Full Payment
+                        </label>
+                        <label class="trip-pay-opt">
+                          <input type="radio" name="pay-coorg" value="emi" class="hidden" onchange="setTripPay(this)">
+                          <i data-lucide="calendar-range" class="w-3 h-3"></i> EMI
+                        </label>
+                      </div>
+                    </div>
+                    <!-- EMI details (shown when EMI selected) -->
+                    <div class="trip-emi-details" style="display:none;">
+                      <div class="flex gap-2 mt-2">
+                        <div class="emi-option active" onclick="selectTripEmi(this, 'coorg', 3)">
+                          <div class="text-xs font-bold">3 mo</div>
+                          <div class="text-[0.6875rem] text-muted-foreground">₹4,833/mo</div>
+                        </div>
+                        <div class="emi-option" onclick="selectTripEmi(this, 'coorg', 6)">
+                          <div class="text-xs font-bold">6 mo</div>
+                          <div class="text-[0.6875rem] text-muted-foreground">₹2,417/mo</div>
+                        </div>
+                      </div>
+                      <p class="text-[0.5625rem] text-muted-foreground mt-1">0% interest · Auto-deducted from payroll</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Finance Summary -->
+        <div>
+          <div class="finance-card">
+            <!-- Summary Header -->
+            <div class="p-4 border-b border-border">
+              <h2 class="font-bold text-sm flex items-center gap-2">
+                <i data-lucide="receipt" class="w-4 h-4 text-primary"></i> Booking Summary
+              </h2>
+            </div>
+
+            <!-- Line Items -->
+            <div class="p-4 space-y-2.5 border-b border-border text-sm" id="lineItems">
+              <div class="flex justify-between items-start" data-line="goa">
+                <div>
+                  <span class="text-muted-foreground">Goa Beach & Culture (2 pax)</span>
+                  <span class="block text-[0.625rem] text-muted-foreground/70 trip-pay-label" data-paylabel="goa">Full Payment</span>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <span class="font-semibold trip-line-price" data-lineprice="goa">₹33,600</span>
+                </div>
+              </div>
+              <div class="flex justify-between items-start" data-line="pondi">
+                <div>
+                  <span class="text-muted-foreground">Pondicherry Escape (2 pax)</span>
+                  <span class="block text-[0.625rem] text-muted-foreground/70 trip-pay-label" data-paylabel="pondi">Full Payment</span>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <span class="font-semibold trip-line-price" data-lineprice="pondi">₹16,800</span>
+                </div>
+              </div>
+              <div class="flex justify-between items-start" data-line="coorg">
+                <div>
+                  <span class="text-muted-foreground">Coorg Coffee Trail (2 pax)</span>
+                  <span class="block text-[0.625rem] text-muted-foreground/70 trip-pay-label" data-paylabel="coorg">Full Payment</span>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <span class="font-semibold trip-line-price" data-lineprice="coorg">₹14,500</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Perks & Credits — Checkbox -->
+            <div class="p-4 border-b border-border">
+              <label class="flex items-start gap-3 cursor-pointer" id="perksToggle">
+                <input type="checkbox" checked class="w-4 h-4 mt-0.5 rounded accent-[hsl(var(--primary))]" id="usePerks" onchange="updateTotals()">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="gift" class="w-4 h-4 text-green-600"></i>
+                    <span class="font-semibold text-sm">Use Perks & Credits</span>
+                  </div>
+                  <p class="text-xs text-muted-foreground mt-0.5">Apply available balance to reduce total</p>
+                  <div class="flex items-center gap-3 mt-2">
+                    <div class="flex items-center gap-1.5 text-xs">
+                      <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                      <span class="text-muted-foreground">Travel Credit:</span>
+                      <span class="font-semibold text-green-600">₹9,000</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                      <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                      <span class="text-muted-foreground">Perk Points:</span>
+                      <span class="font-semibold text-blue-600">₹4,200</span>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Totals -->
+            <div class="p-4 space-y-2 border-b border-border text-sm">
+              <div class="flex justify-between">
+                <span class="text-muted-foreground">Subtotal</span>
+                <span class="font-semibold" id="subtotal">₹64,900</span>
+              </div>
+              <div class="flex justify-between text-green-600" id="creditRow">
+                <span>Perks & Credits</span>
+                <span class="font-semibold" id="creditAmount">– ₹13,200</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-muted-foreground">GST (5%)</span>
+                <span class="font-semibold" id="gstAmount">₹2,585</span>
+              </div>
+              <div class="separator my-2"></div>
+
+              <!-- Pay Now (full payment trips) -->
+              <div id="payNowBlock">
+                <div class="flex justify-between text-base">
+                  <span class="font-bold">Pay Now</span>
+                  <span class="font-bold text-primary" id="payNowAmount">₹54,285</span>
+                </div>
+                <div class="text-[0.625rem] text-muted-foreground mt-0.5" id="payNowDetail">Full payment for Goa + Pondicherry + Coorg</div>
+              </div>
+
+              <!-- EMI block (shown when any trip is EMI) -->
+              <div id="emiBlock" style="display:none;" class="mt-2 pt-2 border-t border-border/50">
+                <div class="flex justify-between text-base">
+                  <span class="font-bold flex items-center gap-1.5"><i data-lucide="calendar-range" class="w-3.5 h-3.5 text-blue-600"></i> EMI/month</span>
+                  <span class="font-bold text-blue-600" id="emiMonthlyAmount">₹0/mo</span>
+                </div>
+                <div class="text-[0.625rem] text-muted-foreground mt-0.5" id="emiDetail">Salary deduction</div>
+              </div>
+
+              <!-- Grand total -->
+              <div class="mt-2 pt-2 border-t border-border/50" id="grandTotalBlock" style="display:none;">
+                <div class="flex justify-between text-xs text-muted-foreground">
+                  <span>Total (Pay Now + EMI)</span>
+                  <span class="font-semibold" id="grandTotal">₹64,900</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="p-4">
+              <button class="btn-primary w-full flex items-center justify-center gap-2 py-2.5" onclick="window.location.href='booking-confirmation.html'">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+                <span class="font-semibold" id="ctaLabel">Pay Now</span>
+                <span class="text-sm opacity-80" id="ctaAmount">· ₹54,285</span>
+              </button>
+              <div class="text-[0.625rem] text-center text-blue-600 font-medium mt-1" id="ctaEmiNote" style="display:none;">
+                + EMI of <span id="ctaEmiAmt">₹0/mo</span> via salary deduction
+              </div>
+              <p class="text-[0.625rem] text-muted-foreground text-center mt-2">
+                <i data-lucide="shield-check" class="w-3 h-3 inline"></i>
+                Secure payment · Free cancellation up to 7 days before travel
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    var CREDIT = 9000;
+    var PERK_POINTS = 4200;
+    var TOTAL_PERKS = CREDIT + PERK_POINTS;
+
+    function fmt(n) { return '₹' + n.toLocaleString('en-IN'); }
+
+    function getSelectedEmiMonths(card) {
+      var active = card.querySelector('.emi-option.active');
+      if (!active) return 3;
+      var text = active.querySelector('.text-xs').textContent;
+      return parseInt(text) || 3;
+    }
+
+    function updateTotals() {
+      var cards = document.querySelectorAll('.cart-trip-card');
+      var subtotal = 0, fullTotal = 0, emiTotal = 0, emiMonthly = 0, count = 0;
+      var fullNames = [], emiNames = [];
+
+      cards.forEach(function(card) {
+        var cb = card.querySelector('.cart-check');
+        var price = parseInt(card.dataset.price) || 0;
+        var trip = card.dataset.trip;
+        var payMode = card.dataset.pay || 'full';
+        var line = document.querySelector('[data-line="' + trip + '"]');
+        var label = document.querySelector('[data-paylabel="' + trip + '"]');
+        var linePrice = document.querySelector('[data-lineprice="' + trip + '"]');
+
+        if (cb && cb.checked) {
+          card.classList.add('selected');
+          if (line) line.style.display = '';
+          subtotal += price;
+          count++;
+          var name = card.querySelector('h3').textContent;
+
+          if (payMode === 'emi') {
+            emiTotal += price;
+            emiNames.push(name);
+            var months = getSelectedEmiMonths(card);
+            var monthly = Math.round(price / months);
+            emiMonthly += monthly;
+            if (label) label.textContent = 'EMI · ' + fmt(monthly) + '/mo × ' + months;
+            if (linePrice) {
+              linePrice.innerHTML = fmt(monthly) + '<span class="text-[0.625rem] text-blue-600 font-normal">/mo × ' + months + '</span>';
+            }
+          } else {
+            fullTotal += price;
+            fullNames.push(name);
+            if (label) label.textContent = 'Full Payment';
+            if (linePrice) linePrice.innerHTML = fmt(price);
+          }
+        } else {
+          card.classList.remove('selected');
+          if (line) line.style.display = 'none';
+        }
+      });
+
+      var selectAllCb = document.getElementById('selectAll');
+      if (selectAllCb) selectAllCb.checked = count === cards.length;
+      document.getElementById('selectedCount').textContent = count;
+      var totalEl = document.getElementById('totalCount');
+      if (totalEl) totalEl.textContent = cards.length;
+      document.getElementById('subtotal').textContent = fmt(subtotal);
+
+      var usePerks = document.getElementById('usePerks').checked;
+      var creditApplied = usePerks ? Math.min(TOTAL_PERKS, fullTotal) : 0;
+      var creditRow = document.getElementById('creditRow');
+      creditRow.style.display = creditApplied > 0 ? '' : 'none';
+      document.getElementById('creditAmount').textContent = '– ' + fmt(creditApplied);
+
+      var fullAfterCredit = fullTotal - creditApplied;
+      if (fullAfterCredit < 0) fullAfterCredit = 0;
+      var fullGst = Math.round(fullAfterCredit * 0.05);
+      var payNow = fullAfterCredit + fullGst;
+
+      var emiGst = Math.round(emiTotal * 0.05);
+      var emiTotalWithGst = emiTotal + emiGst;
+      var gstTotal = fullGst + emiGst;
+
+      document.getElementById('gstAmount').textContent = fmt(gstTotal);
+
+      // Pay Now block
+      document.getElementById('payNowAmount').textContent = fmt(payNow);
+      var payNowNames = fullNames.length > 0 ? 'Full payment for ' + truncateNames(fullNames) : 'No full-payment trips selected';
+      document.getElementById('payNowDetail').textContent = payNowNames;
+
+      // EMI block
+      var emiBlock = document.getElementById('emiBlock');
+      var hasEmi = emiTotal > 0;
+      emiBlock.style.display = hasEmi ? '' : 'none';
+      if (hasEmi) {
+        var emiGstMonthly = Math.round(emiGst / getAvgEmiMonths(cards));
+        var emiMonthlyWithGst = emiMonthly + emiGstMonthly;
+        document.getElementById('emiMonthlyAmount').textContent = fmt(emiMonthlyWithGst) + '/mo';
+        document.getElementById('emiDetail').textContent = 'Salary deduction for ' + truncateNames(emiNames);
+      }
+
+      // Grand total (shown when both pay modes exist)
+      var grandBlock = document.getElementById('grandTotalBlock');
+      if (hasEmi && fullTotal > 0) {
+        grandBlock.style.display = '';
+        document.getElementById('grandTotal').textContent = fmt(payNow + emiTotalWithGst);
+      } else {
+        grandBlock.style.display = 'none';
+      }
+
+      // CTA
+      document.getElementById('ctaAmount').textContent = '· ' + fmt(payNow);
+      document.getElementById('ctaLabel').textContent = hasEmi && fullTotal === 0 ? 'Confirm Booking' : 'Pay Now';
+      var ctaEmiNote = document.getElementById('ctaEmiNote');
+      if (hasEmi) {
+        ctaEmiNote.style.display = '';
+        document.getElementById('ctaEmiAmt').textContent = fmt(emiMonthly) + '/mo';
+      } else {
+        ctaEmiNote.style.display = 'none';
+      }
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function getAvgEmiMonths(cards) {
+      var total = 0, n = 0;
+      cards.forEach(function(c) {
+        if (c.dataset.pay === 'emi' && c.querySelector('.cart-check').checked) {
+          total += getSelectedEmiMonths(c);
+          n++;
+        }
+      });
+      return n > 0 ? Math.round(total / n) : 3;
+    }
+
+    function truncateNames(names) {
+      if (names.length <= 2) return names.join(' + ');
+      return names[0] + ' + ' + (names.length - 1) + ' more';
+    }
+
+    function toggleAll(checked) {
+      document.querySelectorAll('.cart-check').forEach(function(cb) { cb.checked = checked; });
+      updateTotals();
+    }
+
+    function removeSelected() {
+      document.querySelectorAll('.cart-trip-card').forEach(function(card) {
+        var cb = card.querySelector('.cart-check');
+        if (cb && cb.checked) {
+          var trip = card.dataset.trip;
+          var line = document.querySelector('[data-line="' + trip + '"]');
+          if (line) line.remove();
+          card.remove();
+        }
+      });
+      updateTotals();
+      updateCartBadge();
+      checkEmptyCart();
+      if (typeof showToast === 'function') showToast('Selected trips removed', 'success');
+    }
+
+    function updateCartBadge() {
+      var remaining = document.querySelectorAll('.cart-trip-card').length;
+      document.querySelectorAll('[data-cart-count]').forEach(function(el) {
+        el.textContent = remaining;
+        el.style.display = remaining > 0 ? '' : 'none';
+      });
+      var headerBadge = document.querySelector('a[href="cart.html"] .absolute');
+      if (headerBadge) {
+        headerBadge.textContent = remaining;
+        headerBadge.style.display = remaining > 0 ? '' : 'none';
+      }
+    }
+
+    function checkEmptyCart() {
+      var remaining = document.querySelectorAll('.cart-trip-card').length;
+      var cartItems = document.getElementById('cartItems');
+      var emptyState = document.getElementById('emptyCartState');
+      var financeCard = document.querySelector('.finance-card');
+      if (remaining === 0) {
+        if (!emptyState) {
+          emptyState = document.createElement('div');
+          emptyState.id = 'emptyCartState';
+          emptyState.className = 'flex flex-col items-center justify-center py-16 text-center';
+          emptyState.innerHTML = '<i data-lucide="shopping-cart" class="w-16 h-16 text-muted-foreground/30 mb-4"></i>' +
+            '<h3 class="text-lg font-semibold mb-1">Your cart is empty</h3>' +
+            '<p class="text-sm text-muted-foreground mb-4">Browse destinations and add trips to get started</p>' +
+            '<a href="destinations.html" class="btn-primary btn-sm" style="text-decoration:none;">Explore Destinations</a>';
+          cartItems.innerHTML = '';
+          cartItems.appendChild(emptyState);
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        if (financeCard) financeCard.style.display = 'none';
+      }
+    }
+
+    function setTripPay(radio) {
+      var card = radio.closest('.cart-trip-card');
+      var val = radio.value;
+      card.dataset.pay = val;
+
+      card.querySelectorAll('.trip-pay-opt').forEach(function(opt) {
+        var inp = opt.querySelector('input[type="radio"]');
+        opt.classList.toggle('active', inp && inp.checked);
+      });
+
+      var emiPanel = card.querySelector('.trip-emi-details');
+      if (emiPanel) emiPanel.style.display = val === 'emi' ? '' : 'none';
+
+      updateTotals();
+    }
+
+    function selectTripEmi(el, trip, months) {
+      var card = el.closest('.cart-trip-card');
+      card.querySelectorAll('.emi-option').forEach(function(o) { o.classList.remove('active'); });
+      el.classList.add('active');
+      updateTotals();
+    }
+
+    updateTotals();
+  </script>
+</body>
+</html>

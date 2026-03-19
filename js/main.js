@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Trvello — Main JavaScript (Interactions)
+   Leave Studio — Main JavaScript (Interactions)
    ========================================================================== */
 
 // ---- Mobile Menu Toggle ----
@@ -44,7 +44,7 @@ function initSidebar() {
 
 function initSidebarCollapse(sidebar) {
   if (!sidebar) return;
-  const saved = localStorage.getItem('trvello-sidebar-collapsed');
+  const saved = localStorage.getItem('leavestudio-sidebar-collapsed');
   if (saved === 'true') sidebar.classList.add('collapsed');
 
   const btn = document.getElementById('sidebar-collapse-btn');
@@ -53,13 +53,13 @@ function initSidebarCollapse(sidebar) {
   btn.addEventListener('click', () => {
     sidebar.classList.toggle('collapsed');
     const isCollapsed = sidebar.classList.contains('collapsed');
-    localStorage.setItem('trvello-sidebar-collapsed', isCollapsed);
+    localStorage.setItem('leavestudio-sidebar-collapsed', isCollapsed);
   });
 }
 
 function initSidebarTheme(sidebar) {
   if (!sidebar) return;
-  const saved = localStorage.getItem('trvello-sidebar-theme');
+  const saved = localStorage.getItem('leavestudio-sidebar-theme');
   if (saved === 'light') sidebar.classList.add('sidebar-light');
 
   const btn = document.getElementById('sidebar-theme-btn');
@@ -77,7 +77,7 @@ function initSidebarTheme(sidebar) {
   btn.addEventListener('click', () => {
     sidebar.classList.toggle('sidebar-light');
     const isLight = sidebar.classList.contains('sidebar-light');
-    localStorage.setItem('trvello-sidebar-theme', isLight ? 'light' : 'dark');
+    localStorage.setItem('leavestudio-sidebar-theme', isLight ? 'light' : 'dark');
     updateLabel();
   });
 }

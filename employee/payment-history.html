@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment History — Leave Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/shadcn-tokens.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+          borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .tl-rail {
+      position: absolute; left: 15px; top: 0; bottom: 0; width: 2px;
+      background: hsl(var(--border));
+    }
+    .tl-item { position: relative; padding-left: 44px; padding-bottom: 1.5rem; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: 6px; top: 2px;
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1; border: 2px solid hsl(var(--background));
+    }
+    .tl-dot.paid { background: hsl(142 71% 45%); }
+    .tl-dot.pending { background: hsl(38 92% 50%); }
+    .tl-dot.upcoming { background: hsl(var(--muted)); }
+    .tl-dot.refund { background: hsl(0 84% 60%); }
+    .tl-dot.credit { background: hsl(217 91% 60%); }
+
+    .pay-trip-card {
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .pay-trip-card:hover { border-color: hsl(var(--primary) / 0.4); }
+
+    .emi-progress-track {
+      height: 6px; border-radius: 3px;
+      background: hsl(var(--muted));
+      overflow: hidden;
+    }
+    .emi-progress-fill {
+      height: 100%; border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .stat-card {
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 1rem;
+      background: hsl(var(--card));
+    }
+    .tl-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none;
+    }
+    .tl-toggle .tl-chevron {
+      transition: transform 0.2s ease;
+    }
+    .tl-toggle.open .tl-chevron {
+      transform: rotate(180deg);
+    }
+    .tl-body {
+      display: none;
+      padding-top: 0.75rem;
+    }
+    .tl-body.open {
+      display: block;
+    }
+  </style>
+</head>
+<body class="font-sans bg-background text-foreground">
+
+  <div class="emp-layout">
+    <!-- Top Navbar -->
+    <header class="emp-navbar">
+      <div class="flex items-center gap-6">
+        <a href="dashboard.html" class="emp-navbar-brand">
+          <div class="brand-icon"><i data-lucide="globe"></i></div>
+          <span class="brand-name">Leave Studio</span>
+          <span class="brand-org">Acme Corp</span>
+        </a>
+        <nav class="emp-nav-links">
+          <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
+        </nav>
+      </div>
+      <div class="emp-nav-right">
+        <div class="perk-pill-group flex-1 justify-center">
+          <a href="my-perks.html" class="perk-pill">
+            <span class="perk-pill-icon bg-green-100"><i data-lucide="credit-card" class="text-green-600"></i></span>
+            <span class="text-green-700">₹9,000</span>
+            <div class="perk-popover">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-green-600"></i></div>
+                <div>
+                  <div class="text-sm font-semibold">Travel Credit</div>
+                  <div class="text-[0.6875rem] text-muted-foreground">Annual allowance</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-base font-bold text-green-600">₹9,000</span>
+                <span class="text-[0.6875rem] text-muted-foreground">of ₹15,000</span>
+              </div>
+              <div class="progress-bar"><div class="progress-bar-fill success" style="width: 60%"></div></div>
+              <div class="text-[0.6875rem] text-muted-foreground mt-1">Expires Dec 2025</div>
+            </div>
+          </a>
+        </div>
+        <a href="cart.html" class="btn-ghost btn-icon relative" title="Cart">
+          <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+          <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[0.625rem] font-bold rounded-full flex items-center justify-center px-1">3</span>
+        </a>
+        <button class="btn-ghost btn-icon relative" title="Notifications">
+          <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        </button>
+        <div class="dropdown">
+          <button data-dropdown-trigger class="flex items-center gap-2 cursor-pointer">
+            <div class="avatar text-xs">RS</div>
+          </button>
+          <div class="dropdown-menu w-48">
+            <div class="px-3 py-2 border-b border-border">
+              <div class="text-sm font-semibold">Rahul Sharma</div>
+              <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
+            </div>
+            <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="my-plans.html" class="dropdown-item"><i data-lucide="history" class="w-4 h-4"></i> Planned History</a>
+            <a href="payment-history.html" class="dropdown-item"><i data-lucide="indian-rupee" class="w-4 h-4"></i> Payment History</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
+            <div class="my-1 border-t border-border"></div>
+            <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emp-content">
+
+      <!-- Page Header -->
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+          <i data-lucide="indian-rupee" class="w-6 h-6 text-primary"></i> Payment History
+        </h1>
+        <p class="text-muted-foreground text-sm mt-1">Track all your trip payments, EMIs, and credits</p>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="stat-card">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-600"></i></div>
+            <span class="text-xs text-muted-foreground">Total Paid</span>
+          </div>
+          <div class="text-lg font-bold text-green-600">₹47,040</div>
+          <div class="text-[0.625rem] text-muted-foreground">Across 2 trips</div>
+        </div>
+        <div class="stat-card">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-600"></i></div>
+            <span class="text-xs text-muted-foreground">Pending</span>
+          </div>
+          <div class="text-lg font-bold text-amber-600">₹20,380</div>
+          <div class="text-[0.625rem] text-muted-foreground">1 EMI + 1 in cart</div>
+        </div>
+        <div class="stat-card">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center"><i data-lucide="gift" class="w-3.5 h-3.5 text-blue-600"></i></div>
+            <span class="text-xs text-muted-foreground">Credits Used</span>
+          </div>
+          <div class="text-lg font-bold text-blue-600">₹13,200</div>
+          <div class="text-[0.625rem] text-muted-foreground">Travel + Perk points</div>
+        </div>
+        <div class="stat-card">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-rose-600"></i></div>
+            <span class="text-xs text-muted-foreground">Refunds</span>
+          </div>
+          <div class="text-lg font-bold text-rose-600">₹19,600</div>
+          <div class="text-[0.625rem] text-muted-foreground">1 cancelled trip</div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="tabs-list mb-6" data-tabs>
+        <button class="tab-trigger active" data-tab="ph-all">All</button>
+        <button class="tab-trigger" data-tab="ph-paid">Paid</button>
+        <button class="tab-trigger" data-tab="ph-pending">Pending</button>
+        <button class="tab-trigger" data-tab="ph-refunds">Refunds</button>
+      </div>
+
+      <!-- All Tab -->
+      <div data-tab-panel="ph-all">
+        <div class="space-y-5">
+
+          <!-- ═══ Trip 1: Goa — Fully Paid ═══ -->
+          <div class="pay-trip-card">
+            <div class="p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=80&h=80&fit=crop" alt="Goa" class="w-12 h-12 rounded-lg object-cover">
+                  <div>
+                    <h3 class="font-bold text-sm">Goa Beach & Culture Getaway</h3>
+                    <div class="text-xs text-muted-foreground flex items-center gap-3 mt-0.5">
+                      <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> 4 Mar – 8 Mar 2026</span>
+                      <span class="flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="badge badge-success text-[0.625rem]">Fully Paid</span>
+                  <div class="text-base font-bold mt-1">₹35,280</div>
+                </div>
+              </div>
+
+              <!-- Payment Timeline -->
+              <div class="bg-muted/30 rounded-lg p-3 mt-2">
+                <div class="tl-toggle" onclick="toggleTimeline(this)">
+                  <div class="text-xs font-semibold flex items-center gap-1.5">
+                    <i data-lucide="git-branch" class="w-3 h-3 text-primary"></i> Payment Timeline
+                    <span class="text-[0.5625rem] text-muted-foreground font-normal">· 4 events</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-muted-foreground tl-chevron"></i>
+                </div>
+                <div class="tl-body">
+                  <div class="relative" style="padding-left: 0;">
+                    <div class="tl-rail"></div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot credit"><i data-lucide="gift" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Travel Credit Applied</div>
+                          <div class="text-[0.625rem] text-muted-foreground">15 Feb 2026 · Auto-applied at booking</div>
+                        </div>
+                        <span class="text-xs font-bold text-blue-600">– ₹9,000</span>
+                      </div>
+                    </div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot credit"><i data-lucide="sparkles" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Perk Points Redeemed</div>
+                          <div class="text-[0.625rem] text-muted-foreground">15 Feb 2026 · 4,200 points</div>
+                        </div>
+                        <span class="text-xs font-bold text-blue-600">– ₹4,200</span>
+                      </div>
+                    </div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot paid"><i data-lucide="check" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Full Payment — UPI</div>
+                          <div class="text-[0.625rem] text-muted-foreground">15 Feb 2026 · Txn #TRV20260215A · rahul@upi</div>
+                        </div>
+                        <span class="text-xs font-bold text-green-600">₹22,080</span>
+                      </div>
+                    </div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot paid"><i data-lucide="check" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Booking Confirmed</div>
+                          <div class="text-[0.625rem] text-muted-foreground">15 Feb 2026 · Booking #TRV-2026-00842</div>
+                        </div>
+                        <span class="badge badge-success text-[0.5625rem]">Confirmed</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Trip 2: Pondicherry — EMI (Partial Paid) ═══ -->
+          <div class="pay-trip-card">
+            <div class="p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=80&h=80&fit=crop" alt="Pondicherry" class="w-12 h-12 rounded-lg object-cover">
+                  <div>
+                    <h3 class="font-bold text-sm">Pondicherry Escape</h3>
+                    <div class="text-xs text-muted-foreground flex items-center gap-3 mt-0.5">
+                      <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> 14 Jun – 16 Jun 2026</span>
+                      <span class="flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="badge badge-warning text-[0.625rem]">EMI Active</span>
+                  <div class="text-base font-bold mt-1">₹17,640</div>
+                </div>
+              </div>
+
+              <!-- EMI Progress -->
+              <div class="bg-blue-50/50 border border-blue-100 rounded-lg p-3 mb-3">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold flex items-center gap-1.5"><i data-lucide="calendar-range" class="w-3 h-3 text-blue-600"></i> EMI Progress</span>
+                  <span class="text-xs font-bold text-blue-600">2 of 3 paid</span>
+                </div>
+                <div class="emi-progress-track mb-2">
+                  <div class="emi-progress-fill bg-blue-500" style="width: 66.6%"></div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="rounded-md bg-green-50 border border-green-200 py-1.5 px-1">
+                    <div class="text-[0.5625rem] text-green-600 font-semibold">Mar 2026</div>
+                    <div class="text-xs font-bold text-green-700">₹5,880</div>
+                    <div class="text-[0.5rem] text-green-600">Paid ✓</div>
+                  </div>
+                  <div class="rounded-md bg-green-50 border border-green-200 py-1.5 px-1">
+                    <div class="text-[0.5625rem] text-green-600 font-semibold">Apr 2026</div>
+                    <div class="text-xs font-bold text-green-700">₹5,880</div>
+                    <div class="text-[0.5rem] text-green-600">Paid ✓</div>
+                  </div>
+                  <div class="rounded-md bg-amber-50 border border-amber-200 py-1.5 px-1">
+                    <div class="text-[0.5625rem] text-amber-600 font-semibold">May 2026</div>
+                    <div class="text-xs font-bold text-amber-700">₹5,880</div>
+                    <div class="text-[0.5rem] text-amber-600">Due 1 May</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EMI Summary -->
+              <div class="bg-muted/30 rounded-lg p-3 mb-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-semibold flex items-center gap-1.5"><i data-lucide="file-text" class="w-3 h-3 text-primary"></i> EMI Details</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Total Amount</div>
+                    <div class="font-bold">₹17,640</div>
+                  </div>
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Tenure</div>
+                    <div class="font-bold">3 months</div>
+                  </div>
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Interest</div>
+                    <div class="font-bold text-green-600">0% (₹0)</div>
+                  </div>
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Processing Fee</div>
+                    <div class="font-bold text-green-600">Nil</div>
+                  </div>
+                </div>
+                <div class="separator my-2"></div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">EMI/month</div>
+                    <div class="font-bold">₹5,880</div>
+                  </div>
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Paid So Far</div>
+                    <div class="font-bold text-green-600">₹11,760</div>
+                  </div>
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Remaining</div>
+                    <div class="font-bold text-amber-600">₹5,880</div>
+                  </div>
+                  <div>
+                    <div class="text-[0.625rem] text-muted-foreground">Deduction Mode</div>
+                    <div class="font-bold">Salary / Payroll</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Timeline -->
+              <div class="bg-muted/30 rounded-lg p-3">
+                <div class="tl-toggle" onclick="toggleTimeline(this)">
+                  <div class="text-xs font-semibold flex items-center gap-1.5">
+                    <i data-lucide="git-branch" class="w-3 h-3 text-primary"></i> Payment Timeline
+                    <span class="text-[0.5625rem] text-muted-foreground font-normal">· 4 events</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-muted-foreground tl-chevron"></i>
+                </div>
+                <div class="tl-body">
+                  <div class="relative">
+                    <div class="tl-rail"></div>
+
+                    <!-- EMI 1 — Paid -->
+                    <div class="tl-item">
+                      <div class="tl-dot paid"><i data-lucide="check" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <div class="text-xs font-semibold">EMI 1/3 — Salary Deduction</div>
+                          <span class="text-xs font-bold text-green-600">₹5,880</span>
+                        </div>
+                        <div class="text-[0.625rem] text-muted-foreground mt-0.5">1 Mar 2026 · March payroll</div>
+                        <div class="mt-1.5 p-2 rounded-md bg-card border border-border text-[0.625rem] space-y-1">
+                          <div class="flex justify-between"><span class="text-muted-foreground">Transaction ID</span><span class="font-mono font-semibold">SAL-2026-03-EMI-0915-01</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Payslip Ref</span><span class="font-mono font-semibold">PS-MAR26-RS-0047</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Deducted From</span><span class="font-semibold">Net Salary — ₹68,420</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Post-Deduction Salary</span><span class="font-semibold">₹62,540</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Status</span><span class="font-semibold text-green-600">Settled ✓</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Balance After</span><span class="font-semibold">₹11,760 remaining</span></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- EMI 2 — Paid -->
+                    <div class="tl-item">
+                      <div class="tl-dot paid"><i data-lucide="check" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <div class="text-xs font-semibold">EMI 2/3 — Salary Deduction</div>
+                          <span class="text-xs font-bold text-green-600">₹5,880</span>
+                        </div>
+                        <div class="text-[0.625rem] text-muted-foreground mt-0.5">1 Apr 2026 · April payroll</div>
+                        <div class="mt-1.5 p-2 rounded-md bg-card border border-border text-[0.625rem] space-y-1">
+                          <div class="flex justify-between"><span class="text-muted-foreground">Transaction ID</span><span class="font-mono font-semibold">SAL-2026-04-EMI-0915-02</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Payslip Ref</span><span class="font-mono font-semibold">PS-APR26-RS-0047</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Deducted From</span><span class="font-semibold">Net Salary — ₹68,420</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Post-Deduction Salary</span><span class="font-semibold">₹62,540</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Status</span><span class="font-semibold text-green-600">Settled ✓</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Balance After</span><span class="font-semibold">₹5,880 remaining</span></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- EMI 3 — Upcoming -->
+                    <div class="tl-item">
+                      <div class="tl-dot pending"><i data-lucide="clock" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <div class="text-xs font-semibold">EMI 3/3 — Upcoming</div>
+                          <span class="text-xs font-bold text-amber-600">₹5,880</span>
+                        </div>
+                        <div class="text-[0.625rem] text-muted-foreground mt-0.5">1 May 2026 · May payroll (scheduled)</div>
+                        <div class="mt-1.5 p-2 rounded-md bg-amber-50 border border-amber-200 text-[0.625rem] space-y-1">
+                          <div class="flex justify-between"><span class="text-amber-700">Scheduled Date</span><span class="font-semibold text-amber-700">1 May 2026</span></div>
+                          <div class="flex justify-between"><span class="text-amber-700">Deduction Source</span><span class="font-semibold text-amber-700">May Payroll</span></div>
+                          <div class="flex justify-between"><span class="text-amber-700">Expected Salary</span><span class="font-semibold text-amber-700">₹68,420</span></div>
+                          <div class="flex justify-between"><span class="text-amber-700">Post-Deduction</span><span class="font-semibold text-amber-700">₹62,540</span></div>
+                          <div class="flex justify-between"><span class="text-amber-700">Status</span><span class="font-semibold text-amber-700">Scheduled — Auto-deduct</span></div>
+                          <div class="flex justify-between"><span class="text-amber-700">Final EMI</span><span class="font-semibold text-amber-700">Balance will be ₹0 ✓</span></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Booking Confirmed -->
+                    <div class="tl-item">
+                      <div class="tl-dot paid"><i data-lucide="check" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <div class="text-xs font-semibold">Booking Confirmed</div>
+                          <span class="badge badge-success text-[0.5625rem]">Confirmed</span>
+                        </div>
+                        <div class="text-[0.625rem] text-muted-foreground mt-0.5">20 Feb 2026 · Booking #TRV-2026-00915</div>
+                        <div class="mt-1.5 p-2 rounded-md bg-card border border-border text-[0.625rem] space-y-1">
+                          <div class="flex justify-between"><span class="text-muted-foreground">Booking ID</span><span class="font-mono font-semibold">TRV-2026-00915</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">EMI Plan</span><span class="font-semibold">3 × ₹5,880/mo · 0% interest</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">Approved By</span><span class="font-semibold">HR Payroll — Auto-approved</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">EMI Start</span><span class="font-semibold">Mar 2026</span></div>
+                          <div class="flex justify-between"><span class="text-muted-foreground">EMI End</span><span class="font-semibold">May 2026</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Trip 3: Kerala — Cancelled / Refunded ═══ -->
+          <div class="pay-trip-card" style="opacity: 0.7;">
+            <div class="p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=80&h=80&fit=crop" alt="Kerala" class="w-12 h-12 rounded-lg object-cover">
+                  <div>
+                    <h3 class="font-bold text-sm line-through text-muted-foreground">Kerala Backwaters Retreat</h3>
+                    <div class="text-xs text-muted-foreground flex items-center gap-3 mt-0.5">
+                      <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> 10 Jan – 13 Jan 2026</span>
+                      <span class="flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="badge badge-destructive text-[0.625rem]">Cancelled</span>
+                  <div class="text-base font-bold text-muted-foreground mt-1"><s>₹24,500</s></div>
+                </div>
+              </div>
+
+              <!-- Payment Timeline -->
+              <div class="bg-muted/30 rounded-lg p-3">
+                <div class="tl-toggle" onclick="toggleTimeline(this)">
+                  <div class="text-xs font-semibold flex items-center gap-1.5">
+                    <i data-lucide="git-branch" class="w-3 h-3 text-primary"></i> Payment Timeline
+                    <span class="text-[0.5625rem] text-muted-foreground font-normal">· 4 events</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-muted-foreground tl-chevron"></i>
+                </div>
+                <div class="tl-body">
+                  <div class="relative">
+                    <div class="tl-rail"></div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot paid"><i data-lucide="check" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Full Payment — Net Banking</div>
+                          <div class="text-[0.625rem] text-muted-foreground">5 Dec 2025 · Txn #TRV20251205B · HDFC</div>
+                        </div>
+                        <span class="text-xs font-bold text-green-600">₹24,500</span>
+                      </div>
+                    </div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot refund"><i data-lucide="rotate-ccw" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Cancellation Requested</div>
+                          <div class="text-[0.625rem] text-muted-foreground">20 Dec 2025 · Reason: Change of plans</div>
+                        </div>
+                        <span class="badge badge-destructive text-[0.5625rem]">Cancelled</span>
+                      </div>
+                    </div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot refund"><i data-lucide="arrow-down-left" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Refund Processed (80%)</div>
+                          <div class="text-[0.625rem] text-muted-foreground">25 Dec 2025 · Refund #REF-2025-0421 · HDFC</div>
+                        </div>
+                        <span class="text-xs font-bold text-rose-600">₹19,600</span>
+                      </div>
+                    </div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot refund"><i data-lucide="x" class="w-2.5 h-2.5 text-white"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold text-muted-foreground">Cancellation Fee (20%)</div>
+                          <div class="text-[0.625rem] text-muted-foreground">Late cancellation charge</div>
+                        </div>
+                        <span class="text-xs font-bold text-muted-foreground">– ₹4,900</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Trip 4: Coorg — Pending (in cart, not yet paid) ═══ -->
+          <div class="pay-trip-card">
+            <div class="p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&h=80&fit=crop" alt="Coorg" class="w-12 h-12 rounded-lg object-cover">
+                  <div>
+                    <h3 class="font-bold text-sm">Coorg Coffee Trail</h3>
+                    <div class="text-xs text-muted-foreground flex items-center gap-3 mt-0.5">
+                      <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> 1 Aug – 3 Aug 2026</span>
+                      <span class="flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 2 Adults</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="badge badge-outline text-[0.625rem]">In Cart</span>
+                  <div class="text-base font-bold mt-1">₹14,500</div>
+                </div>
+              </div>
+
+              <!-- Payment Timeline -->
+              <div class="bg-muted/30 rounded-lg p-3">
+                <div class="tl-toggle" onclick="toggleTimeline(this)">
+                  <div class="text-xs font-semibold flex items-center gap-1.5">
+                    <i data-lucide="git-branch" class="w-3 h-3 text-primary"></i> Payment Timeline
+                    <span class="text-[0.5625rem] text-muted-foreground font-normal">· 1 event</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-muted-foreground tl-chevron"></i>
+                </div>
+                <div class="tl-body">
+                  <div class="relative">
+                    <div class="tl-rail"></div>
+
+                    <div class="tl-item">
+                      <div class="tl-dot upcoming"><i data-lucide="shopping-cart" class="w-2.5 h-2.5 text-muted-foreground"></i></div>
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="text-xs font-semibold">Added to Cart</div>
+                          <div class="text-[0.625rem] text-muted-foreground">18 Mar 2026 · Awaiting payment</div>
+                        </div>
+                        <a href="cart.html" class="text-xs text-primary font-semibold hover:underline">Pay Now →</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Paid Tab -->
+      <div data-tab-panel="ph-paid" class="hidden" style="display:none;">
+        <div class="space-y-4" id="paidCards"></div>
+      </div>
+
+      <!-- Pending Tab -->
+      <div data-tab-panel="ph-pending" class="hidden" style="display:none;">
+        <div class="space-y-4" id="pendingCards"></div>
+      </div>
+
+      <!-- Refunds Tab -->
+      <div data-tab-panel="ph-refunds" class="hidden" style="display:none;">
+        <div class="space-y-4" id="refundCards"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function toggleTimeline(el) {
+      el.classList.toggle('open');
+      var body = el.nextElementSibling;
+      if (body) body.classList.toggle('open');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var allCards = document.querySelectorAll('[data-tab-panel="ph-all"] .pay-trip-card');
+      var paidContainer = document.getElementById('paidCards');
+      var pendingContainer = document.getElementById('pendingCards');
+      var refundContainer = document.getElementById('refundCards');
+
+      allCards.forEach(function(card) {
+        var badges = card.querySelectorAll('.badge, [class*="badge"]');
+        var statusText = '';
+        badges.forEach(function(b) {
+          var t = b.textContent.trim().toLowerCase();
+          if (t.indexOf('paid') !== -1 || t.indexOf('emi') !== -1 || t.indexOf('refund') !== -1 || t.indexOf('cancelled') !== -1 || t.indexOf('cart') !== -1) {
+            statusText = t;
+          }
+        });
+
+        if (statusText.indexOf('paid') !== -1 || statusText.indexOf('emi') !== -1) {
+          paidContainer.appendChild(card.cloneNode(true));
+        }
+        if (statusText.indexOf('emi') !== -1 || statusText.indexOf('cart') !== -1) {
+          pendingContainer.appendChild(card.cloneNode(true));
+        }
+        if (statusText.indexOf('refund') !== -1 || statusText.indexOf('cancelled') !== -1) {
+          refundContainer.appendChild(card.cloneNode(true));
+        }
+      });
+
+      // Re-init icons in cloned cards
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      // Re-attach timeline toggle handlers on cloned cards
+      document.querySelectorAll('.tl-toggle').forEach(function(el) {
+        el.onclick = function() {
+          this.classList.toggle('open');
+          var body = this.nextElementSibling;
+          if (body) body.classList.toggle('open');
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+      });
+    });
+  </script>
+</body>
+</html>

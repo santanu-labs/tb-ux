@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Import Employees — Trvello Admin</title>
+  <title>Import Employees — Leave Studio Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -43,7 +43,7 @@
       <div class="sidebar-header">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="globe" class="w-4.5 h-4.5 text-white"></i></div>
-          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Trvello</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
+          <div class="sidebar-brand-text"><div class="text-sm font-semibold text-white">Leave Studio</div><div class="text-[11px] text-white/50">Admin Portal</div></div>
           <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" title="Collapse sidebar"><i data-lucide="panel-left-close" class="w-4 h-4"></i></button>
         </div>
       </div>
@@ -432,7 +432,7 @@
           <div class="card mb-6">
             <div class="card-header">
               <h3 class="card-title flex items-center gap-2"><i data-lucide="plug" class="w-5 h-5 text-blue-600"></i> REST API Integration</h3>
-              <p class="card-description">Use Trvello's Employee API to push employee data from your HRMS, ERP, or custom internal systems.</p>
+              <p class="card-description">Use Leave Studio's Employee API to push employee data from your HRMS, ERP, or custom internal systems.</p>
             </div>
             <div class="card-content space-y-6">
 
@@ -443,7 +443,7 @@
                   <div>
                     <label class="label">API Base URL</label>
                     <div class="flex gap-2">
-                      <input class="input w-full font-mono text-xs" value="https://api.trvello.com/v1/orgs/acmecorp" readonly>
+                      <input class="input w-full font-mono text-xs" value="https://api.leavestudio.com/v1/orgs/acmecorp" readonly>
                       <button class="btn-outline btn-sm flex-shrink-0" onclick="showToast('Copied!','success')"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
                     </div>
                   </div>
@@ -544,7 +544,7 @@
                 <div class="space-y-3">
                   <div>
                     <label class="label">Webhook URL</label>
-                    <input class="input w-full" placeholder="https://your-server.com/webhooks/trvello">
+                    <input class="input w-full" placeholder="https://your-server.com/webhooks/leavestudio">
                   </div>
                   <div>
                     <label class="label mb-2 block">Events</label>
@@ -610,7 +610,7 @@
 
             </div>
             <div class="card-footer flex justify-between">
-              <a href="https://docs.trvello.com/api" target="_blank" class="btn-outline btn-sm text-xs flex items-center gap-1.5"><i data-lucide="external-link" class="w-3 h-3"></i> Full API Docs</a>
+              <a href="https://docs.leavestudio.com/api" target="_blank" class="btn-outline btn-sm text-xs flex items-center gap-1.5"><i data-lucide="external-link" class="w-3 h-3"></i> Full API Docs</a>
               <button class="btn-primary btn-sm" onclick="showToast('Settings saved!','success')">Save Webhook Settings</button>
             </div>
           </div>
@@ -622,7 +622,7 @@
 
           <div class="flex items-start gap-2 p-3 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
             <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
-            <span>SCIM automatically keeps your Trvello employee list in sync with your identity provider. When you add or remove users in your IdP, the changes propagate here in real time.</span>
+            <span>SCIM automatically keeps your Leave Studio employee list in sync with your identity provider. When you add or remove users in your IdP, the changes propagate here in real time.</span>
           </div>
 
           <!-- Connection Status -->
@@ -718,7 +718,7 @@
               <div>
                 <label class="label">SCIM Endpoint URL</label>
                 <div class="flex gap-2">
-                  <input class="input w-full font-mono text-xs" value="https://api.trvello.com/scim/v2/acmecorp" readonly>
+                  <input class="input w-full font-mono text-xs" value="https://api.leavestudio.com/scim/v2/acmecorp" readonly>
                   <button class="btn-outline btn-sm flex-shrink-0" onclick="showToast('Copied!','success')"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
                 </div>
               </div>
@@ -740,14 +740,14 @@
               <!-- Attribute Mapping -->
               <div>
                 <h4 class="text-sm font-semibold mb-3">Attribute Mapping</h4>
-                <p class="text-xs text-muted-foreground mb-3">Map SCIM attributes to Trvello employee fields</p>
+                <p class="text-xs text-muted-foreground mb-3">Map SCIM attributes to Leave Studio employee fields</p>
                 <div class="border border-border rounded-lg overflow-hidden">
                   <table class="table w-full">
                     <thead>
                       <tr>
                         <th>SCIM Attribute</th>
                         <th><i data-lucide="arrow-right" class="w-3.5 h-3.5 inline"></i></th>
-                        <th>Trvello Field</th>
+                        <th>Leave Studio Field</th>
                         <th>Required</th>
                       </tr>
                     </thead>
@@ -809,14 +809,14 @@
                     <input type="checkbox" class="checkbox mt-0.5" checked>
                     <div>
                       <span class="text-sm font-medium">Auto-create new employees</span>
-                      <p class="text-xs text-muted-foreground">When a new user appears in your directory, create them in Trvello and send a welcome email.</p>
+                      <p class="text-xs text-muted-foreground">When a new user appears in your directory, create them in Leave Studio and send a welcome email.</p>
                     </div>
                   </label>
                   <label class="flex items-start gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50">
                     <input type="checkbox" class="checkbox mt-0.5" checked>
                     <div>
                       <span class="text-sm font-medium">Auto-deactivate removed employees</span>
-                      <p class="text-xs text-muted-foreground">When a user is deprovisioned in your directory, automatically deactivate them in Trvello.</p>
+                      <p class="text-xs text-muted-foreground">When a user is deprovisioned in your directory, automatically deactivate them in Leave Studio.</p>
                     </div>
                   </label>
                   <label class="flex items-start gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50">

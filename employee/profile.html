@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile — Trvello</title>
+  <title>Profile — Leave Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -40,12 +40,11 @@
       <div class="flex items-center gap-6">
         <a href="dashboard.html" class="emp-navbar-brand">
           <div class="brand-icon"><i data-lucide="globe"></i></div>
-          <span class="brand-name">Trvello</span>
+          <span class="brand-name">Leave Studio</span>
           <span class="brand-org">Acme Corp</span>
         </a>
         <nav class="emp-nav-links">
           <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-          <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
           <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
         </nav>
       </div>
@@ -71,6 +70,10 @@
             </div>
           </a>
         </div>
+        <a href="cart.html" class="btn-ghost btn-icon relative" title="Cart">
+          <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+          <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[0.625rem] font-bold rounded-full flex items-center justify-center px-1">3</span>
+        </a>
         <button class="btn-ghost btn-icon relative" title="Notifications">
           <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
         </button>
@@ -84,6 +87,9 @@
               <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
             </div>
             <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="my-plans.html" class="dropdown-item"><i data-lucide="history" class="w-4 h-4"></i> Planned History</a>
+            <a href="payment-history.html" class="dropdown-item"><i data-lucide="indian-rupee" class="w-4 h-4"></i> Payment History</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
             <div class="my-1 border-t border-border"></div>
             <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
           </div>
@@ -336,7 +342,7 @@
           <div class="card">
             <div class="card-header">
               <div class="card-title text-base">Download My Data</div>
-              <div class="card-description">Request a copy of all your personal data stored on Trvello</div>
+              <div class="card-description">Request a copy of all your personal data stored on Leave Studio</div>
             </div>
             <div class="card-content">
               <p class="text-sm text-muted-foreground mb-3">Your data export includes profile information, travel plans, preferences, perk history, and activity logs. Processing may take up to 24 hours.</p>
@@ -404,13 +410,13 @@
       </div>
       <div class="dialog-body">
         <div>
-          <label class="label" for="confirm-email">Type your email to confirm</label>
-          <input id="confirm-email" type="email" class="input" placeholder="rahul.sharma@acmecorp.com">
+          <label class="label" for="deleteEmailInput">Type your email to confirm</label>
+          <input id="deleteEmailInput" type="email" class="input" placeholder="rahul.sharma@acmecorp.com">
         </div>
       </div>
       <div class="dialog-footer">
         <button class="btn-outline" onclick="closeDialog('delete-dialog')">Cancel</button>
-        <button class="btn-destructive" onclick="closeDialog('delete-dialog'); showToast('Account deletion request submitted.','destructive');">Delete Account</button>
+        <button id="deleteAccountBtn" class="btn-destructive" disabled>Delete Account</button>
       </div>
     </div>
   </div>
@@ -418,5 +424,62 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="../js/main.js"></script>
   <script>lucide.createIcons();</script>
+  <script>
+  (function() {
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var text = btn.textContent.trim().toLowerCase();
+
+      if (text.indexOf('change photo') !== -1) {
+        e.preventDefault();
+        if (typeof showToast === 'function') showToast('Photo upload coming soon', 'info');
+      }
+      if (text.indexOf('revoke') !== -1 && text.indexOf('sign out') === -1) {
+        e.preventDefault();
+        if (!confirm('Revoke this session?')) return;
+        var row = btn.closest('div');
+        if (row) { row.style.opacity = '0.4'; btn.disabled = true; btn.textContent = 'Revoked'; }
+        if (typeof showToast === 'function') showToast('Session revoked', 'success');
+      }
+      if (text.indexOf('sign out all') !== -1) {
+        e.preventDefault();
+        if (!confirm('Sign out from all devices?')) return;
+        if (typeof showToast === 'function') showToast('Signed out from all devices', 'success');
+      }
+    });
+  })();
+  </script>
+  <script>
+    (function() {
+      const CONFIRM_EMAIL = 'rahul.sharma@acmecorp.com';
+      const emailInput = document.getElementById('deleteEmailInput');
+      const deleteBtn = document.getElementById('deleteAccountBtn');
+
+      function updateDeleteButtonState() {
+        const value = (emailInput.value || '').trim();
+        const isMatch = value === CONFIRM_EMAIL;
+        deleteBtn.disabled = !isMatch;
+        emailInput.classList.remove('border-2', 'border-red-500', 'border-green-500');
+        if (value.length > 0) {
+          emailInput.classList.add('border-2', isMatch ? 'border-green-500' : 'border-red-500');
+        }
+      }
+
+      emailInput.addEventListener('input', updateDeleteButtonState);
+      emailInput.addEventListener('keyup', updateDeleteButtonState);
+
+      deleteBtn.addEventListener('click', function() {
+        if (deleteBtn.disabled) return;
+        if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+          closeDialog('delete-dialog');
+          showToast('Account deletion requested', 'destructive');
+          emailInput.value = '';
+          emailInput.classList.remove('border-2', 'border-red-500', 'border-green-500');
+          updateDeleteButtonState();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

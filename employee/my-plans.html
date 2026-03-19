@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Plans — Trvello</title>
+  <title>My Plans — Leave Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -40,12 +40,11 @@
       <div class="flex items-center gap-6">
         <a href="dashboard.html" class="emp-navbar-brand">
           <div class="brand-icon"><i data-lucide="globe"></i></div>
-          <span class="brand-name">Trvello</span>
+          <span class="brand-name">Leave Studio</span>
           <span class="brand-org">Acme Corp</span>
         </a>
         <nav class="emp-nav-links">
           <a href="dashboard.html" class="emp-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-          <a href="my-plans.html" class="emp-nav-link active"><i data-lucide="folder"></i> My Plans</a>
           <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
         </nav>
       </div>
@@ -71,6 +70,10 @@
             </div>
           </a>
         </div>
+        <a href="cart.html" class="btn-ghost btn-icon relative" title="Cart">
+          <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+          <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[0.625rem] font-bold rounded-full flex items-center justify-center px-1">3</span>
+        </a>
         <button class="btn-ghost btn-icon relative" title="Notifications">
           <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
         </button>
@@ -84,6 +87,9 @@
               <div class="text-xs text-muted-foreground">rahul.sharma@acmecorp.com</div>
             </div>
             <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i> Profile</a>
+            <a href="my-plans.html" class="dropdown-item"><i data-lucide="history" class="w-4 h-4"></i> Planned History</a>
+            <a href="payment-history.html" class="dropdown-item"><i data-lucide="indian-rupee" class="w-4 h-4"></i> Payment History</a>
+            <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Preferences</a>
             <div class="my-1 border-t border-border"></div>
             <a href="../index.html" class="dropdown-item destructive"><i data-lucide="log-out" class="w-4 h-4"></i> Sign Out</a>
           </div>
@@ -94,148 +100,23 @@
     <!-- Main Content -->
     <main class="emp-content">
       <!-- Page Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 class="text-2xl font-bold">My Travel Plans</h1>
-          <p class="text-muted-foreground mt-1">Manage and track all your travel plans</p>
-        </div>
-        <a href="preferences.html" class="btn-primary">
-          <i data-lucide="plus" class="w-4 h-4"></i> New Plan
-        </a>
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold">My Travel Plans</h1>
+        <p class="text-muted-foreground mt-1">Manage and track all your travel plans</p>
       </div>
 
       <!-- Filter Tabs -->
       <div class="tabs-list mb-6" data-tabs>
-        <button class="tab-trigger active" data-tab="all">All (4)</button>
-        <button class="tab-trigger" data-tab="draft">Draft (1)</button>
-        <button class="tab-trigger" data-tab="saved">Saved (1)</button>
+        <button class="tab-trigger active" data-tab="planned">Planned (1)</button>
+        <button class="tab-trigger" data-tab="saved">Saved for Later (1)</button>
+        <button class="tab-trigger" data-tab="booked">Booked (1)</button>
         <button class="tab-trigger" data-tab="completed">Completed (2)</button>
+        <button class="tab-trigger" data-tab="visited">Marked Visited (1)</button>
+        <button class="tab-trigger" data-tab="not-interested">Not Interested (2)</button>
       </div>
 
-      <!-- Plan Cards -->
-      <div class="space-y-4" data-tab-panel="all">
-
-        <!-- Plan 1: Goa (Upcoming/Saved) -->
-        <div class="card hover:shadow-md transition-shadow">
-          <div class="p-5 flex flex-col sm:flex-row gap-4">
-            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
-            </div>
-            <div class="flex-1 space-y-2">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-base">Goa, India</h3>
-                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
-                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Mar 15 – Mar 22, 2025</span>
-                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 7 nights</span>
-                  </div>
-                </div>
-                <span class="badge badge-primary">Saved</span>
-              </div>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="font-semibold">₹55,000</span>
-                <span class="text-green-600 text-xs">₹19,000 in perks applied</span>
-              </div>
-              <div class="flex gap-2 pt-1">
-                <a href="plan-summary.html" class="btn-primary btn-sm">View</a>
-                <a href="plan-dates.html" class="btn-outline btn-sm">Edit</a>
-                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Plan 2: Bali (Draft) -->
-        <div class="card hover:shadow-md transition-shadow">
-          <div class="p-5 flex flex-col sm:flex-row gap-4">
-            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
-            </div>
-            <div class="flex-1 space-y-2">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-base">Bali, Indonesia</h3>
-                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
-                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Dates not set</span>
-                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> —</span>
-                  </div>
-                </div>
-                <span class="badge badge-warning">Draft</span>
-              </div>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="font-semibold">₹65,000</span>
-                <span class="text-xs text-muted-foreground">Estimated</span>
-              </div>
-              <div class="flex gap-2 pt-1">
-                <a href="plan-dates.html" class="btn-primary btn-sm">Continue Planning</a>
-                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Plan 3: Kerala (Completed) -->
-        <div class="card hover:shadow-md transition-shadow opacity-90">
-          <div class="p-5 flex flex-col sm:flex-row gap-4">
-            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
-            </div>
-            <div class="flex-1 space-y-2">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-base">Kerala, India</h3>
-                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
-                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Feb 1 – Feb 6, 2025</span>
-                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 5 nights</span>
-                  </div>
-                </div>
-                <span class="badge badge-success">Completed</span>
-              </div>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="font-semibold">₹38,500</span>
-                <span class="text-green-600 text-xs">₹6,000 in perks applied</span>
-              </div>
-              <div class="flex gap-2 pt-1">
-                <a href="plan-summary.html" class="btn-outline btn-sm">View Summary</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Plan 4: Manali (Completed) -->
-        <div class="card hover:shadow-md transition-shadow opacity-90">
-          <div class="p-5 flex flex-col sm:flex-row gap-4">
-            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
-            </div>
-            <div class="flex-1 space-y-2">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="font-semibold text-base">Manali, India</h3>
-                  <div class="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
-                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Dec 20 – Dec 27, 2024</span>
-                    <span class="flex items-center gap-1"><i data-lucide="moon" class="w-3.5 h-3.5"></i> 7 nights</span>
-                  </div>
-                </div>
-                <span class="badge badge-success">Completed</span>
-              </div>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="font-semibold">₹28,000</span>
-              </div>
-              <div class="flex gap-2 pt-1">
-                <a href="plan-summary.html" class="btn-outline btn-sm">View Summary</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Draft Tab -->
-      <div class="space-y-4 hidden" data-tab-panel="draft">
+      <!-- Planned Tab -->
+      <div class="space-y-4" data-tab-panel="planned">
         <div class="card hover:shadow-md transition-shadow">
           <div class="p-5 flex flex-col sm:flex-row gap-4">
             <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
@@ -244,11 +125,12 @@
             <div class="flex-1 space-y-2">
               <div class="flex items-start justify-between">
                 <h3 class="font-semibold text-base">Bali, Indonesia</h3>
-                <span class="badge badge-warning">Draft</span>
+                <span class="badge badge-warning">Planned</span>
               </div>
-              <div class="text-sm text-muted-foreground">Dates not set · ₹65,000 estimated</div>
+              <div class="text-sm text-muted-foreground">Apr 10–17, 2025 · 7 nights · ₹65,000 estimated</div>
               <div class="flex gap-2 pt-1">
-                <a href="plan-dates.html" class="btn-primary btn-sm">Continue Planning</a>
+                <a href="plan-summary.html" class="btn-primary btn-sm">View Plan</a>
+                <a href="plan-dates.html" class="btn-outline btn-sm">Edit</a>
                 <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
@@ -258,7 +140,7 @@
         </div>
       </div>
 
-      <!-- Saved Tab -->
+      <!-- Saved for Later Tab -->
       <div class="space-y-4 hidden" data-tab-panel="saved">
         <div class="card hover:shadow-md transition-shadow">
           <div class="p-5 flex flex-col sm:flex-row gap-4">
@@ -268,12 +150,36 @@
             <div class="flex-1 space-y-2">
               <div class="flex items-start justify-between">
                 <h3 class="font-semibold text-base">Goa, India</h3>
-                <span class="badge badge-primary">Saved</span>
+                <span class="badge badge-primary">Saved for Later</span>
               </div>
-              <div class="text-sm text-muted-foreground">Mar 15–22, 2025 · 7 nights · ₹55,000</div>
+              <div class="text-sm text-muted-foreground">₹55,000 estimated · No dates set</div>
               <div class="flex gap-2 pt-1">
-                <a href="plan-summary.html" class="btn-primary btn-sm">View</a>
-                <a href="plan-dates.html" class="btn-outline btn-sm">Edit</a>
+                <a href="plan-dates.html" class="btn-primary btn-sm">Start Planning</a>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booked Tab -->
+      <div class="space-y-4 hidden" data-tab-panel="booked">
+        <div class="card hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Udaipur, India</h3>
+                <span class="badge badge-primary bg-blue-100 text-blue-700 border-blue-200">Booked</span>
+              </div>
+              <div class="text-sm text-muted-foreground">May 5–10, 2025 · 5 nights · ₹42,000</div>
+              <div class="flex gap-2 pt-1">
+                <a href="plan-summary.html" class="btn-primary btn-sm">View Booking</a>
+                <a href="plan-summary.html" class="btn-outline btn-sm">Itinerary</a>
               </div>
             </div>
           </div>
@@ -317,11 +223,119 @@
           </div>
         </div>
       </div>
+
+      <!-- Marked Visited Tab -->
+      <div class="space-y-4 hidden" data-tab-panel="visited">
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Jaipur, India</h3>
+                <span class="badge badge-outline">Marked Visited</span>
+              </div>
+              <div class="text-sm text-muted-foreground">You marked this destination as already visited</div>
+              <div class="flex gap-2 pt-1">
+                <a href="preferences.html" class="btn-outline btn-sm">Plan Again</a>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Not Interested Tab -->
+      <div class="space-y-4 hidden" data-tab-panel="not-interested">
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Dubai, UAE</h3>
+                <span class="badge badge-secondary">Not Interested</span>
+              </div>
+              <div class="text-sm text-muted-foreground">You dismissed this recommendation</div>
+              <div class="flex gap-2 pt-1">
+                <button class="btn-outline btn-sm">Reconsider</button>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="p-5 flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-36 h-24 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+              <i data-lucide="image" class="w-6 h-6 text-muted-foreground"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-base">Maldives</h3>
+                <span class="badge badge-secondary">Not Interested</span>
+              </div>
+              <div class="text-sm text-muted-foreground">You dismissed this recommendation</div>
+              <div class="flex gap-2 pt-1">
+                <button class="btn-outline btn-sm">Reconsider</button>
+                <button class="btn-ghost btn-sm text-destructive hover:text-destructive">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="../js/main.js"></script>
   <script>lucide.createIcons();</script>
+  <script>
+(function() {
+  document.addEventListener('click', function(e) {
+    // Delete button (trash icon)
+    var delBtn = e.target.closest('.btn-ghost.btn-icon[title], button[onclick*="delete"]');
+    if (!delBtn) {
+      // Try matching any button with a trash icon inside
+      var trashIcon = e.target.closest('[data-lucide="trash-2"], [data-lucide="trash"]');
+      if (trashIcon) delBtn = trashIcon.closest('button');
+    }
+    if (delBtn) {
+      var card = delBtn.closest('.card, [data-tab-panel] > div');
+      if (card && card.closest('[data-tab-panel]')) {
+        e.preventDefault();
+        if (!confirm('Remove this trip from your plans?')) return;
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(-20px)';
+        setTimeout(function() { card.remove(); }, 300);
+        if (typeof showToast === 'function') showToast('Trip removed', 'success');
+        return;
+      }
+    }
+
+    // Reconsider button
+    var reconBtn = e.target.closest('button');
+    if (reconBtn && reconBtn.textContent.trim().toLowerCase().indexOf('reconsider') !== -1) {
+      var card = reconBtn.closest('.card, [data-tab-panel] > div');
+      if (card) {
+        e.preventDefault();
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(-20px)';
+        setTimeout(function() { card.remove(); }, 300);
+        if (typeof showToast === 'function') showToast('Trip moved back to Planned', 'success');
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

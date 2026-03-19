@@ -14,19 +14,19 @@ Read [](file:///Users/saan-personal/Documents/tb-ux)
 
 Read [](file:///Users/saan-personal/Documents/tb-ux/pages)
 
-Now I have a complete understanding. The existing pages are for a generic "TravelBuddy" B2C travel site, but **Trvello is a fundamentally different product** — it's a **multi-tenant B2B corporate travel benefits platform** with 3 distinct user portals + public pages. The current pages need to be replaced with the correct architecture.
+Now I have a complete understanding. The existing pages are for a generic "TravelBuddy" B2C travel site, but **Leave Studio is a fundamentally different product** — it's a **multi-tenant B2B corporate travel benefits platform** with 3 distinct user portals + public pages. The current pages need to be replaced with the correct architecture.
 
 Let me clarify a few things before presenting the plan: 
 
 Asked 4 questions (Portal Scope, Branding, Old Pages, Fidelity)
 
-Now I have full clarity. Here's the comprehensive plan for **Trvello** — Employee Portal + Corporate Admin Portal, full fidelity, rebranded.
+Now I have full clarity. Here's the comprehensive plan for **Leave Studio** — Employee Portal + Corporate Admin Portal, full fidelity, rebranded.
 
 ---
 
-## Plan: Trvello B2B Travel Portal — Page Architecture & Design Guide
+## Plan: Leave Studio B2B Travel Portal — Page Architecture & Design Guide
 
-**TL;DR:** Replace the existing 5 B2C "TravelBuddy" pages with ~24 purpose-built Trvello B2B pages across two portals: **Employee Portal** (13 pages covering onboarding, dashboard, travel planning, perks) and **Corporate Admin Portal** (11 pages covering dashboard, employee management, settings, perks, audit). All pages use Trvello branding, Tailwind + shadcn design tokens, and a sidebar-based admin layout. The existing shadcn-tokens.css and main.js will be updated to support the new architecture.
+**TL;DR:** Replace the existing 5 B2C "TravelBuddy" pages with ~24 purpose-built Leave Studio B2B pages across two portals: **Employee Portal** (13 pages covering onboarding, dashboard, travel planning, perks) and **Corporate Admin Portal** (11 pages covering dashboard, employee management, settings, perks, audit). All pages use Leave Studio branding, Tailwind + shadcn design tokens, and a sidebar-based admin layout. The existing shadcn-tokens.css and main.js will be updated to support the new architecture.
 
 ---
 
@@ -34,9 +34,9 @@ Now I have full clarity. Here's the comprehensive plan for **Trvello** — Emplo
 
 ```
 tb-ux/
-├── index.html                          → Trvello login page (subdomain-aware)
+├── index.html                          → Leave Studio login page (subdomain-aware)
 ├── css/
-│   └── shadcn-tokens.css              → Updated design tokens (Trvello palette)
+│   └── shadcn-tokens.css              → Updated design tokens (Leave Studio palette)
 ├── js/
 │   └── main.js                        → Updated interactions
 ├── docs/
@@ -79,7 +79,7 @@ tb-ux/
 ### Design Guidelines
 
 **Brand:**
-- Name: **Trvello**
+- Name: **Leave Studio**
 - Primary color: Updated to a warm professional blue-purple (keeping shadcn structure)
 - Logo icon: `globe` or `plane` from Lucide
 - Typography: Inter (already in place)
@@ -118,7 +118,7 @@ Sections:
 - Email + password inputs
 - "Sign in with SSO" button (conditional)
 - "Forgot password?" link
-- Footer: Terms of Service | Privacy Policy | Powered by Trvello
+- Footer: Terms of Service | Privacy Policy | Powered by Leave Studio
 
 ---
 
@@ -127,7 +127,7 @@ Sections:
 
 Sections:
 - Full-screen centered card
-- Trvello + company logo
+- Leave Studio + company logo
 - Welcome headline: "Welcome to [Company]'s Travel Benefits"
 - Brief value proposition (3 bullet points with icons)
 - "Get Started" CTA button
@@ -540,7 +540,7 @@ After implementation, verify by:
 7. All Lucide icons render correctly
 
 ### Decisions
-- **Replace B2C pages** — existing `TravelBuddy` files will be removed, replaced with Trvello B2B structure
+- **Replace B2C pages** — existing `TravelBuddy` files will be removed, replaced with Leave Studio B2B structure
 - **Employee portal uses top navbar** — consumer-friendly feel for employees
 - **Admin portal uses left sidebar** — standard admin pattern, appropriate for data-heavy management
 - **Co-Admin restrictions** noted on relevant pages (Financial Summary hidden, settings limited)

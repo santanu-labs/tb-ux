@@ -1,8 +1,8 @@
-## Trvello – Phase 1 MVP Context Document
+## Leave Studio – Phase 1 MVP Context Document
 
 1. Overview
 
-Trvello is a multi-tenant B2B travel benefits platform designed for corporate organizations and their employees.
+Leave Studio is a multi-tenant B2B travel benefits platform designed for corporate organizations and their employees.
 
 The platform enables:
 	•	Companies to onboard and manage travel-related perks
@@ -15,9 +15,9 @@ This document explains the system behavior and user journeys from different role
 
 2. Platform Structure
 
-Trvello operates as a multi-tenant system:
+Leave Studio operates as a multi-tenant system:
 	•	Each company has its own subdomain:
-companyname.trvello.com
+companyname.leavestudio.com
 	•	Data is strictly isolated per organization
 	•	Roles and permissions are enforced server-side
 
@@ -32,7 +32,7 @@ There are three primary layers of users:
 
 Employees are users who belong to a registered organization.
 
-They access Trvello via their company subdomain.
+They access Leave Studio via their company subdomain.
 
 3.1 How Employees Join
 
@@ -145,7 +145,7 @@ No real transaction occurs in Phase 1.
 
 4. Organization (Corporate) Perspective
 
-Organizations interact with Trvello through a structured onboarding and management process.
+Organizations interact with Leave Studio through a structured onboarding and management process.
 
 ⸻
 

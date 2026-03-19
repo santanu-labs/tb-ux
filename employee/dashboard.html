@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Trvello</title>
+    <title>Dashboard — Leave Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -42,13 +42,12 @@
             <div class="flex items-center gap-6">
                 <a href="dashboard.html" class="emp-navbar-brand">
                     <div class="brand-icon"><i data-lucide="globe"></i></div>
-                    <span class="brand-name">Trvello</span>
+                    <span class="brand-name">Leave Studio</span>
                     <span class="brand-org">Acme Corp</span>
                 </a>
                 <nav class="emp-nav-links">
                     <a href="dashboard.html" class="emp-nav-link active"><i data-lucide="layout-dashboard"></i>
                         Dashboard</a>
-                    <a href="my-plans.html" class="emp-nav-link"><i data-lucide="folder"></i> My Plans</a>
                     <a href="my-perks.html" class="emp-nav-link"><i data-lucide="gift"></i> My Perks</a>
                 </nav>
             </div>
@@ -81,6 +80,10 @@
                         </div>
                     </a>
                 </div>
+                <a href="cart.html" class="btn-ghost btn-icon relative" title="Cart">
+                    <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+                    <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-primary-foreground text-[0.625rem] font-bold rounded-full flex items-center justify-center px-1">3</span>
+                </a>
                 <button class="btn-ghost btn-icon relative" title="Notifications">
                     <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
                     <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
@@ -96,6 +99,10 @@
                         </div>
                         <a href="profile.html" class="dropdown-item mt-1"><i data-lucide="user" class="w-4 h-4"></i>
                             Profile</a>
+                        <a href="my-plans.html" class="dropdown-item"><i data-lucide="history" class="w-4 h-4"></i>
+                            Planned History</a>
+                        <a href="payment-history.html" class="dropdown-item"><i data-lucide="indian-rupee" class="w-4 h-4"></i>
+                            Payment History</a>
                         <a href="preferences.html" class="dropdown-item"><i data-lucide="sliders-horizontal"
                                 class="w-4 h-4"></i> Preferences</a>
                         <div class="my-1 border-t border-border"></div>
@@ -108,13 +115,10 @@
 
         <!-- Main Content -->
         <main class="emp-content">
-            <!-- Welcome Hero -->
-            <div class="emp-hero mb-6">
-                <div class="relative z-10">
-                    <h1 class="text-2xl font-bold mb-1">Welcome back, Rahul! 👋</h1>
-                    <p class="text-white/80 text-sm">Your next trip to Goa is in <strong>12 days</strong>. Ready for
-                        some sunshine?</p>
-                </div>
+            <!-- Welcome Banner -->
+            <div class="mb-6 py-3">
+                <h1 class="text-2xl font-bold text-foreground mb-1">Welcome back, Rahul! 👋</h1>
+                <p class="text-muted-foreground text-sm">Your next trip to Pondicherry is in <strong class="text-foreground">87 days</strong>. Time to start planning!</p>
             </div>
 
             <!-- Quick Stats — Compact -->
@@ -182,9 +186,19 @@
             <div class="sticky top-16 z-30 bg-background pb-3 pt-1 -mx-6 px-6 border-b border-border/50" style="backdrop-filter: blur(8px); background-color: hsl(var(--background) / 0.92);">
               <div class="flex items-center justify-between mb-2">
                 <h2 class="text-lg font-bold">Upcoming Holidays & Matching Packages</h2>
-                <a href="preferences.html" class="btn-outline btn-sm flex items-center gap-1.5" style="text-decoration:none;">
-                  <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Preferences
-                </a>
+                <div class="flex items-center gap-2">
+                  <div class="mode-toggle" id="plannerModeToggle">
+                    <button class="mode-toggle-btn active" data-mode="suggested">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Suggested
+                    </button>
+                    <button class="mode-toggle-btn" data-mode="custom">
+                      <i data-lucide="search" class="w-3.5 h-3.5"></i> Custom
+                    </button>
+                  </div>
+                  <a href="preferences.html" class="btn-outline btn-sm flex items-center gap-1.5" style="text-decoration:none;">
+                    <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Preferences
+                  </a>
+                </div>
               </div>
 
               <!-- Legend -->
@@ -201,6 +215,67 @@
                 <div class="holiday-legend-item">
                   <i data-lucide="star" class="w-4 h-4 long-weekend-star"></i> Long Weekend
                 </div>
+              </div>
+            </div>
+
+            <!-- =============== CUSTOM SEARCH PANEL =============== -->
+            <div id="customSearchPanel" class="custom-search-panel" style="display:none;">
+              <div class="flex flex-wrap items-end gap-4">
+                <div>
+                  <label class="text-sm font-semibold mb-2 block">Travel Dates</label>
+                  <div class="flex items-center gap-1.5 relative">
+                    <i data-lucide="calendar-range" class="w-4 h-4 text-muted-foreground flex-shrink-0"></i>
+                    <input type="text" class="input text-sm w-52 cursor-pointer" id="customDateRange" value="03 Apr — 05 Apr 2026" readonly placeholder="Select date range" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? '' : 'none'">
+                    <div class="absolute top-full left-0 mt-1 bg-card border border-border rounded-lg shadow-lg p-3 z-50" style="display:none;" id="dateRangeDropdown">
+                      <div class="flex items-center gap-2">
+                        <div>
+                          <div class="text-[0.6875rem] text-muted-foreground mb-1">From</div>
+                          <input type="date" class="input text-sm" value="2026-04-03" id="customDateFrom">
+                        </div>
+                        <span class="text-muted-foreground mt-4">—</span>
+                        <div>
+                          <div class="text-[0.6875rem] text-muted-foreground mb-1">To</div>
+                          <input type="date" class="input text-sm" value="2026-04-05" id="customDateTo">
+                        </div>
+                      </div>
+                      <button class="btn-primary btn-sm w-full mt-2 text-xs" id="dateRangeApply">Apply</button>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm font-semibold mb-2 block">Travellers</label>
+                  <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="user" class="w-4 h-4 text-muted-foreground"></i>
+                      <span class="text-sm">Adults</span>
+                      <input type="number" class="input text-sm w-14 text-center" value="2" min="1" max="10">
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <i data-lucide="baby" class="w-4 h-4 text-muted-foreground"></i>
+                      <span class="text-sm">Kids</span>
+                      <input type="number" class="input text-sm w-14 text-center" value="0" min="0" max="6" id="customKidsCount">
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-2 mt-2" id="kidAgesContainer"></div>
+                </div>
+                <div class="flex-1 min-w-[180px]">
+                  <label class="text-sm font-semibold mb-2 block">Destination</label>
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-muted-foreground flex-shrink-0"></i>
+                    <input type="text" class="input text-sm w-full" placeholder="Search places — Goa, Bali, Kerala..." id="customPlaceInput">
+                  </div>
+                </div>
+                <button class="btn-primary btn-sm flex items-center gap-1.5" onclick="showToast('Showing matching trips','success')">
+                  <i data-lucide="search" class="w-3.5 h-3.5"></i> Find Trips
+                </button>
+              </div>
+
+              <!-- Custom Search Results (empty until user searches) -->
+              <div class="custom-search-results" id="customResults" style="display:none;"></div>
+              <div id="customEmptyState" class="flex flex-col items-center justify-center py-10 text-center">
+                <i data-lucide="search" class="w-10 h-10 text-muted-foreground/40 mb-3"></i>
+                <p class="text-sm font-semibold text-muted-foreground">Select dates, travellers & destination</p>
+                <p class="text-xs text-muted-foreground mt-1">Click "Find Trips" to see matching packages</p>
               </div>
             </div>
 
@@ -281,6 +356,7 @@
                       <div class="text-xs text-muted-foreground mt-0.5">4 Nights / 5 Days · Baga, Anjuna, Palolem</div>
                       <div class="flex items-center gap-2 mt-1.5">
                         <span class="badge badge-success text-[0.625rem]">Confirmed</span>
+                        <span class="badge badge-outline text-[0.625rem]">via Suggested</span>
                         <span class="text-xs text-muted-foreground">Booking #TRV-2026-00842</span>
                       </div>
                     </div>
@@ -1719,6 +1795,148 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="../js/main.js"></script>
     <script>lucide.createIcons();</script>
+    <script>
+    (function() {
+      var toggle = document.getElementById('plannerModeToggle');
+      var customPanel = document.getElementById('customSearchPanel');
+      var holidayRows = document.querySelectorAll('.holiday-row');
+      var legend = document.querySelector('.holiday-legend');
+      var futurePlanner = document.querySelector('.future-planner-section');
+      if (!toggle || !customPanel) return;
+
+      var buttons = toggle.querySelectorAll('.mode-toggle-btn');
+      buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var mode = btn.getAttribute('data-mode');
+          buttons.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+
+          if (mode === 'custom') {
+            customPanel.style.display = '';
+            if (legend) legend.style.display = 'none';
+            if (futurePlanner) futurePlanner.style.display = 'none';
+            holidayRows.forEach(function(row) {
+              row.style.display = 'none';
+            });
+          } else {
+            customPanel.style.display = 'none';
+            if (legend) legend.style.display = '';
+            if (futurePlanner) futurePlanner.style.display = '';
+            holidayRows.forEach(function(row) {
+              row.style.display = '';
+            });
+          }
+        });
+      });
+
+      // Date range picker
+      var dateFrom = document.getElementById('customDateFrom');
+      var dateTo = document.getElementById('customDateTo');
+      var dateRangeInput = document.getElementById('customDateRange');
+      var dateRangeDropdown = document.getElementById('dateRangeDropdown');
+      var dateRangeApply = document.getElementById('dateRangeApply');
+
+      function formatDateLabel(dateStr) {
+        if (!dateStr) return '';
+        var d = new Date(dateStr);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return ('0' + d.getDate()).slice(-2) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+      }
+
+      if (dateRangeApply) {
+        dateRangeApply.addEventListener('click', function() {
+          if (dateFrom.value && dateTo.value) {
+            var d1 = new Date(dateFrom.value), d2 = new Date(dateTo.value);
+            var nights = Math.round((d2 - d1) / 86400000);
+            dateRangeInput.value = formatDateLabel(dateFrom.value) + ' — ' + formatDateLabel(dateTo.value);
+            dateRangeDropdown.style.display = 'none';
+            if (nights > 0) {
+              showToast(nights + ' night' + (nights > 1 ? 's' : '') + ' selected', 'success');
+            }
+          }
+        });
+      }
+
+      document.addEventListener('click', function(e) {
+        if (dateRangeDropdown && !dateRangeDropdown.contains(e.target) && e.target !== dateRangeInput) {
+          dateRangeDropdown.style.display = 'none';
+        }
+      });
+
+      // Kid age inputs
+      var kidsCountInput = document.getElementById('customKidsCount');
+      var kidAgesContainer = document.getElementById('kidAgesContainer');
+
+      function renderKidAges(count) {
+        kidAgesContainer.innerHTML = '';
+        for (var i = 0; i < count; i++) {
+          var wrapper = document.createElement('div');
+          wrapper.className = 'flex items-center gap-1';
+          wrapper.innerHTML =
+            '<span class="text-xs text-muted-foreground whitespace-nowrap">Kid ' + (i + 1) + ' age</span>' +
+            '<select class="input text-sm w-16 py-1">' +
+              '<option value="">—</option>' +
+              '<option value="0">&lt;1</option>' +
+              '<option value="1">1</option>' +
+              '<option value="2">2</option>' +
+              '<option value="3">3</option>' +
+              '<option value="4">4</option>' +
+              '<option value="5">5</option>' +
+              '<option value="6">6</option>' +
+              '<option value="7">7</option>' +
+              '<option value="8">8</option>' +
+              '<option value="9">9</option>' +
+              '<option value="10">10</option>' +
+              '<option value="11">11</option>' +
+              '<option value="12">12</option>' +
+            '</select>';
+          kidAgesContainer.appendChild(wrapper);
+        }
+        if (count > 0) lucide.createIcons();
+      }
+
+      if (kidsCountInput) {
+        kidsCountInput.addEventListener('change', function() {
+          renderKidAges(parseInt(kidsCountInput.value) || 0);
+        });
+        renderKidAges(parseInt(kidsCountInput.value) || 0);
+      }
+    })();
+    </script>
+    <script>
+    (function() {
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.pkg-action-btn');
+        if (!btn) return;
+        var card = btn.closest('.pkg-card');
+        var title = card ? card.querySelector('.pkg-card-title') : null;
+        var name = title ? title.textContent.trim() : 'Trip';
+        var icon = btn.querySelector('[data-lucide]');
+        var iconName = icon ? icon.getAttribute('data-lucide') : '';
+
+        if (iconName === 'shopping-cart') {
+          btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Added!';
+          btn.style.color = 'hsl(var(--primary))';
+          btn.disabled = true;
+          if (typeof showToast === 'function') showToast(name + ' added to cart', 'success');
+        } else if (iconName === 'clock') {
+          btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Saved';
+          btn.disabled = true;
+          if (typeof showToast === 'function') showToast(name + ' saved for later', 'success');
+        } else if (iconName === 'check-circle') {
+          btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Marked';
+          btn.disabled = true;
+          if (typeof showToast === 'function') showToast(name + ' marked as visited', 'success');
+        } else if (iconName === 'eye-off') {
+          if (card) card.style.opacity = '0.4';
+          btn.innerHTML = '<i data-lucide="x" class="w-3 h-3"></i> Hidden';
+          btn.disabled = true;
+          if (typeof showToast === 'function') showToast(name + ' hidden', 'success');
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      });
+    })();
+    </script>
 </body>
 
 </html>
