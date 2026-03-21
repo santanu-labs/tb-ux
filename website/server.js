@@ -1,12 +1,15 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 4030;
 
-const websiteDist = path.join(__dirname, 'website', 'dist');
+const distDir = path.join(__dirname, 'dist');
 
-// Basic auth for internal review — set REVIEW_PASSWORD env var to enable
 const REVIEW_USER = process.env.REVIEW_USER || 'review';
 const REVIEW_PASSWORD = process.env.REVIEW_PASSWORD;
 
@@ -25,27 +28,12 @@ if (REVIEW_PASSWORD) {
   console.log('Basic auth enabled for internal review');
 }
 
-// Serve the existing app (employee, admin, etc.) under /app
-app.use('/app', express.static(__dirname, {
-    index: 'index.html',
-}));
+app.use(express.static(distDir));
 
-// Serve the marketing website at root
-app.use(express.static(websiteDist));
-
-// SPA fallback — any unmatched route serves the website's index.html
 app.get('/*path', (req, res) => {
-    // Don't intercept /app routes that already resolved to static files
-    if (req.path.startsWith('/app')) {
-        return res.sendFile(path.join(__dirname, req.path.replace('/app', '')), (err) => {
-            if (err) res.sendFile(path.join(__dirname, 'index.html'));
-        });
-    }
-    res.sendFile(path.join(websiteDist, 'index.html'));
+  res.sendFile(path.join(distDir, 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`Marketing website at http://localhost:${PORT}`);
-    console.log(`App (sign-in, employee, admin) at http://localhost:${PORT}/app/`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

@@ -3,9 +3,13 @@
   "scripts": {
     "build": "cd website && npm install && npm run build",
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "postinstall": "echo 'Root deps installed'"
   },
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
