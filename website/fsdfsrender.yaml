@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tb-ux-review
+    name: leave-studio-site
     runtime: node
     buildCommand: npm run build
     startCommand: npm start
