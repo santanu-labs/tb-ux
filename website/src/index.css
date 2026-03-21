@@ -1,19 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #114459;
-  --color-brand-light: #1a6b8a;
-  --color-brand-dark: #0d3544;
-  --color-brand-50: #f0f9fc;
-  --color-brand-100: #d4eef6;
-  --color-brand-200: #a8dded;
-  --color-brand-300: #6dc4df;
-  --color-brand-400: #3aa5c8;
-  --color-brand-500: #1a6b8a;
-  --color-brand-600: #114459;
-  --color-brand-700: #0d3544;
-  --color-brand-800: #092630;
-  --color-brand-900: #051820;
+  --color-trust: #002366;
+  --color-trust-light: #003399;
+  --color-trust-dark: #001a4d;
+  --color-trust-50: #f0f4ff;
+  --color-trust-100: #dbe4ff;
+  --color-trust-200: #b3c7ff;
+  --color-trust-300: #809fff;
+  --color-trust-400: #4d77ff;
+  --color-trust-500: #003399;
+  --color-trust-600: #002366;
+  --color-trust-700: #001a4d;
+  --color-trust-800: #001133;
+  --color-trust-900: #000a1f;
+
+  --color-teal: #14B8A6;
+  --color-teal-light: #2dd4bf;
+  --color-teal-dark: #0d9488;
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-200: #99f6e4;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+  --color-teal-900: #134e4a;
+
+  --color-slate-bg: #F8FAFC;
 
   --color-success: #22c55e;
   --color-warning: #f59e0b;
@@ -29,4 +45,14 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
 }

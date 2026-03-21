@@ -1,89 +1,93 @@
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import {
   ArrowRight,
-  Play,
-  Globe,
-  Plane,
-  CreditCard,
+  Clock,
+  Calendar,
+  TrendingUp,
   Shield,
-  Star,
+  Zap,
   CheckCircle2,
-  User,
 } from 'lucide-react'
 
-const floatingIcons = [
-  { icon: Plane, x: '10%', y: '20%', delay: 0.5, size: 20 },
-  { icon: Globe, x: '85%', y: '15%', delay: 0.8, size: 24 },
-  { icon: CreditCard, x: '75%', y: '70%', delay: 1.1, size: 18 },
-  { icon: Shield, x: '5%', y: '65%', delay: 1.4, size: 22 },
-  { icon: Star, x: '90%', y: '45%', delay: 0.3, size: 16 },
+const bridgeSteps = [
+  { day: 'Thu', type: 'work', label: 'Work' },
+  { day: 'Fri', type: 'leave', label: 'Leave' },
+  { day: 'Sat', type: 'weekend', label: 'Sat' },
+  { day: 'Sun', type: 'weekend', label: 'Sun' },
+  { day: 'Mon', type: 'holiday', label: 'Holiday' },
+  { day: 'Tue', type: 'leave', label: 'Leave' },
+  { day: 'Wed', type: 'leave', label: 'Leave' },
+  { day: 'Thu', type: 'holiday', label: 'Holiday' },
+  { day: 'Fri', type: 'weekend', label: 'Fri' },
 ]
 
 const stats = [
-  { value: '500+', label: 'Companies' },
-  { value: '100K+', label: 'Travelers' },
-  { value: '98%', label: 'Satisfaction' },
-  { value: '₹2Cr+', label: 'Perks Delivered' },
+  { value: '14', label: 'Extra Days Found', suffix: 'days' },
+  { value: '27%', label: 'Avg. Flight Savings', suffix: '' },
+  { value: '10', label: 'Year Roadmap', suffix: 'yr' },
+  { value: '0', label: 'Cost to You', suffix: '$' },
 ]
 
 export default function Hero() {
-  return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-100/30">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full bg-brand/[0.03] blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full bg-brand-300/[0.05] blur-3xl" />
+  const [animPhase, setAnimPhase] = useState(0)
 
-        {floatingIcons.map((item, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-brand/10"
-            style={{ left: item.x, top: item.y }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: item.delay, duration: 0.5 }}
-          >
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <item.icon size={item.size} />
-            </motion.div>
-          </motion.div>
-        ))}
+  useEffect(() => {
+    const t1 = setTimeout(() => setAnimPhase(1), 1200)
+    const t2 = setTimeout(() => setAnimPhase(2), 2400)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [])
+
+  return (
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-trust-50">
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          src="https://tb-resources.blr1.digitaloceanspaces.com/14322544_3840_2160_25fps.mp4"
+        />
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 lg:pt-40 lg:pb-28">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left content */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        <div className="absolute top-0 left-1/4 w-[700px] h-[700px] rounded-full bg-trust/[0.03] blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full bg-teal/[0.05] blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full border border-trust/[0.04]" />
+      </div>
+
+      <div className="relative z-[2] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 lg:pt-40 lg:pb-28">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/[0.08] text-brand-600 text-sm font-medium mb-6"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal/[0.1] text-teal-700 text-sm font-semibold mb-6 border border-teal/[0.15]"
             >
-              <Star className="w-3.5 h-3.5 fill-brand-400 text-brand-400" />
-              Trusted by 100K+ travelers & 500+ companies
+              <Zap className="w-3.5 h-3.5" />
+              Always Free — No Paywalls, No "Pro" Tiers
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-[1.1]"
+              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-trust leading-[1.08]"
             >
-              Travel smarter,{' '}
-              <span className="relative">
-                <span className="relative z-10 text-brand">your way</span>
+              Engineering the World's First Free{' '}
+              <span className="relative inline-block">
+                <span className="relative z-10 text-teal">Travel Portfolio</span>
                 <motion.span
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.5, delay: 1 }}
-                  className="absolute bottom-1 left-0 right-0 h-3 bg-brand-200/50 -z-0 origin-left rounded-sm"
+                  transition={{ duration: 0.6, delay: 1.2 }}
+                  className="absolute bottom-1 left-0 right-0 h-3 bg-teal-200/40 -z-0 origin-left rounded-sm"
                 />
               </span>
-              .
             </motion.h1>
 
             <motion.p
@@ -92,8 +96,9 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="mt-6 text-lg text-gray-600 leading-relaxed max-w-lg"
             >
-              Plan trips, discover AI-matched destinations, and unlock travel perks — whether
-              you're exploring solo or managing benefits for your entire team.
+              A Travel Life-Planning Platform that structures your time, optimizes your
+              leave, and architects a 10-year travel roadmap — with institutional-grade
+              precision, at zero cost.
             </motion.p>
 
             <motion.div
@@ -104,15 +109,15 @@ export default function Hero() {
             >
               <a
                 href="/app/"
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-base font-semibold text-white bg-brand rounded-2xl hover:bg-brand-light transition-all shadow-[0_2px_8px_rgba(17,68,89,0.3)] hover:shadow-[0_8px_24px_rgba(17,68,89,0.25)] hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-semibold text-white bg-trust rounded-2xl hover:bg-trust-light transition-all shadow-[0_2px_12px_rgba(0,35,102,0.3)] hover:shadow-[0_8px_30px_rgba(0,35,102,0.25)] hover:-translate-y-0.5"
               >
-                Start Free
+                Design Your 10-Year Roadmap
                 <ArrowRight className="w-4.5 h-4.5 transition-transform group-hover:translate-x-1" />
               </a>
-              <button className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-2xl hover:border-brand-300 hover:text-brand-600 transition-all shadow-sm">
-                <Play className="w-4.5 h-4.5 text-brand fill-brand/20" />
-                Watch Demo
-              </button>
+              <span className="inline-flex items-center justify-center gap-2 px-6 py-4 text-sm font-medium text-trust/60 bg-white border border-trust/10 rounded-2xl">
+                <Shield className="w-4 h-4 text-teal" />
+                Enterprise-Grade · Always Free
+              </span>
             </motion.div>
 
             <motion.div
@@ -122,108 +127,130 @@ export default function Hero() {
               className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500"
             >
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-success" />
-                Free for individuals
+                <CheckCircle2 className="w-4 h-4 text-teal" />
+                ISO 27001 Compliant
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-success" />
-                14-day team trial
+                <CheckCircle2 className="w-4 h-4 text-teal" />
+                SOC 2 Type II
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-success" />
-                No credit card needed
+                <CheckCircle2 className="w-4 h-4 text-teal" />
+                GDPR Ready
               </span>
             </motion.div>
           </div>
 
-          {/* Right — Dashboard preview */}
+          {/* Right — Glassmorphism Dashboard with Bridge Animation */}
           <motion.div
-            initial={{ opacity: 0, x: 60, rotateY: -8 }}
+            initial={{ opacity: 0, x: 60, rotateY: -5 }}
             animate={{ opacity: 1, x: 0, rotateY: 0 }}
             transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="relative"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200/60 bg-white">
-              {/* Mock browser chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-100">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/60 bg-white/70 backdrop-blur-xl">
+              <div className="flex items-center gap-2 px-4 py-3 bg-trust-50/60 border-b border-trust/[0.08]">
                 <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-400" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <div className="w-3 h-3 rounded-full bg-green-400" />
+                  <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-400/80" />
                 </div>
                 <div className="flex-1 mx-4">
-                  <div className="bg-white rounded-md px-3 py-1 text-xs text-gray-400 border border-gray-200 text-center">
-                    app.leavestudio.com/dashboard
+                  <div className="bg-white/80 rounded-md px-3 py-1 text-xs text-trust/40 border border-trust/[0.08] text-center font-mono">
+                    app.leavestudio.com/portfolio
                   </div>
                 </div>
               </div>
 
-              {/* Dashboard mockup */}
-              <div className="p-6 space-y-4">
+              <div className="p-6 space-y-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">Welcome back, Rahul 👋</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Your travel dashboard</div>
+                    <div className="text-sm font-bold text-trust">Travel Portfolio</div>
+                    <div className="text-xs text-gray-500 mt-0.5">2026 Optimized Calendar</div>
                   </div>
-                  <div className="px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs font-semibold">
-                    ₹9,000 credit
+                  <div className="px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold border border-teal/20">
+                    +14 days found
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { label: 'Trips Planned', value: '3', color: 'bg-brand-50 text-brand-600' },
-                    { label: 'Savings', value: '₹24K', color: 'bg-green-50 text-green-600' },
-                    { label: 'Leave Balance', value: '12 days', color: 'bg-amber-50 text-amber-600' },
-                  ].map((stat) => (
-                    <div key={stat.label} className={`rounded-xl p-3 ${stat.color}`}>
-                      <div className="text-lg font-bold">{stat.value}</div>
-                      <div className="text-[0.65rem] font-medium opacity-80">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="rounded-xl border border-gray-100 p-4">
-                  <div className="text-xs font-semibold text-gray-700 mb-3">AI-Matched Destinations</div>
-                  <div className="space-y-2.5">
-                    {[
-                      { name: 'Bali, Indonesia', match: '94%', color: 'bg-green-500' },
-                      { name: 'Manali, India', match: '89%', color: 'bg-green-500' },
-                      { name: 'Santorini, Greece', match: '82%', color: 'bg-yellow-500' },
-                    ].map((dest) => (
-                      <div key={dest.name} className="flex items-center justify-between">
-                        <span className="text-xs text-gray-700 font-medium">{dest.name}</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-16 h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: dest.match }}
-                              transition={{ duration: 1.5, delay: 1.2 }}
-                              className={`h-full rounded-full ${dest.color}`}
-                            />
-                          </div>
-                          <span className="text-[0.65rem] font-bold text-gray-500">{dest.match}</span>
-                        </div>
-                      </div>
+                {/* Bridge Animation */}
+                <div className="rounded-xl border border-trust/[0.08] bg-trust-50/30 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="text-xs font-bold text-trust/70 uppercase tracking-wider">Optimized Bridge</div>
+                    <div className="text-[0.65rem] text-teal-600 font-semibold">9-day window · 3 leaves used</div>
+                  </div>
+                  <div className="flex gap-1.5">
+                    {bridgeSteps.map((step, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        animate={{
+                          opacity: animPhase >= 1 ? 1 : 0,
+                          scaleY: animPhase >= 1 ? 1 : 0,
+                        }}
+                        transition={{ delay: 0.1 * i, duration: 0.4 }}
+                        className={`flex-1 rounded-lg py-2 text-center origin-bottom ${
+                          step.type === 'work'
+                            ? 'bg-gray-200 text-gray-500'
+                            : step.type === 'leave'
+                            ? 'bg-teal/20 text-teal-700 border border-teal/30'
+                            : step.type === 'holiday'
+                            ? 'bg-trust/10 text-trust border border-trust/20'
+                            : 'bg-trust-100 text-trust-600'
+                        }`}
+                      >
+                        <div className="text-[0.6rem] font-bold">{step.day}</div>
+                        <div className="text-[0.5rem] opacity-70">{step.label}</div>
+                      </motion.div>
                     ))}
                   </div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: animPhase >= 2 ? 1 : 0 }}
+                    className="mt-2 text-center"
+                  >
+                    <span className="text-[0.6rem] text-trust/50 italic">
+                      "We found 14 extra days in your 2026 calendar."
+                    </span>
+                  </motion.div>
+                </div>
+
+                {/* Mini Financial Dashboard */}
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { label: 'Monthly Save', value: '$50/mo', icon: TrendingUp, color: 'bg-teal-50 text-teal-700' },
+                    { label: 'Leave Balance', value: '18 days', icon: Calendar, color: 'bg-trust-50 text-trust' },
+                    { label: 'Next Window', value: 'Apr 10', icon: Clock, color: 'bg-amber-50 text-amber-700' },
+                  ].map((stat) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.5, duration: 0.5 }}
+                      className={`rounded-xl p-3 ${stat.color}`}
+                    >
+                      <stat.icon className="w-3.5 h-3.5 mb-1 opacity-60" />
+                      <div className="text-sm font-bold">{stat.value}</div>
+                      <div className="text-[0.6rem] font-medium opacity-70">{stat.label}</div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Floating notification card */}
+            {/* Floating AI Insight */}
             <motion.div
               initial={{ opacity: 0, y: 20, x: -20 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
-              transition={{ delay: 1.5, duration: 0.6 }}
-              className="absolute -bottom-4 -left-8 bg-white rounded-xl shadow-lg border border-gray-100 p-3 flex items-center gap-3"
+              transition={{ delay: 2, duration: 0.6 }}
+              className="absolute -bottom-4 -left-6 bg-white/90 backdrop-blur-lg rounded-xl shadow-lg border border-teal/20 p-3 flex items-center gap-3"
             >
-              <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                <CheckCircle2 className="w-4 h-4 text-green-600" />
+              <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-teal-600" />
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-900">Trip Booked!</div>
-                <div className="text-[0.65rem] text-gray-500">Bali · 5N/6D · ₹42,000</div>
+                <div className="text-xs font-bold text-trust">Flights 27% cheaper</div>
+                <div className="text-[0.6rem] text-gray-500">Matches your Wellness DNA</div>
               </div>
             </motion.div>
           </motion.div>
@@ -233,12 +260,18 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 py-8 px-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-gray-100 shadow-sm"
+          transition={{ duration: 0.7, delay: 1.2 }}
+          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 py-8 px-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-trust/[0.06] shadow-sm"
         >
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-2xl lg:text-3xl font-extrabold text-brand">{stat.value}</div>
+              <div className="text-2xl lg:text-3xl font-extrabold text-trust">
+                {stat.suffix === '$' && <span className="text-teal">$</span>}
+                {stat.value}
+                {stat.suffix && stat.suffix !== '$' && (
+                  <span className="text-base font-bold text-teal ml-1">{stat.suffix}</span>
+                )}
+              </div>
               <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
             </div>
           ))}

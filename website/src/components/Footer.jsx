@@ -2,29 +2,29 @@ import { Globe, Twitter, Linkedin, Github, Mail } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const footerLinks = {
-  Product: [
-    { label: 'Features', href: '/#features' },
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Integrations', href: '#' },
-    { label: 'Changelog', href: '#' },
+  Platform: [
+    { label: 'Travel Roadmap', href: '/#roadmap' },
+    { label: 'Time-Off Architecture', href: '/#time-off' },
+    { label: 'Solutions', href: '/#solutions' },
+    { label: 'Safety Scores', href: '/#trust' },
   ],
   Company: [
-    { label: 'About', href: '/about' },
-    { label: 'Blog', href: '#' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Investor Relations', href: '/about#investors' },
     { label: 'Careers', href: '#' },
     { label: 'Contact', href: '/contact' },
   ],
-  Resources: [
+  Ecosystem: [
+    { label: 'API Partners', href: '/contact' },
+    { label: 'Tour Operators', href: '/contact' },
+    { label: 'GDS Providers', href: '/contact' },
     { label: 'Documentation', href: '#' },
-    { label: 'Help Center', href: '#' },
-    { label: 'API Reference', href: '#' },
-    { label: 'Status', href: '#' },
   ],
   Legal: [
     { label: 'Privacy Policy', href: '#' },
     { label: 'Terms of Service', href: '#' },
     { label: 'Cookie Policy', href: '#' },
-    { label: 'DPA', href: '#' },
+    { label: 'Security', href: '/#trust' },
   ],
 }
 
@@ -37,28 +37,31 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-950 text-gray-400">
+    <footer className="bg-trust-900 text-gray-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16 lg:py-20">
           <div className="grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12">
             <div className="col-span-2">
               <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-trust flex items-center justify-center border border-white/10">
                   <Globe className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold tracking-tight text-white">Leave Studio</span>
               </Link>
-              <p className="text-sm leading-relaxed max-w-xs mb-6">
-                Smart travel planning for individuals and teams. Discover destinations,
-                unlock perks, and make every trip count.
+              <p className="text-sm leading-relaxed max-w-xs mb-3">
+                The world's first free Travel Life-Planning Platform. Enterprise-grade
+                architecture for every traveler.
               </p>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal/10 text-teal-400 text-xs font-semibold mb-6 border border-teal/20">
+                Always Free — No Paywalls
+              </div>
               <div className="flex items-center gap-3">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="w-9 h-9 rounded-lg bg-gray-800 hover:bg-brand-600 flex items-center justify-center text-gray-400 hover:text-white transition-all"
+                    className="w-9 h-9 rounded-lg bg-white/[0.06] hover:bg-teal/20 flex items-center justify-center text-gray-400 hover:text-teal-400 transition-all"
                   >
                     <social.icon className="w-4 h-4" />
                   </a>
@@ -74,7 +77,7 @@ export default function Footer() {
                     <li key={link.label}>
                       <Link
                         to={link.href}
-                        className="text-sm hover:text-white transition-colors"
+                        className="text-sm hover:text-teal-400 transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -86,10 +89,21 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="py-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs">© {new Date().getFullYear()} Leave Studio. All rights reserved.</p>
+        {/* Compliance Bar */}
+        <div className="py-4 border-t border-white/[0.06] flex flex-wrap items-center justify-center gap-6 text-xs text-white/30">
+          <span>ISO 27001</span>
+          <span className="w-px h-3 bg-white/10" />
+          <span>SOC 2 Type II</span>
+          <span className="w-px h-3 bg-white/10" />
+          <span>GDPR Compliant</span>
+          <span className="w-px h-3 bg-white/10" />
+          <span>256-bit Encryption</span>
+        </div>
+
+        <div className="py-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs">&copy; {new Date().getFullYear()} Leave Studio. All rights reserved.</p>
           <p className="text-xs">
-            Built with care in India 🇮🇳
+            Engineered with precision for a global audience
           </p>
         </div>
       </div>

@@ -23,7 +23,7 @@ const plans = [
   {
     name: 'Team',
     description: 'For companies managing travel perks for their people',
-    price: '₹99',
+    price: '$1.19',
     period: '/user/month',
     features: [
       'Everything in Individual',
