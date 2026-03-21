@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
+import { useRegion } from '../i18n/RegionContext'
+import { formatCurrency, formatCurrencyPerMonth } from '../i18n/regionData'
 import {
   TrendingUp,
   Calendar,
@@ -10,63 +13,45 @@ import {
   Plane,
 } from 'lucide-react'
 
-const years = [
-  {
-    year: 2026,
-    trips: [
-      { destination: 'Bali, Indonesia', quarter: 'Q2', cost: '$1,000', monthly: '$50/mo', days: 9, match: 94 },
-      { destination: 'Lisbon, Portugal', quarter: 'Q3', cost: '$950', monthly: '$48/mo', days: 5, match: 89 },
-    ],
-    totalCost: '$1,950',
-    monthlySave: '$98',
-    daysUsed: 14,
-    daysOptimized: 28,
-  },
-  {
-    year: 2027,
-    trips: [
-      { destination: 'Santorini, Greece', quarter: 'Q1', cost: '$2,150', monthly: '$179/mo', days: 10, match: 91 },
-      { destination: 'Medellín, Colombia', quarter: 'Q4', cost: '$800', monthly: '$67/mo', days: 6, match: 96 },
-    ],
-    totalCost: '$2,950',
-    monthlySave: '$246',
-    daysUsed: 14,
-    daysOptimized: 24,
-  },
-  {
-    year: 2028,
-    trips: [
-      { destination: 'Tokyo, Japan', quarter: 'Q2', cost: '$2,850', monthly: '$119/mo', days: 12, match: 88 },
-    ],
-    totalCost: '$2,850',
-    monthlySave: '$119',
-    daysUsed: 12,
-    daysOptimized: 20,
-  },
-  {
-    year: 2029,
-    trips: [
-      { destination: 'Iceland', quarter: 'Q3', cost: '$3,800', monthly: '$106/mo', days: 14, match: 85 },
-    ],
-    totalCost: '$3,800',
-    monthlySave: '$106',
-    daysUsed: 14,
-    daysOptimized: 22,
-  },
-  {
-    year: 2030,
-    trips: [
-      { destination: 'New Zealand', quarter: 'Q1', cost: '$5,350', monthly: '$112/mo', days: 16, match: 92 },
-    ],
-    totalCost: '$5,350',
-    monthlySave: '$112',
-    daysUsed: 16,
-    daysOptimized: 26,
-  },
-]
+function buildTimelineYears(destinations) {
+  const d = destinations ?? []
+  const tripGroups = [
+    [d[0], d[1]].filter(Boolean),
+    [d[2], d[3]].filter(Boolean),
+    d[4] ? [d[4]] : [],
+    d[5] ? [d[5]] : [],
+    d[6] ? [d[6]] : [],
+  ]
+  const yearLabels = [2026, 2027, 2028, 2029, 2030]
+
+  return yearLabels.map((year, yearIndex) => {
+    const tripsRaw = tripGroups[yearIndex] ?? []
+    const totalCost = tripsRaw.reduce((sum, t) => sum + (t?.cost ?? 0), 0)
+    const monthlySave = Math.round(totalCost / 12)
+    const daysUsed = tripsRaw.reduce((sum, t) => sum + (t?.days ?? 0), 0)
+    const daysOptimized = daysUsed + (yearIndex === 0 ? 14 : 10)
+
+    return {
+      year,
+      tripsRaw,
+      totalCost,
+      monthlySave,
+      daysUsed,
+      daysOptimized,
+    }
+  })
+}
 
 export default function TimelineRoadmap() {
+  const { t } = useTranslation()
+  const { region } = useRegion()
   const [activeYear, setActiveYear] = useState(0)
+
+  const years = useMemo(
+    () => buildTimelineYears(region.destinations),
+    [region.destinations],
+  )
+
   const selected = years[activeYear]
 
   return (
@@ -74,15 +59,14 @@ export default function TimelineRoadmap() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-trust-50 text-trust text-sm font-semibold mb-4">
-            The 1–10 Year Roadmap
+            {t('timeline.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-trust">
-            Your Travel Portfolio,{' '}
-            <span className="text-teal">Engineered</span>
+            {t('timeline.title')}{' '}
+            <span className="text-teal">{t('timeline.titleHighlight')}</span>
           </h2>
           <p className="mt-4 text-lg text-gray-500">
-            Not a travel blog — a financial dashboard for your life's greatest experiences.
-            Plan affordably with monthly breakdowns instead of lump-sum shock.
+            {t('timeline.subtitle')}
           </p>
         </AnimatedSection>
 
@@ -140,24 +124,48 @@ export default function TimelineRoadmap() {
             {/* Summary Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               {[
-                { label: 'Total Investment', value: selected.totalCost, icon: DollarSign, color: 'text-trust', bg: 'bg-trust-50' },
-                { label: 'Monthly Savings Plan', value: selected.monthlySave, icon: TrendingUp, color: 'text-teal-700', bg: 'bg-teal-50' },
-                { label: 'Leave Days Used', value: `${selected.daysUsed} days`, icon: Calendar, color: 'text-amber-700', bg: 'bg-amber-50' },
-                { label: 'Days Optimized', value: `${selected.daysOptimized} days`, icon: Plane, color: 'text-trust', bg: 'bg-trust-50' },
+                {
+                  labelKey: 'timeline.totalInvestment',
+                  value: formatCurrency(selected.totalCost, region),
+                  icon: DollarSign,
+                  color: 'text-trust',
+                  bg: 'bg-trust-50',
+                },
+                {
+                  labelKey: 'timeline.monthlySavings',
+                  value: formatCurrencyPerMonth(selected.monthlySave, region),
+                  icon: TrendingUp,
+                  color: 'text-teal-700',
+                  bg: 'bg-teal-50',
+                },
+                {
+                  labelKey: 'timeline.leaveDays',
+                  value: t('timeline.daysUnit', { count: selected.daysUsed }),
+                  icon: Calendar,
+                  color: 'text-amber-700',
+                  bg: 'bg-amber-50',
+                },
+                {
+                  labelKey: 'timeline.daysOptimized',
+                  value: t('timeline.daysUnit', { count: selected.daysOptimized }),
+                  icon: Plane,
+                  color: 'text-trust',
+                  bg: 'bg-trust-50',
+                },
               ].map((card) => (
-                <div key={card.label} className={`${card.bg} rounded-2xl p-5 border border-transparent`}>
+                <div key={card.labelKey} className={`${card.bg} rounded-2xl p-5 border border-transparent`}>
                   <card.icon className={`w-5 h-5 ${card.color} opacity-60 mb-2`} />
                   <div className={`text-xl sm:text-2xl font-extrabold ${card.color}`}>{card.value}</div>
-                  <div className="text-xs font-medium text-gray-500 mt-1">{card.label}</div>
+                  <div className="text-xs font-medium text-gray-500 mt-1">{t(card.labelKey)}</div>
                 </div>
               ))}
             </div>
 
             {/* Trip Cards */}
             <div className="space-y-4">
-              {selected.trips.map((trip) => (
+              {selected.tripsRaw.map((trip, tripIdx) => (
                 <div
-                  key={trip.destination}
+                  key={`${selected.year}-${trip.destination}-${trip.quarter}-${tripIdx}`}
                   className="group flex items-center justify-between p-5 rounded-2xl border border-trust/[0.06] bg-slate-bg hover:border-trust/15 hover:shadow-md transition-all"
                 >
                   <div className="flex items-center gap-4">
@@ -167,20 +175,32 @@ export default function TimelineRoadmap() {
                     <div>
                       <div className="text-base font-bold text-trust">{trip.destination}</div>
                       <div className="text-xs text-gray-500 mt-0.5">
-                        {trip.quarter} · {trip.days} days · {trip.match}% match
+                        {t('timeline.tripInfo', {
+                          quarter: trip.quarter,
+                          days: trip.days,
+                          match: trip.match,
+                        })}
                       </div>
                     </div>
                   </div>
 
                   <div className="hidden sm:flex items-center gap-8">
                     <div className="text-right">
-                      <div className="text-xs text-gray-400 uppercase tracking-wider font-medium">Lump Sum</div>
-                      <div className="text-sm font-bold text-gray-700">{trip.cost}</div>
+                      <div className="text-xs text-gray-400 uppercase tracking-wider font-medium">
+                        {t('timeline.lumpSum')}
+                      </div>
+                      <div className="text-sm font-bold text-gray-700">
+                        {formatCurrency(trip.cost, region)}
+                      </div>
                     </div>
                     <div className="w-px h-8 bg-trust/10" />
                     <div className="text-right">
-                      <div className="text-xs text-teal-600 uppercase tracking-wider font-medium">Monthly Plan</div>
-                      <div className="text-sm font-bold text-teal-700">{trip.monthly}</div>
+                      <div className="text-xs text-teal-600 uppercase tracking-wider font-medium">
+                        {t('timeline.monthlyPlan')}
+                      </div>
+                      <div className="text-sm font-bold text-teal-700">
+                        {formatCurrencyPerMonth(trip.monthly, region)}
+                      </div>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-trust transition-colors" />
                   </div>

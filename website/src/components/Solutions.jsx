@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
 import {
   User,
@@ -14,53 +15,85 @@ import {
   Zap,
 } from 'lucide-react'
 
-const tabs = [
-  {
-    id: 'individual',
-    label: 'For Individuals',
-    icon: User,
-    tagline: 'Your Life, Structured.',
-    description:
-      'Whether you are a solo explorer, a couple planning your honeymoon, or a family mapping out the next decade — Leave Studio gives you institutional-grade planning tools, completely free.',
-    features: [
-      { icon: Calendar, title: '10-Year Travel Roadmap', description: 'Plan quarter-by-quarter with financial breakdowns and monthly savings targets.' },
-      { icon: TrendingUp, title: 'Monthly Affordability Engine', description: 'Replace lump-sum shock with manageable monthly plans for every trip.' },
-      { icon: Heart, title: 'Wellness DNA Matching', description: 'AI analyzes your preferences, stress patterns, and travel style for perfect matches.' },
-      { icon: Zap, title: 'Optimized Bridge Finder', description: 'Automatically find 9-day windows using only 3 leave days around holidays.' },
-    ],
-  },
-  {
-    id: 'corporate',
-    label: 'For Corporations',
-    icon: Building2,
-    tagline: 'The Ultimate Employee Perk (at $0 Cost).',
-    description:
-      'Give your workforce the most valuable benefit in modern HR — optimized time-off planning. Reduce burnout, improve retention, and automate leave optimization without a software budget.',
-    features: [
-      { icon: Users, title: 'Workforce Leave Optimization', description: 'Auto-sync corporate calendars to suggest optimal leave windows for every employee.' },
-      { icon: BarChart3, title: 'Burnout Prevention Analytics', description: 'Real-time dashboards showing team wellness scores and leave utilization patterns.' },
-      { icon: Shield, title: 'Enterprise Compliance', description: 'ISO 27001, SOC 2 Type II, GDPR — deploy with confidence at zero cost.' },
-      { icon: Zap, title: 'Zero-Budget Deployment', description: 'No procurement cycles, no software budget needed. Onboard your entire org in minutes.' },
-    ],
-  },
-]
-
 export default function Solutions() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('individual')
-  const active = tabs.find((t) => t.id === activeTab)
+
+  const tabs = [
+    {
+      id: 'individual',
+      label: t('solutions.forIndividuals'),
+      icon: User,
+      tagline: t('solutions.individualTagline'),
+      description: t('solutions.individualDesc'),
+      features: [
+        {
+          icon: Calendar,
+          title: t('solutions.indFeature1'),
+          description: t('solutions.indFeature1Desc'),
+        },
+        {
+          icon: TrendingUp,
+          title: t('solutions.indFeature2'),
+          description: t('solutions.indFeature2Desc'),
+        },
+        {
+          icon: Heart,
+          title: t('solutions.indFeature3'),
+          description: t('solutions.indFeature3Desc'),
+        },
+        {
+          icon: Zap,
+          title: t('solutions.indFeature4'),
+          description: t('solutions.indFeature4Desc'),
+        },
+      ],
+    },
+    {
+      id: 'corporate',
+      label: t('solutions.forCorporations'),
+      icon: Building2,
+      tagline: t('solutions.corporateTagline'),
+      description: t('solutions.corporateDesc'),
+      features: [
+        {
+          icon: Users,
+          title: t('solutions.corpFeature1'),
+          description: t('solutions.corpFeature1Desc'),
+        },
+        {
+          icon: BarChart3,
+          title: t('solutions.corpFeature2'),
+          description: t('solutions.corpFeature2Desc'),
+        },
+        {
+          icon: Shield,
+          title: t('solutions.corpFeature3'),
+          description: t('solutions.corpFeature3Desc'),
+        },
+        {
+          icon: Zap,
+          title: t('solutions.corpFeature4'),
+          description: t('solutions.corpFeature4Desc'),
+        },
+      ],
+    },
+  ]
+
+  const active = tabs.find((tab) => tab.id === activeTab)
 
   return (
     <section id="solutions" className="py-24 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-trust-50 text-trust text-sm font-semibold mb-4">
-            Solutions
+            {t('solutions.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-trust">
-            Built for <span className="text-teal">Everyone</span>
+            {t('solutions.title')} <span className="text-teal">{t('solutions.titleHighlight')}</span>
           </h2>
           <p className="mt-4 text-lg text-gray-500">
-            From individual life-planners to Fortune 500 HR teams — one platform, zero cost.
+            {t('solutions.subtitle')}
           </p>
         </AnimatedSection>
 
@@ -108,7 +141,7 @@ export default function Solutions() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal/10 text-teal-700 text-xs font-bold mb-4">
                   <active.icon className="w-3.5 h-3.5" />
-                  {active.id === 'individual' ? 'Personal' : 'B2B'}
+                  {active.id === 'individual' ? t('solutions.personalTag') : t('solutions.b2bTag')}
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-trust mb-4">
                   {active.tagline}
@@ -120,7 +153,9 @@ export default function Solutions() {
                   href="/app/"
                   className="group inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-trust rounded-xl hover:bg-trust-light transition-all shadow-md"
                 >
-                  {active.id === 'individual' ? 'Start Planning Free' : 'Deploy for Your Team'}
+                  {active.id === 'individual'
+                    ? t('solutions.startPlanning')
+                    : t('solutions.deployTeam')}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </a>
               </div>

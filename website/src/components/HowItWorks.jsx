@@ -1,59 +1,59 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
 import { UserPlus, Sparkles, Layers, Plane } from 'lucide-react'
 
-const steps = [
-  {
-    number: '01',
-    icon: UserPlus,
-    title: 'Create Your Portfolio',
-    description:
-      'Sign up in seconds — as an individual or have your organization deploy for the entire team. No credit card, no procurement cycle.',
-    details: ['Instant free account', 'Corporate bulk onboarding', 'SSO & calendar sync'],
-    color: 'from-trust to-trust-light',
-  },
-  {
-    number: '02',
-    icon: Sparkles,
-    title: 'Define Your Wellness DNA',
-    description:
-      'Tell us your travel style, stress patterns, budget range, and life goals. Our AI builds your unique traveler profile.',
-    details: ['Preference profiling', 'Budget & risk tolerance', 'Wellness pattern analysis'],
-    color: 'from-teal-600 to-teal',
-  },
-  {
-    number: '03',
-    icon: Layers,
-    title: 'Optimize Your Calendar',
-    description:
-      'We sync your corporate holidays, public calendars, and weekends to find every hidden travel window — automatically.',
-    details: ['Bridge day detection', 'Leave stacking engine', 'Price-optimized windows'],
-    color: 'from-trust-400 to-trust-300',
-  },
-  {
-    number: '04',
-    icon: Plane,
-    title: 'Architect Your Decade',
-    description:
-      'Build a 1-10 year travel roadmap with monthly affordability plans. Track, adjust, and live your best life — all free.',
-    details: ['Financial dashboard view', 'Monthly savings plans', 'Real-time adjustments'],
-    color: 'from-teal-700 to-teal-500',
-  },
-]
-
 export default function HowItWorks() {
+  const { t } = useTranslation()
+
+  const steps = [
+    {
+      number: '01',
+      icon: UserPlus,
+      titleKey: 'step1Title',
+      descKey: 'step1Desc',
+      detailKeys: ['step1Detail1', 'step1Detail2', 'step1Detail3'],
+      color: 'from-trust to-trust-light',
+    },
+    {
+      number: '02',
+      icon: Sparkles,
+      titleKey: 'step2Title',
+      descKey: 'step2Desc',
+      detailKeys: ['step2Detail1', 'step2Detail2', 'step2Detail3'],
+      color: 'from-teal-600 to-teal',
+    },
+    {
+      number: '03',
+      icon: Layers,
+      titleKey: 'step3Title',
+      descKey: 'step3Desc',
+      detailKeys: ['step3Detail1', 'step3Detail2', 'step3Detail3'],
+      color: 'from-trust-400 to-trust-300',
+    },
+    {
+      number: '04',
+      icon: Plane,
+      titleKey: 'step4Title',
+      descKey: 'step4Desc',
+      detailKeys: ['step4Detail1', 'step4Detail2', 'step4Detail3'],
+      color: 'from-teal-700 to-teal-500',
+    },
+  ]
+
   return (
     <section id="how-it-works" className="py-24 lg:py-32 bg-slate-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-trust-50 text-trust text-sm font-semibold mb-4">
-            How It Works
+            {t('howItWorks.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-trust">
-            From zero to <span className="text-teal">10-year roadmap</span> in minutes
+            {t('howItWorks.title')} <span className="text-teal">{t('howItWorks.titleHighlight')}</span>{' '}
+            {t('howItWorks.titleEnd')}
           </h2>
           <p className="mt-4 text-lg text-gray-500">
-            Four steps to architect your travel future. No setup fees, no learning curve, no limits.
+            {t('howItWorks.subtitle')}
           </p>
         </AnimatedSection>
 
@@ -74,19 +74,23 @@ export default function HowItWorks() {
                   </motion.div>
 
                   <div className="text-xs font-bold text-teal tracking-widest uppercase mb-2">
-                    Step {step.number}
+                    {t('howItWorks.step', { number: step.number })}
                   </div>
-                  <h3 className="text-xl font-bold text-trust mb-2">{step.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-4">{step.description}</p>
+                  <h3 className="text-xl font-bold text-trust mb-2">
+                    {t(`howItWorks.${step.titleKey}`)}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                    {t(`howItWorks.${step.descKey}`)}
+                  </p>
 
                   <ul className="space-y-1.5">
-                    {step.details.map((detail) => (
+                    {step.detailKeys.map((detailKey) => (
                       <li
-                        key={detail}
+                        key={detailKey}
                         className="flex items-center gap-2 text-xs text-gray-600"
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-teal" />
-                        {detail}
+                        {t(`howItWorks.${detailKey}`)}
                       </li>
                     ))}
                   </ul>

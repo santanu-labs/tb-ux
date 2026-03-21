@@ -6,6 +6,25 @@ const PORT = process.env.PORT || 4030;
 
 const websiteDist = path.join(__dirname, 'website', 'dist');
 
+// Basic auth for internal review — set REVIEW_PASSWORD env var to enable
+const REVIEW_USER = process.env.REVIEW_USER || 'review';
+const REVIEW_PASSWORD = process.env.REVIEW_PASSWORD;
+
+if (REVIEW_PASSWORD) {
+  app.use((req, res, next) => {
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith('Basic ')) {
+      res.set('WWW-Authenticate', 'Basic realm="Internal Review"');
+      return res.status(401).send('Authentication required');
+    }
+    const [user, pass] = Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
+    if (user === REVIEW_USER && pass === REVIEW_PASSWORD) return next();
+    res.set('WWW-Authenticate', 'Basic realm="Internal Review"');
+    return res.status(401).send('Invalid credentials');
+  });
+  console.log('Basic auth enabled for internal review');
+}
+
 // Serve the existing app (employee, admin, etc.) under /app
 app.use('/app', express.static(__dirname, {
     index: 'index.html',

@@ -1,80 +1,88 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
 import { Check, ArrowRight, Sparkles, Heart } from 'lucide-react'
-
-const plans = [
-  {
-    name: 'Individual',
-    description: 'For solo travelers who want smarter trip planning',
-    price: 'Free',
-    period: '',
-    features: [
-      'AI destination matching',
-      'Smart holiday planner',
-      'Personal travel dashboard',
-      '5-year trip planner',
-      'EMI payment options',
-      'Community support',
-    ],
-    cta: 'Get Started Free',
-    popular: false,
-    icon: Heart,
-  },
-  {
-    name: 'Team',
-    description: 'For companies managing travel perks for their people',
-    price: '$1.19',
-    period: '/user/month',
-    features: [
-      'Everything in Individual',
-      'Up to 500 users',
-      'Admin dashboard & analytics',
-      'Travel perks management',
-      'CSV bulk import & SSO',
-      'Custom branding & subdomain',
-      'Audit logs',
-      'Priority support',
-    ],
-    cta: 'Start Free Trial',
-    popular: true,
-    icon: null,
-  },
-  {
-    name: 'Enterprise',
-    description: 'For large organizations with custom requirements',
-    price: 'Custom',
-    period: '',
-    features: [
-      'Everything in Team',
-      'Unlimited users',
-      'Advanced AI recommendations',
-      'Dedicated account manager',
-      'Custom integrations & API',
-      'SLA guarantee',
-      'SOC 2 compliance',
-      'On-premise option',
-    ],
-    cta: 'Contact Sales',
-    popular: false,
-    icon: null,
-  },
-]
+import { useRegion } from '../i18n/RegionContext'
 
 export default function Pricing() {
+  const { t } = useTranslation()
+  const { region } = useRegion()
+
+  const teamPriceFormatted = Number.isInteger(region.teamPrice)
+    ? String(region.teamPrice)
+    : region.teamPrice.toFixed(2)
+  const teamPriceDisplay = `${region.currency.symbol}${teamPriceFormatted}`
+
+  const plans = [
+    {
+      name: t('pricing.individual'),
+      description: t('pricing.individualDesc'),
+      price: t('pricing.free'),
+      period: '',
+      features: [
+        t('pricing.feat_aiMatch'),
+        t('pricing.feat_holiday'),
+        t('pricing.feat_dashboard'),
+        t('pricing.feat_5year'),
+        t('pricing.feat_emi'),
+        t('pricing.feat_community'),
+      ],
+      cta: t('pricing.getStarted'),
+      popular: false,
+      icon: Heart,
+    },
+    {
+      name: t('pricing.team'),
+      description: t('pricing.teamDesc'),
+      price: teamPriceDisplay,
+      period: t('pricing.perUserMonth'),
+      features: [
+        t('pricing.feat_everything'),
+        t('pricing.feat_500users'),
+        t('pricing.feat_admin'),
+        t('pricing.feat_perks'),
+        t('pricing.feat_csv'),
+        t('pricing.feat_branding'),
+        t('pricing.feat_audit'),
+        t('pricing.feat_priority'),
+      ],
+      cta: t('pricing.startTrial'),
+      popular: true,
+      icon: null,
+    },
+    {
+      name: t('pricing.enterprise'),
+      description: t('pricing.enterpriseDesc'),
+      price: t('pricing.custom'),
+      period: '',
+      features: [
+        t('pricing.feat_everythingTeam'),
+        t('pricing.feat_unlimited'),
+        t('pricing.feat_advancedAi'),
+        t('pricing.feat_manager'),
+        t('pricing.feat_api'),
+        t('pricing.feat_sla'),
+        t('pricing.feat_soc2'),
+        t('pricing.feat_onPremise'),
+      ],
+      cta: t('pricing.contactSales'),
+      popular: false,
+      icon: null,
+    },
+  ]
+
   return (
     <section id="pricing" className="py-24 lg:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-brand-50 text-brand-600 text-sm font-semibold mb-4">
-            Pricing
+            {t('pricing.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900">
-            Free for individuals.{' '}
-            <span className="text-brand">Powerful for teams.</span>
+            {t('pricing.title')}{' '}
+            <span className="text-brand">{t('pricing.titleHighlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-gray-500">
-            Start planning trips for free. Upgrade when your company needs team-wide travel benefits.
-          </p>
+          <p className="mt-4 text-lg text-gray-500">{t('pricing.subtitle')}</p>
         </AnimatedSection>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -92,7 +100,7 @@ export default function Pricing() {
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                     <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-brand text-white text-xs font-bold shadow-lg">
                       <Sparkles className="w-3 h-3" />
-                      Most Popular
+                      {t('pricing.mostPopular')}
                     </span>
                   </div>
                 )}

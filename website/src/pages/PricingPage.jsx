@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import SEOHead from '../components/SEOHead'
 import AnimatedSection from '../components/AnimatedSection'
 import CTA from '../components/CTA'
+import { useRegion } from '../i18n/RegionContext'
 import {
   Check,
   HelpCircle,
@@ -13,54 +16,6 @@ import {
   Globe,
 } from 'lucide-react'
 import { useState } from 'react'
-
-const faqs = [
-  {
-    q: 'Is Leave Studio really 100% free?',
-    a: 'Yes. Every feature — AI matching, 10-year roadmaps, bridge optimization, safety scores, and enterprise compliance — is completely free for every user. No paywalls, no "Pro" tiers, no hidden costs.',
-  },
-  {
-    q: 'How does Leave Studio make money if it\'s free?',
-    a: 'We operate an aggregator model. Tour operators, GDS providers, and experience platforms pay for premium placement and we earn commissions on bookings made through the platform. The platform is free for travelers — always.',
-  },
-  {
-    q: 'Is it really enterprise-grade? How can free software be secure?',
-    a: 'Absolutely. We hold ISO 27001, SOC 2 Type II, and GDPR certifications. Our security infrastructure is the same standard used by financial institutions. Free doesn\'t mean compromised — it means we monetize differently.',
-  },
-  {
-    q: 'Can my company deploy this for our entire workforce?',
-    a: 'Yes. Organizations can onboard their entire workforce in minutes — bulk CSV import, SSO integration, and corporate calendar sync. Zero software budget required. Your IT and security teams can audit us fully.',
-  },
-  {
-    q: 'What data do you collect and how is it used?',
-    a: 'We collect only what\'s needed to optimize your travel planning: preferences, calendar data, and travel history. Your data is encrypted at rest (AES-256) and in transit (TLS 1.3). We never sell personal data to third parties.',
-  },
-  {
-    q: 'How is this different from a travel booking site?',
-    a: 'Booking sites help you buy a trip. Leave Studio helps you architect your life. We\'re a Travel Life-Planning Platform — think financial portfolio management applied to your time, with a 10-year horizon.',
-  },
-]
-
-const allFeatures = [
-  'AI Wellness DNA Matching',
-  '10-Year Travel Roadmap',
-  'Optimized Bridge Finder',
-  'Monthly Affordability Engine',
-  'Real-Time Price Intelligence',
-  'Female-Centric Safety Scores',
-  'Corporate Calendar Sync',
-  'Leave Stacking Optimization',
-  'Travel Opportunity Heatmap',
-  'Burnout Prevention Analytics',
-  'Workforce Leave Optimization',
-  'ISO 27001 / SOC 2 / GDPR',
-  'Multi-Tenant Data Isolation',
-  'Full Audit Trails',
-  'SSO Integration',
-  'API Access',
-  'Bulk CSV Import',
-  'Custom Branding',
-]
 
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false)
@@ -89,8 +44,56 @@ function FAQItem({ faq }) {
 }
 
 export default function PricingPage() {
+  const { t } = useTranslation()
+  const { region } = useRegion()
+
+  const faqs = [
+    { q: t('pricingPage.faq1q'), a: t('pricingPage.faq1a') },
+    { q: t('pricingPage.faq2q'), a: t('pricingPage.faq2a') },
+    { q: t('pricingPage.faq3q'), a: t('pricingPage.faq3a') },
+    { q: t('pricingPage.faq4q'), a: t('pricingPage.faq4a') },
+    { q: t('pricingPage.faq5q'), a: t('pricingPage.faq5a') },
+    { q: t('pricingPage.faq6q'), a: t('pricingPage.faq6a') },
+  ]
+
+  const allFeatures = Array.from({ length: 18 }, (_, i) => t(`pricingPage.feat${i + 1}`))
+
+  const compliance = [
+    { icon: Shield, label: t('pricingPage.isoLabel') },
+    { icon: Shield, label: t('pricingPage.socLabel') },
+    { icon: Shield, label: t('pricingPage.gdprLabel') },
+    { icon: Shield, label: t('pricingPage.aesLabel') },
+    { icon: Shield, label: t('pricingPage.tlsLabel') },
+  ]
+
+  const cards = [
+    {
+      icon: Heart,
+      title: t('pricingPage.forIndividuals'),
+      tagline: t('pricingPage.forIndividualsTag'),
+      description: t('pricingPage.forIndividualsDesc'),
+    },
+    {
+      icon: Building2,
+      title: t('pricingPage.forOrganizations'),
+      tagline: t('pricingPage.forOrganizationsTag'),
+      description: t('pricingPage.forOrganizationsDesc'),
+    },
+    {
+      icon: Globe,
+      title: t('pricingPage.forPartners'),
+      tagline: t('pricingPage.forPartnersTag'),
+      description: t('pricingPage.forPartnersDesc'),
+    },
+  ]
+
   return (
     <div className="pt-20">
+      <SEOHead
+        title="Pricing — Everything Free Forever"
+        description="Leave Studio is 100% free for individuals and organizations. No paywalls, no Pro tiers, no credit card. Enterprise-grade travel planning at zero cost."
+        path="/pricing"
+      />
       {/* Hero — Zero Cost Philosophy */}
       <section className="py-24 lg:py-32 bg-gradient-to-br from-trust-50 via-slate-bg to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,7 +105,7 @@ export default function PricingPage() {
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal/10 text-teal-700 text-sm font-semibold mb-6 border border-teal/15"
             >
               <Zap className="w-4 h-4" />
-              Zero-Cost, High-Value
+              {t('pricingPage.badge')}
             </motion.div>
 
             <motion.h1
@@ -111,7 +114,8 @@ export default function PricingPage() {
               transition={{ duration: 0.7, delay: 0.1 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-trust leading-tight"
             >
-              Everything. <span className="text-teal">Free. Forever.</span>
+              {t('pricingPage.title')}{' '}
+              <span className="text-teal">{t('pricingPage.titleHighlight')}</span>
             </motion.h1>
 
             <motion.p
@@ -120,8 +124,7 @@ export default function PricingPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mt-6 text-lg text-gray-600 leading-relaxed"
             >
-              No paywalls. No "Pro" tiers. No credit card. Every feature, every user,
-              every organization — completely free, with enterprise-grade security.
+              {t('pricingPage.subtitle')}
             </motion.p>
           </div>
         </div>
@@ -131,26 +134,7 @@ export default function PricingPage() {
       <section className="py-24 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Heart,
-                title: 'For Individuals',
-                tagline: 'Your Life, Structured',
-                description: 'Solo travelers, couples, families — architect your travel future with institutional-grade tools.',
-              },
-              {
-                icon: Building2,
-                title: 'For Organizations',
-                tagline: 'The $0 Employee Perk',
-                description: 'Deploy for your entire workforce. Reduce burnout, optimize leave, zero software budget.',
-              },
-              {
-                icon: Globe,
-                title: 'For Partners',
-                tagline: 'Join the Ecosystem',
-                description: 'Tour operators and GDS providers — list your experiences and reach millions of travelers.',
-              },
-            ].map((card, i) => (
+            {cards.map((card, i) => (
               <AnimatedSection key={card.title} delay={i * 0.15}>
                 <motion.div
                   whileHover={{ y: -6 }}
@@ -163,14 +147,16 @@ export default function PricingPage() {
                   <p className="text-sm text-teal font-semibold mb-3">{card.tagline}</p>
                   <p className="text-sm text-gray-500 leading-relaxed mb-6 flex-1">{card.description}</p>
                   <div className="mb-6">
-                    <span className="text-4xl font-extrabold text-trust">$0</span>
-                    <span className="text-sm text-gray-400 ml-2">forever</span>
+                    <span className="text-4xl font-extrabold text-trust">
+                      {`${region.currency.symbol}0`}
+                    </span>
+                    <span className="text-sm text-gray-400 ml-2">{t('pricingPage.forever')}</span>
                   </div>
                   <a
                     href="/app/"
                     className="group inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold bg-trust text-white hover:bg-trust-light transition-all shadow-md shadow-trust/20"
                   >
-                    Get Started Free
+                    {t('pricingPage.getStarted')}
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                   </a>
                 </motion.div>
@@ -185,7 +171,8 @@ export default function PricingPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="text-center mb-12">
             <h2 className="text-3xl font-extrabold tracking-tight text-trust">
-              Every feature. Every user. <span className="text-teal">No exceptions.</span>
+              {t('pricingPage.allFeatures')}{' '}
+              <span className="text-teal">{t('pricingPage.allFeaturesHighlight')}</span>
             </h2>
           </AnimatedSection>
 
@@ -209,13 +196,7 @@ export default function PricingPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="flex flex-wrap items-center justify-center gap-8 py-8 px-6 rounded-2xl bg-trust-50 border border-trust/[0.06]">
-              {[
-                { icon: Shield, label: 'ISO 27001' },
-                { icon: Shield, label: 'SOC 2 Type II' },
-                { icon: Shield, label: 'GDPR Compliant' },
-                { icon: Shield, label: 'AES-256 Encryption' },
-                { icon: Shield, label: 'TLS 1.3' },
-              ].map((cert) => (
+              {compliance.map((cert) => (
                 <div key={cert.label} className="flex items-center gap-2 text-sm font-semibold text-trust/60">
                   <cert.icon className="w-4 h-4 text-teal" />
                   {cert.label}
@@ -232,10 +213,10 @@ export default function PricingPage() {
           <AnimatedSection className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-trust-50 text-trust text-sm font-semibold mb-4">
               <HelpCircle className="w-4 h-4" />
-              FAQ
+              {t('pricingPage.faqBadge')}
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight text-trust">
-              Frequently asked questions
+              {t('pricingPage.faqTitle')}
             </h2>
           </AnimatedSection>
 

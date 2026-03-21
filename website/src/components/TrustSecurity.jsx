@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
 import {
   Shield,
@@ -7,46 +8,60 @@ import {
   CheckCircle2,
   AlertTriangle,
   Heart,
-  Globe,
   Server,
 } from 'lucide-react'
 
-const certifications = [
-  { name: 'ISO 27001', description: 'Information Security Management', icon: Shield },
-  { name: 'SOC 2 Type II', description: 'Service Organization Controls', icon: Lock },
-  { name: 'GDPR', description: 'EU Data Protection Regulation', icon: Eye },
-]
-
-const safetyMetrics = [
-  { label: 'Overall Safety', score: 92, color: 'bg-teal' },
-  { label: 'Solo Female Safety', score: 88, color: 'bg-trust-400' },
-  { label: 'Night Safety', score: 85, color: 'bg-teal-600' },
-  { label: 'Transport Safety', score: 90, color: 'bg-trust' },
-]
-
-const securityFeatures = [
-  { icon: Server, title: 'Data Isolation', description: 'Multi-tenant architecture with complete data segregation per organization.' },
-  { icon: Lock, title: 'End-to-End Encryption', description: 'AES-256 encryption at rest, TLS 1.3 in transit for all data.' },
-  { icon: Eye, title: 'Audit Trails', description: 'Complete audit logging for every action — accessible to admins in real-time.' },
-  { icon: Heart, title: 'Female-Centric Safety', description: 'Dedicated safety filters and real-time safety scores for solo female travelers.' },
-]
-
 export default function TrustSecurity() {
+  const { t } = useTranslation()
+
+  const certifications = [
+    { name: t('trust.iso'), description: t('trust.isoDesc'), icon: Shield },
+    { name: t('trust.soc'), description: t('trust.socDesc'), icon: Lock },
+    { name: t('trust.gdprCert'), description: t('trust.gdprDesc'), icon: Eye },
+  ]
+
+  const safetyMetrics = [
+    { label: t('trust.overallSafety'), score: 92, color: 'bg-teal' },
+    { label: t('trust.soloFemaleSafety'), score: 88, color: 'bg-trust-400' },
+    { label: t('trust.nightSafety'), score: 85, color: 'bg-teal-600' },
+    { label: t('trust.transportSafety'), score: 90, color: 'bg-trust' },
+  ]
+
+  const securityFeatures = [
+    {
+      icon: Server,
+      title: t('trust.dataIsolation'),
+      description: t('trust.dataIsolationDesc'),
+    },
+    {
+      icon: Lock,
+      title: t('trust.encryption'),
+      description: t('trust.encryptionDesc'),
+    },
+    {
+      icon: Eye,
+      title: t('trust.auditTrails'),
+      description: t('trust.auditTrailsDesc'),
+    },
+    {
+      icon: Heart,
+      title: t('trust.femaleSafety'),
+      description: t('trust.femaleSafetyDesc'),
+    },
+  ]
+
   return (
     <section id="trust" className="py-24 lg:py-32 bg-trust-900 text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-teal-300 text-sm font-semibold mb-4 border border-white/10">
-            Trust & Security
+            {t('trust.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
-            Enterprise-Grade Security for{' '}
-            <span className="text-teal-400">Every Traveler</span>
+            {t('trust.title')}{' '}
+            <span className="text-teal-400">{t('trust.titleHighlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-white/50">
-            Free doesn't mean compromised. We hold ourselves to the same standards as
-            the world's leading financial institutions.
-          </p>
+          <p className="mt-4 text-lg text-white/50">{t('trust.subtitle')}</p>
         </AnimatedSection>
 
         {/* Certifications */}
@@ -78,12 +93,14 @@ export default function TrustSecurity() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <div className="text-xs font-bold text-white/40 uppercase tracking-wider">Live Safety Dashboard</div>
-                  <div className="text-sm text-white/60 mt-0.5">Bali, Indonesia · Updated 2h ago</div>
+                  <div className="text-xs font-bold text-white/40 uppercase tracking-wider">
+                    {t('trust.liveDashboard')}
+                  </div>
+                  <div className="text-sm text-white/60 mt-0.5">{t('trust.dashboardLocation')}</div>
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal/20 text-teal-300 text-xs font-bold">
                   <CheckCircle2 className="w-3 h-3" />
-                  Safe
+                  {t('trust.safe')}
                 </div>
               </div>
 
@@ -116,10 +133,8 @@ export default function TrustSecurity() {
               <div className="mt-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-3">
                 <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-xs font-semibold text-amber-300">Advisory Note</div>
-                  <div className="text-xs text-amber-200/70 mt-0.5">
-                    Avoid Kuta area after 11 PM. Seminyak rated safer for solo female travelers.
-                  </div>
+                  <div className="text-xs font-semibold text-amber-300">{t('trust.advisoryNote')}</div>
+                  <div className="text-xs text-amber-200/70 mt-0.5">{t('trust.advisoryText')}</div>
                 </div>
               </div>
             </div>

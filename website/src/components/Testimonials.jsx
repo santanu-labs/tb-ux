@@ -1,79 +1,75 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
 import { Star, Quote } from 'lucide-react'
 
-const testimonials = [
-  {
-    quote:
-      'Leave Studio found 14 extra travel days in my 2026 calendar that I never would have spotted. The bridge optimization is genuinely life-changing — and it\'s free.',
-    name: 'Sarah Chen',
-    role: 'HR Director',
-    company: 'Meridian Group',
-    avatar: 'SC',
-    rating: 5,
-  },
-  {
-    quote:
-      'I replaced my spreadsheet with a 10-year travel roadmap. The monthly affordability engine turned a $5,350 New Zealand trip into $112/month. Suddenly it felt achievable.',
-    name: 'James Okafor',
-    role: 'Software Engineer',
-    company: null,
-    avatar: 'JO',
-    rating: 5,
-  },
-  {
-    quote:
-      'We deployed Leave Studio for 200 employees at zero cost. The burnout analytics alone justified it — our leave utilization improved 34% in the first quarter.',
-    name: 'Lucas Andersen',
-    role: 'People Operations Lead',
-    company: 'Stratos Inc.',
-    avatar: 'LA',
-    rating: 5,
-  },
-  {
-    quote:
-      'As a solo female traveler, the safety scores are invaluable. Real-time ratings for night safety, transport, and area-specific advisories — I\'ve never felt more confident planning trips.',
-    name: 'Elena Rossi',
-    role: 'Freelance Designer',
-    company: null,
-    avatar: 'ER',
-    rating: 5,
-  },
-  {
-    quote:
-      'The fact that this is enterprise-grade and completely free is hard to believe. ISO 27001, SOC 2 — we ran it through our security team and they were impressed.',
-    name: 'Maria Torres',
-    role: 'VP of Employee Experience',
-    company: 'NovaBridge',
-    avatar: 'MT',
-    rating: 5,
-  },
-  {
-    quote:
-      'Leave Studio told me flights to Bali were 27% cheaper during my optimized bridge window. I saved $215 on a single booking. This platform pays for itself — except it\'s free.',
-    name: 'David Kim',
-    role: 'Product Manager',
-    company: null,
-    avatar: 'DK',
-    rating: 5,
-  },
-]
-
 export default function Testimonials() {
+  const { t } = useTranslation()
+
+  const testimonials = [
+    {
+      quote: t('testimonials.quote1'),
+      name: 'Sarah Chen',
+      role: 'HR Director',
+      company: 'Meridian Group',
+      avatar: 'SC',
+      rating: 5,
+    },
+    {
+      quote: t('testimonials.quote2'),
+      name: 'James Okafor',
+      role: 'Software Engineer',
+      company: null,
+      avatar: 'JO',
+      rating: 5,
+    },
+    {
+      quote: t('testimonials.quote3'),
+      name: 'Lucas Andersen',
+      role: 'People Operations Lead',
+      company: 'Stratos Inc.',
+      avatar: 'LA',
+      rating: 5,
+    },
+    {
+      quote: t('testimonials.quote4'),
+      name: 'Elena Rossi',
+      role: 'Freelance Designer',
+      company: null,
+      avatar: 'ER',
+      rating: 5,
+    },
+    {
+      quote: t('testimonials.quote5'),
+      name: 'Maria Torres',
+      role: 'VP of Employee Experience',
+      company: 'NovaBridge',
+      avatar: 'MT',
+      rating: 5,
+    },
+    {
+      quote: t('testimonials.quote6'),
+      name: 'David Kim',
+      role: 'Product Manager',
+      company: null,
+      avatar: 'DK',
+      rating: 5,
+    },
+  ]
+
   return (
     <section className="py-24 lg:py-32 bg-slate-bg overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-trust-50 text-trust text-sm font-semibold mb-4">
-            Testimonials
+            {t('testimonials.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-trust">
-            Trusted by <span className="text-teal">Professionals</span> Worldwide
+            {t('testimonials.title')}{' '}
+            <span className="text-teal">{t('testimonials.titleHighlight')}</span>{' '}
+            {t('testimonials.titleEnd')}
           </h2>
-          <p className="mt-4 text-lg text-gray-500">
-            From solo travelers to enterprise HR teams — see how Leave Studio is
-            engineering better lives.
-          </p>
+          <p className="mt-4 text-lg text-gray-500">{t('testimonials.subtitle')}</p>
         </AnimatedSection>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

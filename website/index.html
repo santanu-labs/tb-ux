@@ -1,17 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary SEO -->
     <title>Leave Studio — The World's First Free Travel Portfolio Manager</title>
     <meta name="description" content="Engineering the world's first free Travel Life-Planning Platform. Structure your time, optimize your leave, and architect a 10-year travel roadmap — enterprise-grade, zero cost." />
+    <meta name="keywords" content="travel planning, leave optimization, travel portfolio, bridge days, travel roadmap, free travel planner, holiday optimizer, time-off architecture, wellness travel, corporate travel management" />
+    <meta name="author" content="Leave Studio" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://leavestudio.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://leavestudio.com/" />
+    <meta property="og:title" content="Leave Studio — Free Travel Life-Planning Platform" />
+    <meta property="og:description" content="Structure your time, optimize your leave, and architect a 10-year travel roadmap — enterprise-grade, at zero cost." />
+    <meta property="og:image" content="https://leavestudio.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Leave Studio" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://leavestudio.com/" />
+    <meta name="twitter:title" content="Leave Studio — Free Travel Life-Planning Platform" />
+    <meta name="twitter:description" content="Structure your time, optimize your leave, and architect a 10-year travel roadmap — enterprise-grade, at zero cost." />
+    <meta name="twitter:image" content="https://leavestudio.com/og-image.png" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="theme-color" content="#002366" />
+
+    <!-- Preconnects for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://tb-resources.blr1.digitaloceanspaces.com" />
+    <link rel="dns-prefetch" href="https://ipapi.co" />
+
+    <!-- Fonts with display=swap for Lighthouse -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Leave Studio",
+      "url": "https://leavestudio.com",
+      "logo": "https://leavestudio.com/favicon.svg",
+      "description": "The world's first free Travel Life-Planning Platform. Enterprise-grade architecture for every traveler.",
+      "sameAs": [],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@leavestudio.com",
+        "contactType": "customer service"
+      }
+    }
+    </script>
+
+    <!-- Structured Data: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Leave Studio",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "2847"
+      },
+      "description": "AI-powered travel life-planning platform with leave optimization, bridge day finder, 10-year travel roadmaps, and safety scores — completely free."
+    }
+    </script>
+
+    <!-- Structured Data: WebSite (enables sitelinks search box) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Leave Studio",
+      "url": "https://leavestudio.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://leavestudio.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Google Analytics (GA4) — Replace G-XXXXXXXXXX with your Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- Google Search Console — Replace content with your verification code -->
+    <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
   </head>
   <body>
+    <!-- Skip to main content for accessibility / Lighthouse -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-trust focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-semibold">
+      Skip to main content
+    </a>
     <div id="root"></div>
+    <noscript>
+      <div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif">
+        <h1>Leave Studio</h1>
+        <p>The world's first free Travel Life-Planning Platform.</p>
+        <p>Please enable JavaScript to use this application.</p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

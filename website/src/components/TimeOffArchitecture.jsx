@@ -1,4 +1,6 @@
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import AnimatedSection from './AnimatedSection'
 import {
   Calendar,
@@ -8,58 +10,107 @@ import {
   Clock,
   Sun,
 } from 'lucide-react'
+import { useRegion } from '../i18n/RegionContext'
 
-const stackLayers = [
-  { label: 'Your Corporate Holidays', count: '14 days', color: 'bg-trust', textColor: 'text-white', icon: Calendar },
-  { label: 'Public Holidays', count: '10–15 days', color: 'bg-trust-400', textColor: 'text-white', icon: Sun },
-  { label: 'Weekends (Sat + Sun)', count: '104 days', color: 'bg-teal', textColor: 'text-white', icon: Clock },
-  { label: 'Optimized Bridges', count: '+14 days', color: 'bg-teal-300', textColor: 'text-trust-900', icon: Layers },
+const MONTH_KEYS = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'may',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'oct',
+  'nov',
+  'dec',
 ]
-
-const aiInsights = [
-  {
-    icon: TrendingDown,
-    title: 'Flights 27% cheaper this week',
-    subtitle: 'Matches your Wellness DNA profile',
-    color: 'bg-teal-50 text-teal-700 border-teal/20',
-  },
-  {
-    icon: Sparkles,
-    title: 'Best bridge: Mar 20–28',
-    subtitle: '9 days off using only 3 leave days',
-    color: 'bg-trust-50 text-trust border-trust/15',
-  },
-  {
-    icon: Calendar,
-    title: 'Holi + Weekend combo',
-    subtitle: 'Auto-detected from your corporate calendar',
-    color: 'bg-amber-50 text-amber-700 border-amber-200',
-  },
-]
-
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-const heatmapData = months.map((m) => ({
-  month: m,
-  score: Math.floor(Math.random() * 60) + 40,
-}))
 
 export default function TimeOffArchitecture() {
+  const { t } = useTranslation()
+  const { region } = useRegion()
+
+  const stackLayers = useMemo(
+    () => [
+      {
+        label: t('timeOff.corporateHolidays'),
+        count: t('timeOff.corporateHolidayDays'),
+        color: 'bg-trust',
+        textColor: 'text-white',
+        icon: Calendar,
+      },
+      {
+        label: t('timeOff.publicHolidays'),
+        count: region.publicHolidayCount,
+        color: 'bg-trust-400',
+        textColor: 'text-white',
+        icon: Sun,
+      },
+      {
+        label: t('timeOff.weekends'),
+        count: t('timeOff.weekendDaysCount'),
+        color: 'bg-teal',
+        textColor: 'text-white',
+        icon: Clock,
+      },
+      {
+        label: t('timeOff.optimizedBridges'),
+        count: t('timeOff.optimizedBridgesCount'),
+        color: 'bg-teal-300',
+        textColor: 'text-trust-900',
+        icon: Layers,
+      },
+    ],
+    [t, region]
+  )
+
+  const aiInsights = useMemo(
+    () => [
+      {
+        icon: TrendingDown,
+        title: t('timeOff.insight1Title'),
+        subtitle: t('timeOff.insight1Sub'),
+        color: 'bg-teal-50 text-teal-700 border-teal/20',
+      },
+      {
+        icon: Sparkles,
+        title: t('timeOff.insight2Title'),
+        subtitle: t('timeOff.insight2Sub'),
+        color: 'bg-trust-50 text-trust border-trust/15',
+      },
+      {
+        icon: Calendar,
+        title: t('timeOff.insight3Title'),
+        subtitle: t('timeOff.insight3Sub'),
+        color: 'bg-amber-50 text-amber-700 border-amber-200',
+      },
+    ],
+    [t]
+  )
+
+  const heatmapScores = useMemo(
+    () => Array.from({ length: 12 }, () => Math.floor(Math.random() * 60) + 40),
+    []
+  )
+
+  const heatmapData = MONTH_KEYS.map((key, i) => ({
+    month: t(`timeOff.months.${key}`),
+    score: heatmapScores[i],
+  }))
+
   return (
     <section id="time-off" className="py-24 lg:py-32 bg-slate-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-trust-50 text-trust text-sm font-semibold mb-4">
-            Leave Architecture
+            {t('timeOff.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-trust">
-            The Mathematics of{' '}
-            <span className="text-teal">Time-Off</span>
+            {t('timeOff.title')}{' '}
+            <span className="text-teal">{t('timeOff.titleHighlight')}</span>
           </h2>
-          <p className="mt-4 text-lg text-gray-500">
-            We sync your corporate holidays, public calendars, and weekends to find the
-            most optimized windows for travel — automatically.
-          </p>
+          <p className="mt-4 text-lg text-gray-500">{t('timeOff.subtitle')}</p>
         </AnimatedSection>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -67,7 +118,7 @@ export default function TimeOffArchitecture() {
           <AnimatedSection>
             <div className="bg-white rounded-2xl border border-trust/[0.06] p-6 shadow-sm">
               <div className="text-xs font-bold text-trust/50 uppercase tracking-wider mb-6">
-                Time-Off Stack · 2026
+                {t('timeOff.stackTitle')}
               </div>
 
               <div className="space-y-3">
@@ -100,12 +151,12 @@ export default function TimeOffArchitecture() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-medium opacity-80">Total Optimized Days Off</div>
-                    <div className="text-2xl font-extrabold mt-1">144 days</div>
+                    <div className="text-xs font-medium opacity-80">{t('timeOff.totalOptimized')}</div>
+                    <div className="text-2xl font-extrabold mt-1">{t('timeOff.totalDays')}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-medium opacity-80">vs. Standard</div>
-                    <div className="text-lg font-bold text-teal-200">+14 extra</div>
+                    <div className="text-xs font-medium opacity-80">{t('timeOff.vsStandard')}</div>
+                    <div className="text-lg font-bold text-teal-200">{t('timeOff.extraDays')}</div>
                   </div>
                 </div>
               </motion.div>
@@ -117,7 +168,7 @@ export default function TimeOffArchitecture() {
             <AnimatedSection delay={0.2}>
               <div className="bg-white rounded-2xl border border-trust/[0.06] p-6 shadow-sm">
                 <div className="text-xs font-bold text-trust/50 uppercase tracking-wider mb-4">
-                  AI Travel Insights
+                  {t('timeOff.aiInsightsTitle')}
                 </div>
                 <div className="space-y-3">
                   {aiInsights.map((insight, i) => (
@@ -143,7 +194,7 @@ export default function TimeOffArchitecture() {
             <AnimatedSection delay={0.4}>
               <div className="bg-white rounded-2xl border border-trust/[0.06] p-6 shadow-sm">
                 <div className="text-xs font-bold text-trust/50 uppercase tracking-wider mb-4">
-                  Travel Opportunity Score · 2026
+                  {t('timeOff.heatmapTitle')}
                 </div>
                 <div className="grid grid-cols-6 gap-2">
                   {heatmapData.map((d) => (
@@ -159,7 +210,7 @@ export default function TimeOffArchitecture() {
                   ))}
                 </div>
                 <div className="flex items-center justify-between mt-4 text-[0.6rem] text-gray-400">
-                  <span>Low opportunity</span>
+                  <span>{t('timeOff.lowOpportunity')}</span>
                   <div className="flex gap-1">
                     {[0.2, 0.4, 0.6, 0.8, 1].map((o) => (
                       <div
@@ -169,7 +220,7 @@ export default function TimeOffArchitecture() {
                       />
                     ))}
                   </div>
-                  <span>High opportunity</span>
+                  <span>{t('timeOff.highOpportunity')}</span>
                 </div>
               </div>
             </AnimatedSection>
